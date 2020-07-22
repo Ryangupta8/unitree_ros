@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="slam" default="false"/>
+  <arg name="gui" default="true"/>
+
+  <!-- Use standard ROS navigation stack through move_base? If not, specify vector maps for graph_navigation -->
+  <arg name="move_base" default="false"/>
+  <arg name="graph_map_location" default="$(find amrl_maps)"/>
+  <arg name="graph_map_name" default="UT_Campus"/>
+  <arg name="odom_topic" default="/odom"/>
+  <arg name="scan_topic" default="/scan"/>
+  <arg name="localization_topic" default="/amcl_pose"/>
+
+  <include file="$(find unitree_gazebo)/launch/normal.launch">
+     <arg name="ahg_sim" value="true"/>
+     <arg name="rname" value="laikago"/>
+  </include>
+
+  <group if="$(arg slam)">
+    <include file="$(find unitree_navigation)/launch/gmapping.launch"/>
+  </group>
+
+  <group if="$(arg move_base)">
+    <include file="$(find unitree_navigation)/launch/move_base.launch">
+      <arg name="slam" value="$(arg slam)"/>
+    </include>
+  </group>
+  <group unless="$(arg move_base)">  
+    <node pkg="amrl" type="enml" name="non_markov_localization" output="screen" args="--config_path $(find amrl)/enml --robot_config $(find unitree_gazebo)/config/robot.lua" />
+    
+    <node pkg="amrl" type="navigation" name="graph_navigation" output="screen" args="--map $(arg graph_map_location)/$(arg graph_map_name)/$(arg graph_map_name).navigation.txt" >
+       <remap from="/jackal_velocity_controller/odom" to="/odom"/>
+       <remap from="/velodyne_2dscan" to="/scan"/>
+       <remap from="/navigation/cmd_vel" to="/cmd_vel"/>
+    </node>
+  </group>  
+
+  <group if="$(arg gui)">
+     <node pkg="rviz" type="rviz" name="rviz" args="-d $(find unitree_gazebo)/config/laikago.rviz" output="screen"/>
+  </group>
+
+
+
+</launch>

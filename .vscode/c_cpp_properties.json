@@ -1,0 +1,25 @@
+{
+    "configurations": [
+        {
+            "browse": {
+                "databaseFilename": "",
+                "limitSymbolsToIncludedHeaders": true
+            },
+            "includePath": [
+                "/home/bian/catkin_ws/devel/include/**",
+                "/opt/ros/melodic/include/**",
+                "/home/bian/catkin_ws/src/unitree_ros/unitree_controller/include/**",
+                "/home/bian/catkin_ws/src/unitree_ros/unitree_legged_control/include/**",
+                "/home/bian/catkin_ws/src/unitree_ros/unitree_legged_real/include/**",
+                "/home/bian/catkin_ws/src/unitree_motor_ctrl/include/**",
+                "/usr/include/**"
+            ],
+            "name": "ROS",
+            "intelliSenseMode": "gcc-x64",
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "gnu11",
+            "cppStandard": "gnu++14"
+        }
+    ],
+    "version": 4
+}

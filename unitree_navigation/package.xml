@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>unitree_navigation</name>
+  <version>0.0.1</version>
+  <description>The unitree_navigation package</description>
+  <maintainer email="steveminq@utexas.edu">Minkyu Kim</maintainer>
+
+  <license>BSD</license>
+  <exec_depend>amcl</exec_depend>
+  <exec_depend>movebase</exec_depend>
+  <exec_depend>movebase-msgs</exec_depend>
+  <buildtool_depend>catkin</buildtool_depend>
+  <export>
+  </export>
+</package>

@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="paused" default="true"/>
+  <arg name="use_sim_time" default="true"/>
+  <arg name="gui" default="true"/>
+  <arg name="headless" default="false"/>
+  <arg name="debug" default="false"/>
+  <!-- Debug mode will hung up the robot, use "true" or "false" to switch it. -->
+  <arg name="user_debug" default="false"/>
+  <arg name="ahg_sim" default="false"/>
+
+
+  <group unless="$(arg ahg_sim)">
+    <!--Gazebo empty world launch file-->
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="debug" value="false" />
+    <arg name="gui" value="true" />
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="false"/>
+    <arg name="headless" value="false"/>
+    <arg name="verbose" value="true"/>
+    </include>
+  </group>
+  <group if="$(arg ahg_sim)">
+  <include file="$(find ahg_gazebo_simulation)/launch/ahg_apartment.launch">
+    <arg name="gui" value="true" />
+    <arg name="use_sim_time" value="true"/>
+    </include>
+  </group>
+ 
+  <!-- Load the URDF into the ROS Parameter Server -->
+    <param name="robot_description"
+           command="$(find xacro)/xacro '$(find laikago_description)/xacro/robot.xacro' 
+           DEBUG:=$(arg user_debug)"/>
+
+  <!--Nodes-->
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher"/>
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher">
+    <remap from="/joint_states" to="/laikago_gazebo/joint_states"/>\
+  </node>
+  <node pkg="gazebo_ros" type="spawn_model" name="urdf_spawner" respawn="false" output="screen"
+          args="-urdf -z 0.6 -model $(arg rname)_gazebo -param robot_description -unpause"/>
+
+
+  <include file="$(find unitree_gazebo)/launch/velodyne_2d.launch"/>
+
+  <!-- <node pkg="laikago_gazebo" type="laikago_gazebo_servo" name="servo" required="true" output="screen"/> -->
+
+</launch>
