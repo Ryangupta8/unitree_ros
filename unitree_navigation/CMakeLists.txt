@@ -3,9 +3,53 @@ project(unitree_navigation)
 
 add_compile_options(-std=c++11)
 
-find_package(catkin REQUIRED)
+find_package(catkin REQUIRED COMPONENTS
+    controller_manager
+    genmsg
+    joint_state_controller
+    robot_state_publisher
+    roscpp
+    gazebo_ros
+    std_msgs
+    tf
+    geometry_msgs
+    unitree_legged_msgs
+    nav_msgs
+)
 
-catkin_package( )
+find_package(gazebo REQUIRED)
 
-include_directories( )
+generate_messages(
+   DEPENDENCIES
+   std_msgs
+   geometry_msgs
+ )
 
+catkin_package(
+    CATKIN_DEPENDS 
+    unitree_legged_msgs
+    nav_msgs 
+    geometry_msgs
+)
+
+include_directories(
+    # include
+    ${Boost_INCLUDE_DIR}
+    ${catkin_INCLUDE_DIRS}
+    ${GAZEBO_INCLUDE_DIRS}
+)
+
+
+link_directories(${GAZEBO_LIBRARY_DIRS})
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GAZEBO_CXX_FLAGS}")
+
+
+# add_dependencies(${PROJECT_NAME} geometry_msgs_gencpp)
+
+# target_link_libraries(#${PROJECT_NAME}
+#   ${catkin_LIBRARIES} ${EXTRA_LIBS}
+# )
+
+
+add_executable(test_amrl_nav src/test_amrl_nav.cpp)
+target_link_libraries(test_amrl_nav ${catkin_LIBRARIES})
