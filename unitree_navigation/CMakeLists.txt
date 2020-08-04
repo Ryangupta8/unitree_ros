@@ -33,7 +33,7 @@ catkin_package(
 )
 
 include_directories(
-    # include
+    include
     ${Boost_INCLUDE_DIR}
     ${catkin_INCLUDE_DIRS}
     ${GAZEBO_INCLUDE_DIRS}
@@ -43,12 +43,16 @@ include_directories(
 link_directories(${GAZEBO_LIBRARY_DIRS})
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GAZEBO_CXX_FLAGS}")
 
+# Declare a C++ library
+add_library(${PROJECT_NAME}
+    src/orientation_utils.cpp 
+)
 
 # add_dependencies(${PROJECT_NAME} geometry_msgs_gencpp)
 
-# target_link_libraries(#${PROJECT_NAME}
-#   ${catkin_LIBRARIES} ${EXTRA_LIBS}
-# )
+target_link_libraries(${PROJECT_NAME}
+  ${catkin_LIBRARIES} #${EXTRA_LIBS}
+)
 
 
 add_executable(test_amrl_nav src/test_amrl_nav.cpp)

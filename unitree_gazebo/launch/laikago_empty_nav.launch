@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <launch>
   <arg name="slam" default="false"/>
-  <arg name="gui" default="true"/>
 
   <!-- Use standard ROS navigation stack through move_base? If not, specify vector maps for graph_navigation -->
   <arg name="move_base" default="false"/>
@@ -12,15 +11,9 @@
   <arg name="localization_topic" default="/amcl_pose"/>
 
   <include file="$(find unitree_gazebo)/launch/normal.launch">
-     <arg name="ahg_sim" value="true"/>
+     <arg name="ahg_sim" value="false"/>
      <arg name="rname" value="laikago"/>
   </include>
-
-  <!-- Azure Kinect -->
-<!--   <include file="$(find azure_kinect_ros_driver)/launch/driver.launch">
-     <arg name="ahg_sim" value="true"/>
-     <arg name="rname" value="laikago"/>
-  </include> -->
 
   <group if="$(arg slam)">
     <include file="$(find unitree_navigation)/launch/gmapping.launch"/>
@@ -40,11 +33,6 @@
        <remap from="/navigation/cmd_vel" to="/cmd_vel"/>
     </node>
   </group>  
-
-  <group if="$(arg gui)">
-     <node pkg="rviz" type="rviz" name="rviz" args="-d $(find unitree_gazebo)/config/laikago.rviz" output="screen"/>
-  </group>
-
 
 
 </launch>
