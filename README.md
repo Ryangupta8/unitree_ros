@@ -1,3 +1,44 @@
+# To Run Laikago Simulation
+In one terminal:
+```
+source ws_name/devel/setup.bash
+cd ws_name/src/amrl/
+export ROS_PACKAGE_PATH=`pwd`:$ROS_PACKAGE_PATH
+cd amrl_maps
+export ROS_PACKAGE_PATH=`pwd`:$ROS_PACKAGE_PATH
+cd ../amrl_msgs
+export ROS_PACKAGE_PATH=`pwd`:$ROS_PACKAGE_PATH
+roslaunch unitree_gazebo laikago_empty_nav.launch gui:=false
+```
+In another terminal:
+```
+source wsname/devel/setup.bash
+rosrun unitree_navigation test_amrl_nav
+```
+In another terminal:
+```
+source wsname/devel/setup.bash
+rosrun unitree_controller unitree_servo
+```
+Now you should see that laikago has stood up in gazebo
+
+In another terminal:
+```
+source ws_name/devel/setup.bash
+cd ws_name/src/amrl/
+export ROS_PACKAGE_PATH=`pwd`:$ROS_PACKAGE_PATH
+cd amrl_maps
+export ROS_PACKAGE_PATH=`pwd`:$ROS_PACKAGE_PATH
+cd ../amrl_msgs
+export ROS_PACKAGE_PATH=`pwd`:$ROS_PACKAGE_PATH
+rostopic pub /move_base_simple/goal amrl_msgs/Pose2Df "x: 30.0 
+y: 30.0
+theta: 0.0"
+```
+ 
+
+
+
 # Introduction
 Here are the ROS packages of Unitree robots, namely Laikago, Aliengo and A1. You can load robots and joint controllers in Gazebo. And we also offered a basic standing controller, a position and pose publisher and a tool to generate external force. Besides of these simulation functions, you can also control your real robots in ROS by the `unitree_legged_real`.
 
