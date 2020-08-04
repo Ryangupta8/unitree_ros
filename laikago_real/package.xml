@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>laikago_real</name>
+  <version>0.0.0</version>
+  <description>The laikago_real package</description>
+
+  <maintainer email="laikago@unitree.cc">unitree</maintainer>
+  <license>TODO</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>roscpp</build_depend>
+  <build_export_depend>roscpp</build_export_depend>
+  <exec_depend>roscpp</exec_depend>
+  <depend>unitree_legged_msgs</depend>
+
+</package>
