@@ -16,7 +16,7 @@ Use of this source code is governed by the MPL-2.0 license, see LICENSE.
 #include <nav_msgs/Odometry.h>
 
 //Laikago SDK Modules
-#include <ros/ros.h>
+
 #include <pthread.h>
 #include <boost/thread.hpp>
 #include <boost/thread/mutex.hpp>
@@ -49,14 +49,23 @@ void* update_loop(void* data)
     }
 }
 
+class Listener{
+public:
+	double dx, dy, drz;
+
+
 // Callback function for subscriber
-void twist_callback(const geometry_msgs::Twist& vel_cmd)
-{
-	ROS_INFO("[v_x] I heard: [%s]", vel_cmd.linear.x);
-	ROS_INFO("[v_y] I heard: [%s]", vel_cmd.linear.y);
-	ROS_INFO("[v_z] I heard: [%s]", vel_cmd.angular.z);
-	cout << "Twist Received" << endl;
-}
+	void twist_callback(const geometry_msgs::Twist::ConstPtr& vel_cmd)
+	{
+		dx = vel_cmd->linear.x;
+		dy = vel_cmd->linear.y;
+		drz = vel_cmd->angular.z;
+		ROS_INFO("[v_x] I heard: [%s]", vel_cmd->linear.x);
+		ROS_INFO("[v_y] I heard: [%s]", vel_cmd->linear.y);
+		ROS_INFO("[v_z] I heard: [%s]", vel_cmd->angular.z);
+		cout << "Twist Received" << endl;
+	}
+};
 
 int main( int argc, char* argv[] )
 {
@@ -68,14 +77,17 @@ int main( int argc, char* argv[] )
 	ros::init(argc, argv, "laikago_ros_driver");
 	
 	ros::NodeHandle n;
+
+	Listener listener;
 	
 	ros::Rate loop_rate(500);
 	ros::Publisher pub = n.advertise<nav_msgs::Odometry>("odom", 1000);
 	roslcm.SubscribeState();
-	ros::Subscriber sub = n.subscribe("/cmd_vel", 1000, twist_callback);
+	ros::Subscriber sub = n.subscribe("/cmd_vel", 1000, &Listener::twist_callback, &listener);
 
 	pthread_t tid;
     pthread_create(&tid, NULL, update_loop, NULL);
+	
 
     while (ros::ok()){
 
@@ -154,9 +166,9 @@ int main( int argc, char* argv[] )
         }
 
         if (motiontime>5000 && motiontime<21000){
-        	SendHighROS.forwardSpeed = vel_cmd.linear.y;
-        	SendHighROS.sideSpeed = vel_cmd.linear.x;
-        	SendHighROS.rotateSpeed = vel_cmd.angular.z;
+        	SendHighROS.forwardSpeed = listener.dx;
+        	SendHighROS.sideSpeed = listener.dy;
+        	SendHighROS.rotateSpeed = listener.drz;
         }
 
         if(motiontime>20000 && motiontime<21000){
