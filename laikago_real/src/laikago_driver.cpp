@@ -4,11 +4,10 @@ Use of this source code is governed by the MPL-2.0 license, see LICENSE.
 ************************************************************************/
 
 //Author: Nick Machak
+//Co-author: Ryan Gupta
 
 //Links: https://gist.github.com/grassjelly/b06aaf5e73019868236eeb425ca60f76 (for some guidance)
 // https://github.com/Ryangupta8/unitree_ros/blob/master/unitree_legged_msgs/msg/HighState.msg 
-
-//Note: This is the script for unitree_legged_sdk/examples/example_walk.cpp
 
 ///ROS Modules
 #include <ros/ros.h>
