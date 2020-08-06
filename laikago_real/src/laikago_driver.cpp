@@ -6,9 +6,6 @@ Use of this source code is governed by the MPL-2.0 license, see LICENSE.
 //Author: Nick Machak
 //Co-author: Ryan Gupta
 
-//Links: https://gist.github.com/grassjelly/b06aaf5e73019868236eeb425ca60f76 (for some guidance)
-// https://github.com/Ryangupta8/unitree_ros/blob/master/unitree_legged_msgs/msg/HighState.msg 
-
 ///ROS Modules
 #include <ros/ros.h>
 #include <geometry_msgs/Twist.h>
@@ -33,6 +30,7 @@ HighCmd SendHighLCM = {0};
 HighState RecvHighLCM = {0};
 unitree_legged_msgs::HighCmd SendHighROS;
 unitree_legged_msgs::HighState RecvHighROS;
+unitree_legged_msgs::IMU RecvIMU;
 
 Control control(HIGHLEVEL);
 LCM roslcm;
@@ -102,11 +100,13 @@ int main( int argc, char* argv[] )
         odom.header.stamp = ros::Time::now();
         odom.header.frame_id = "odom";
         //robot's position in x,y, and z
-        odom.pose.pose.position.x = RecvHighROS.forwardPosition; // can I do this if nav_msgs/Odometry takes float64 but RecvHighROS uses float32 here?
-        odom.pose.pose.position.y = RecvHighROS.sidePosition; // can I do this if nav_msgs/Odometry takes float64 but RecvHighROS uses float32 here?
+        //nav_msgs/Odometry -> float64
+        //RecvHighROS -> float32
+        odom.pose.pose.position.x = RecvHighROS.forwardPosition;
+        odom.pose.pose.position.y = RecvHighROS.sidePosition;
         odom.pose.pose.position.z = 0.0;
-        // robot's heading ??
-        // odom.pose.pose.orientation = ??
+        // robot's heading
+        odom.pose.pose.orientation = RecvIMU.quaternion;
 
         // odom.child_frame_id = ?? 
         // linear speed
