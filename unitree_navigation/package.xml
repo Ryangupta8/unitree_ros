@@ -11,6 +11,9 @@
     <exec_depend>movebase-msgs</exec_depend>
     <buildtool_depend>catkin</buildtool_depend>
 
+    <exec_depend>math_utils</exec_depend>
+    <build_depend>math_utils</build_depend>
+    	
     <buildtool_depend>genmsg</buildtool_depend>
     <build_depend>controller_manager</build_depend>
     <build_depend>joint_state_controller</build_depend>

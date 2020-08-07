@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>math_utils</name>
+  <version>0.0.0</version>
+  <description>The math_utils package</description>
+  <maintainer email="ryan.gupta@utexas.edu">Ryan Gupta</maintainer>
+
+    <license>BSD</license>
+    <exec_depend>roscpp</exec_depend>
+    <buildtool_depend>catkin</buildtool_depend>
+
+    <build_depend>roscpp</build_depend>
+</package>

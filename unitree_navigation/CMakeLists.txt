@@ -15,7 +15,8 @@ find_package(catkin REQUIRED COMPONENTS
     geometry_msgs
     unitree_legged_msgs
     nav_msgs
-)
+    math_utils
+    )
 
 find_package(gazebo REQUIRED)
 
@@ -30,6 +31,7 @@ catkin_package(
     unitree_legged_msgs
     nav_msgs 
     geometry_msgs
+    math_utils
 )
 
 include_directories(
@@ -50,9 +52,9 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GAZEBO_CXX_FLAGS}")
 
 # add_dependencies(${PROJECT_NAME} geometry_msgs_gencpp)
 
-target_link_libraries(${PROJECT_NAME}
-  ${catkin_LIBRARIES} #${EXTRA_LIBS}
-)
+# target_link_libraries(# ${PROJECT_NAME}
+#   ${catkin_LIBRARIES} #${EXTRA_LIBS}
+# )
 
 
 add_executable(test_amrl_nav src/test_amrl_nav.cpp)
