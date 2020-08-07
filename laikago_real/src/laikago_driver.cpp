@@ -10,9 +10,9 @@ Use of this source code is governed by the MPL-2.0 license, see LICENSE.
 #include <ros/ros.h>
 #include <geometry_msgs/Twist.h>
 #include <nav_msgs/Odometry.h>
+#include <sensor_msgs/Imu.h>
 
 //Laikago SDK Modules
-
 #include <pthread.h>
 #include <boost/thread.hpp>
 #include <boost/thread/mutex.hpp>
@@ -30,7 +30,7 @@ HighCmd SendHighLCM = {0};
 HighState RecvHighLCM = {0};
 unitree_legged_msgs::HighCmd SendHighROS;
 unitree_legged_msgs::HighState RecvHighROS;
-unitree_legged_msgs::IMU RecvIMU;
+unitree_legged_msgs::IMU RecvIMUo;
 
 Control control(HIGHLEVEL);
 LCM roslcm;
@@ -93,9 +93,33 @@ int main( int argc, char* argv[] )
         memcpy(&RecvHighROS, &RecvHighLCM, sizeof(HighState));
         printf("%f\n",  RecvHighROS.forwardSpeed);
 
-        ////////////////////////////
-        // publish odometry here //
-        //////////////////////////
+	// Get IMU reading
+	double quat_ [4] = { RecvHighROS.imu.quaternion[0] , RecvHighROS.imu.quaternion[1] , RecvHighROS.imu.quaternion[2] , RecvHighROS.imu.quaternion[3] };
+	double gyro_ [3] = { RecvHighROS.imu.gyroscope[0] , RecvHighROS.imu.gyroscope[1] , RecvHighROS.imu.gyroscope[2] };
+	double acceler_ [3] = { RecvHighROS.imu.accelerometer[0] , RecvHighROS.imu.accelerometer[1] , RecvHighROS.imu.accelerometer[2] };
+	double rpy_ [3] = { RecvHighROS.imu.rpy[0] , RecvHighROS.imu.rpy[1] , RecvHighROS.imu.rpy[2] };
+	// Create sensor_msgs/imu			// robot_localization assumes East North Up (ENU) 
+	// 						// frame for all IMU data
+	// 						// i.e. x = magnetic north, z = center of earth
+	sensor_msgs::Imu imu_msg;
+	imu_msg.header.frame_id = "base_link";// Need Unitree Response			// robot_localization assumes East North Up (ENU) 
+							// frame for all IMU data
+							// // i.e. x = magnetic north, z = center of earth
+	imu_msg.orientation.x = quat_[0];
+	imu_msg.orientation.y = quat_[1];
+	imu_msg.orientation.z = quat_[2];
+	imu_msg.orientation.w = quat_[3];
+
+	imu_msg.linear_acceleration.x = acceler_[0];
+	imu_msg.linear_acceleration.y = acceler_[1];
+	imu_msg.linear_acceleration.z = acceler_[2];
+	
+		
+	
+	////////////////////////////
+        // publish odometry here //      Odometry msg:i
+        //////////////////////////       frame_id = where position and orientation are (map or odom)
+	// 				 child_frame_id = twist data (base_link)
         nav_msgs::Odometry odom;
         odom.header.stamp = ros::Time::now();
         odom.header.frame_id = "odom";
@@ -106,7 +130,9 @@ int main( int argc, char* argv[] )
         odom.pose.pose.position.y = RecvHighROS.sidePosition;
         odom.pose.pose.position.z = 0.0;
         // robot's heading
-        odom.pose.pose.orientation = RecvIMU.quaternion;
+	// odom.pose.pose.orientation = RecvIMU.quaternion;
+	// Did Ryan do this line above? Not good to push code that doesnt build
+
 
         // odom.child_frame_id = ?? 
         // linear speed

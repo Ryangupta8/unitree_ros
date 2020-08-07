@@ -9,6 +9,7 @@ find_package(catkin REQUIRED COMPONENTS
     nav_msgs
     std_msgs
     unitree_legged_msgs
+    sensor_msgs
 )
 
 catkin_package(
@@ -18,7 +19,8 @@ catkin_package(
     nav_msgs
     std_msgs 
     unitree_legged_msgs
-)
+    sensor_msgs
+    )
 
 include_directories(
     include
