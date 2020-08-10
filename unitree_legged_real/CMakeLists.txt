@@ -48,6 +48,6 @@ target_link_libraries(walk_lcm ${EXTRA_LIBS} ${catkin_LIBRARIES})
 add_dependencies(walk_lcm ${${PEOJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 
-# add_executable(lcm_server $ENV{UNITREE_LEGGED_SDK_PATH}/examples/lcm_server.cpp)
-# target_link_libraries(lcm_server ${EXTRA_LIBS} ${catkin_LIBRARIES})
-# add_dependencies(lcm_server ${${PEOJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_executable(lcm_server /home/knapsack/robots/unitree_legged_sdk/examples/lcm_server.cpp)
+target_link_libraries(lcm_server ${EXTRA_LIBS} ${catkin_LIBRARIES})
+add_dependencies(lcm_server ${${PEOJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
