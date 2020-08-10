@@ -18,6 +18,10 @@
   <exec_depend>sensor_msgs</exec_depend>
   <depend>unitree_legged_msgs</depend>
 
+<!--   <build_depend>math_utils</build_depend>
+  <exec_depend>math_utils</exec_depend> -->
+  <depend>math_utils</depend>
+
   <exec_depend>geometry_msgs</exec_depend>
   <exec_depend>nav_msgs</exec_depend>
   <exec_depend>std_msgs</exec_depend>

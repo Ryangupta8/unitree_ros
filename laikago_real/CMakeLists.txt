@@ -10,9 +10,15 @@ find_package(catkin REQUIRED COMPONENTS
     std_msgs
     unitree_legged_msgs
     sensor_msgs
+    math_utils
 )
+find_package(Eigen3 REQUIRED)
+
+
+find_library(RUNNING_COVARIANCE_LIBRARY running_covariance HINTS /home/knapsack/workspaces/unitree_ws/)
 
 catkin_package(
+
     CATKIN_DEPENDS
     roscpp
     geometry_msgs
@@ -20,13 +26,16 @@ catkin_package(
     std_msgs 
     unitree_legged_msgs
     sensor_msgs
+    math_utils
     )
 
 include_directories(
     include
     /home/knapsack/robots/laikago_sdk/include
+    /home/knapsack/workspaces/unitree_ws/src/unitree_ros/math_utils/include
     ${Boost_INCLUDE_DIR}
     ${catkin_INCLUDE_DIRS}
+    ${EIGEN3_INCLUDE_DIRS}
 )
 
 add_compile_options(-std=c++11)
@@ -47,4 +56,8 @@ add_executable(walk_lcm src/walk_mode.cpp)
 target_link_libraries(walk_lcm ${EXTRA_LIBS} ${catkin_LIBRARIES})
 
 add_executable(laikago_driver src/laikago_driver.cpp)
-target_link_libraries(laikago_driver ${EXTRA_LIBS} ${catkin_LIBRARIES})
+target_link_libraries(laikago_driver 
+    ${EXTRA_LIBS} 
+    ${catkin_LIBRARIES} 
+    ${RUNNING_COVARIANCE_LIBRARY}
+)

@@ -12,6 +12,8 @@ Use of this source code is governed by the MPL-2.0 license, see LICENSE.
 #include <nav_msgs/Odometry.h>
 #include <sensor_msgs/Imu.h>
 
+#include "math_utils/running_covariance.h"
+
 //Laikago SDK Modules
 #include <pthread.h>
 #include <boost/thread.hpp>
@@ -79,12 +81,38 @@ int main( int argc, char* argv[] )
 	
 	ros::Rate loop_rate(500);
 	ros::Publisher pub = n.advertise<nav_msgs::Odometry>("odom", 1000);
+    ros::Publisher odom_pub = n.advertise<sensor_msgs::Imu>("imu_data", 1000);
 	roslcm.SubscribeState();
 	ros::Subscriber sub = n.subscribe("/cmd_vel", 1000, &Listener::twist_callback, &listener);
 
 	pthread_t tid;
     pthread_create(&tid, NULL, update_loop, NULL);
-	
+
+    // Covariance objects
+    RunningCovariance cov_accel_, cov_rpy_; // Need angular velocity covariance also
+    Eigen::Vector3d acceler_data_, rpy_data_, acceler_cov_vec, rpy_cov_vec;
+    // Vars for collecting raw IMU data
+    double quat_[4];
+    double gyro_[3];
+    double acceler_[3];
+    double rpy_[3];
+    double linear_accel_cov[9]; 
+    // STILL WAITING ON UNITREE TO CORRECTLY TELL US WHICH VALUE CORRESP.
+    // TO ANGULAR VELOCITY AND ORIENTATION
+
+    sensor_msgs::Imu imu_msg;
+    // Begin Filler
+    // There are some issue with the covariance calc that I am using
+    // because covariance of a vector3d should be a 3x3 matrix. 
+    // Note: the sensor_msgs/Imu expects a flattened version of this 3x3 matrix hence array[9]
+    imu_msg.linear_acceleration_covariance[1] = 0; imu_msg.linear_acceleration_covariance[2] = 0;
+    imu_msg.linear_acceleration_covariance[4] = 0; imu_msg.linear_acceleration_covariance[5] = 0;
+    imu_msg.linear_acceleration_covariance[7] = 0; imu_msg.linear_acceleration_covariance[8] = 0;
+
+    imu_msg.orientation_covariance[1] = 0; imu_msg.orientation_covariance[2] = 0;
+    imu_msg.orientation_covariance[4] = 0; imu_msg.orientation_covariance[5] = 0;
+    imu_msg.orientation_covariance[7] = 0; imu_msg.orientation_covariance[8] = 0;
+	// End Filler
 
     while (ros::ok()){
 
@@ -93,33 +121,61 @@ int main( int argc, char* argv[] )
         memcpy(&RecvHighROS, &RecvHighLCM, sizeof(HighState));
         printf("%f\n",  RecvHighROS.forwardSpeed);
 
-	// Get IMU reading
-	double quat_ [4] = { RecvHighROS.imu.quaternion[0] , RecvHighROS.imu.quaternion[1] , RecvHighROS.imu.quaternion[2] , RecvHighROS.imu.quaternion[3] };
-	double gyro_ [3] = { RecvHighROS.imu.gyroscope[0] , RecvHighROS.imu.gyroscope[1] , RecvHighROS.imu.gyroscope[2] };
-	double acceler_ [3] = { RecvHighROS.imu.accelerometer[0] , RecvHighROS.imu.accelerometer[1] , RecvHighROS.imu.accelerometer[2] };
-	double rpy_ [3] = { RecvHighROS.imu.rpy[0] , RecvHighROS.imu.rpy[1] , RecvHighROS.imu.rpy[2] };
-	// Create sensor_msgs/imu			// robot_localization assumes East North Up (ENU) 
-	// 						// frame for all IMU data
-	// 						// i.e. x = magnetic north, z = center of earth
-	sensor_msgs::Imu imu_msg;
-	imu_msg.header.frame_id = "base_link";// Need Unitree Response			// robot_localization assumes East North Up (ENU) 
-							// frame for all IMU data
-							// // i.e. x = magnetic north, z = center of earth
-	imu_msg.orientation.x = quat_[0];
-	imu_msg.orientation.y = quat_[1];
-	imu_msg.orientation.z = quat_[2];
-	imu_msg.orientation.w = quat_[3];
+        ////////////////////////////
+        ////// IMU Here ///////////
+        //////////////////////////
+    	// Get IMU data
+    	quat_[0] = RecvHighROS.imu.quaternion[0]; quat_[1] = RecvHighROS.imu.quaternion[1]; 
+        quat_[2] = RecvHighROS.imu.quaternion[2]; quat_[3] = RecvHighROS.imu.quaternion[3];
+        
+        gyro_[0] = RecvHighROS.imu.gyroscope[0]; gyro_[1] = RecvHighROS.imu.gyroscope[1]; gyro_[2] = RecvHighROS.imu.gyroscope[2];
 
-	imu_msg.linear_acceleration.x = acceler_[0];
-	imu_msg.linear_acceleration.y = acceler_[1];
-	imu_msg.linear_acceleration.z = acceler_[2];
+        acceler_[0] = RecvHighROS.imu.accelerometer[0]; acceler_[1] = RecvHighROS.imu.accelerometer[1]; 
+        acceler_[2] = RecvHighROS.imu.accelerometer[2];
+
+        rpy_[0] = RecvHighROS.imu.rpy[0]; rpy_[1] = RecvHighROS.imu.rpy[1]; rpy_[2] = RecvHighROS.imu.rpy[2];
+
+        // robot_localization assumes East North Up (ENU) 
+        // frame for all IMU data
+        // i.e. y = magnetic north, x = east, z = up
+        imu_msg.header.frame_id = "base_link"; 
+        
+        // IMU Orientation                   
+        imu_msg.orientation.x = quat_[0];
+        imu_msg.orientation.y = quat_[1];
+        imu_msg.orientation.z = quat_[2];
+        imu_msg.orientation.w = quat_[3];
+        // IMU Linear Acceleration
+        imu_msg.linear_acceleration.x = acceler_[0];
+        imu_msg.linear_acceleration.y = acceler_[1];
+        imu_msg.linear_acceleration.z = acceler_[2];
+    	
+        // Convert raw IMU data to Eigen
+        acceler_data_[0] = acceler_[0]; acceler_data_[1] = acceler_[1]; acceler_data_[2] = acceler_[2];
+        rpy_data_[0] = rpy_[0]; rpy_data_[1] = rpy_[1]; rpy_data_[2] = rpy_[2];  
+        // Get covariance for Eigen data
+        acceler_cov_vec = cov_accel_.Push(acceler_data_);
+        rpy_cov_vec = cov_rpy_.Push(rpy_data_);
+        // Collect covariance data for imu_msg
+        imu_msg.linear_acceleration_covariance[0] = acceler_cov_vec[0];
+        imu_msg.linear_acceleration_covariance[3] = acceler_cov_vec[1];
+        imu_msg.linear_acceleration_covariance[6] = acceler_cov_vec[2];
+
+        imu_msg.orientation_covariance[0] = rpy_cov_vec[0];
+        imu_msg.orientation_covariance[3] = rpy_cov_vec[1];
+        imu_msg.orientation_covariance[6] = rpy_cov_vec[2];
+
+        // Todo in IMU:
+        // 1) Get correct frames
+        // 2) Get correct covariance
+        // 3) Figure out which unitree_legged_msgs/IMU data corresponds to sensor_msgs/Imu angular_velocity
+    	
+        odom_pub.publish(imu_msg);
 	
-		
-	
-	////////////////////////////
-        // publish odometry here //      Odometry msg:i
+    	////////////////////////////
+        //// Local Odom here //////      Odometry msg:i
         //////////////////////////       frame_id = where position and orientation are (map or odom)
-	// 				 child_frame_id = twist data (base_link)
+    	// 				                 child_frame_id = twist data (base_link)
         nav_msgs::Odometry odom;
         odom.header.stamp = ros::Time::now();
         odom.header.frame_id = "odom";
