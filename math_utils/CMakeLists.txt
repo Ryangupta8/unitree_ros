@@ -17,6 +17,8 @@ find_package(gazebo REQUIRED)
    #  )
 
 catkin_package(
+    INCLUDE_DIRS include
+    LIBRARIES running_stats orientation_utils
     CATKIN_DEPENDS 
     # unitree_legged_msgs
     # nav_msgs 
@@ -44,15 +46,16 @@ add_library(orientation_utils
 	src/orientation_utils.cpp
 )
 
-# target_link_libraries( math_utils
-#   ${catkin_LIBRARIES} #${EXTRA_LIBS}  
-#   ${Boost_LIBRARIES}
-#   running_stats
-#   orientation_utils
-#   )
+add_library(running_covariance
+    src/running_covariance.cpp
+)
+
+target_link_libraries(running_stats ${catkin_LIBRARIES})
+target_link_libraries(orientation_utils ${catkin_LIBRARIES})
+target_link_libraries(running_covariance ${catkin_LIBRARIES})
 
 
-install(TARGETS orientation_utils running_stats 
+install(TARGETS orientation_utils running_stats running_covariance
 	ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 	LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 	RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
