@@ -5,6 +5,7 @@ Use of this source code is governed by the MPL-2.0 license, see LICENSE.
 
 //Author: Nick Machak
 //Co-author: Ryan Gupta
+//Co-author: Cem Karamanli
 
 ///ROS Modules
 #include <ros/ros.h>
@@ -90,7 +91,7 @@ int main( int argc, char* argv[] )
 
     // Covariance objects
     RunningCovariance cov_accel_, cov_rpy_; // Need angular velocity covariance also
-    Eigen::Vector3d acceler_data_, rpy_data_, acceler_cov_vec, rpy_cov_vec;
+    Eigen::Vector3d acceler_data_, rpy_data_, acceler_cov_vec, rpy_cov_vec, acceler_var_vec, rpy_var_vec;
     // Vars for collecting raw IMU data
     double quat_[4];
     double gyro_[3];
@@ -105,14 +106,13 @@ int main( int argc, char* argv[] )
     // There are some issue with the covariance calc that I am using
     // because covariance of a vector3d should be a 3x3 matrix. 
     // Note: the sensor_msgs/Imu expects a flattened version of this 3x3 matrix hence array[9]
-    imu_msg.linear_acceleration_covariance[1] = 0; imu_msg.linear_acceleration_covariance[2] = 0;
-    imu_msg.linear_acceleration_covariance[4] = 0; imu_msg.linear_acceleration_covariance[5] = 0;
-    imu_msg.linear_acceleration_covariance[7] = 0; imu_msg.linear_acceleration_covariance[8] = 0;
+    imu_msg.linear_acceleration_covariance[0] = 0; imu_msg.linear_acceleration_covariance[1] = 0; imu_msg.linear_acceleration_covariance[2] = 0;
+    imu_msg.linear_acceleration_covariance[3] = 0; imu_msg.linear_acceleration_covariance[4] = 0; imu_msg.linear_acceleration_covariance[5] = 0;
+    imu_msg.linear_acceleration_covariance[6] = 0; imu_msg.linear_acceleration_covariance[7] = 0; imu_msg.linear_acceleration_covariance[8] = 0;
 
-    imu_msg.orientation_covariance[1] = 0; imu_msg.orientation_covariance[2] = 0;
-    imu_msg.orientation_covariance[4] = 0; imu_msg.orientation_covariance[5] = 0;
-    imu_msg.orientation_covariance[7] = 0; imu_msg.orientation_covariance[8] = 0;
-	// End Filler
+    imu_msg.orientation_covariance[0] = 0; imu_msg.orientation_covariance[1] = 0; imu_msg.orientation_covariance[2] = 0;
+    imu_msg.orientation_covariance[3] = 0; imu_msg.orientation_covariance[4] = 0; imu_msg.orientation_covariance[5] = 0;
+    imu_msg.orientation_covariance[6] = 0; imu_msg.orientation_covariance[7] = 0; imu_msg.orientation_covariance[8] = 0;
 
     while (ros::ok()){
 
@@ -156,14 +156,26 @@ int main( int argc, char* argv[] )
         // Get covariance for Eigen data
         acceler_cov_vec = cov_accel_.Push(acceler_data_);
         rpy_cov_vec = cov_rpy_.Push(rpy_data_);
+        // Get variance for Eigen data
+        acceler_var_vec = cov_accel_.Variance();
+        rpy_var_vec = cov_rpy_.Variance();
         // Collect covariance data for imu_msg
-        imu_msg.linear_acceleration_covariance[0] = acceler_cov_vec[0];
-        imu_msg.linear_acceleration_covariance[3] = acceler_cov_vec[1];
-        imu_msg.linear_acceleration_covariance[6] = acceler_cov_vec[2];
-
-        imu_msg.orientation_covariance[0] = rpy_cov_vec[0];
-        imu_msg.orientation_covariance[3] = rpy_cov_vec[1];
-        imu_msg.orientation_covariance[6] = rpy_cov_vec[2];
+        // Collect covariance values for linear acceleration
+        imu_msg.linear_acceleration_covariance[1] = imu_msg.linear_acceleration_covariance[3] = acceler_cov_vec[0];
+        imu_msg.linear_acceleration_covariance[5] = imu_msg.linear_acceleration_covariance[7] = acceler_cov_vec[1];
+        imu_msg.linear_acceleration_covariance[2] = imu_msg.linear_acceleration_covariance[6] = acceler_cov_vec[2];
+        // Collect variance values for linear acceleration
+        imu_msg.linear_acceleration_covariance[0] = acceler_var_vec[0];
+        imu_msg.linear_acceleration_covariance[4] = acceler_var_vec[1];
+        imu_msg.linear_acceleration_covariance[8] = acceler_var_vec[2];
+        // Collect covariance values for orientation
+        imu_msg.orientation_covariance[1] = imu_msg.orientation_covariance[3] = rpy_cov_vec[0];
+        imu_msg.orientation_covariance[5] = imu_msg.orientation_covariance[7] = rpy_cov_vec[1];
+        imu_msg.orientation_covariance[2] = imu_msg.orientation_covariance[6] = rpy_cov_vec[2];
+        // Collect variance values for orientation
+        imu_msg.orientation_covariance[0] = rpy_var_vec[0];
+        imu_msg.orientation_covariance[4] = rpy_var_vec[1];
+        imu_msg.orientation_covariance[8] = rpy_var_vec[2];
 
         // Todo in IMU:
         // 1) Get correct frames
