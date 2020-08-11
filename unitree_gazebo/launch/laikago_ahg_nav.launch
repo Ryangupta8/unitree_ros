@@ -6,14 +6,20 @@
   <!-- Use standard ROS navigation stack through move_base? If not, specify vector maps for graph_navigation -->
   <arg name="move_base" default="false"/>
   <arg name="graph_map_location" default="$(find amrl_maps)"/>
-  <arg name="graph_map_name" default="UT_Campus"/>
+  <arg name="graph_map_name" default="AHG_Apartment"/>
   <arg name="odom_topic" default="/odom"/>
   <arg name="scan_topic" default="/scan"/>
   <arg name="localization_topic" default="/amcl_pose"/>
 
+
+  <param name="use_sim_time" value="false"/>
+
   <include file="$(find unitree_gazebo)/launch/normal.launch">
      <arg name="ahg_sim" value="true"/>
      <arg name="rname" value="laikago"/>
+     <arg name="x_pos" value="8.0"/>
+     <arg name="y_pos" value="-2.0"/>
+     <arg name="z_pos" value="0.2"/>
   </include>
 
   <!-- Azure Kinect -->
@@ -32,7 +38,7 @@
     </include>
   </group>
   <group unless="$(arg move_base)">  
-    <node pkg="amrl" type="enml" name="non_markov_localization" output="screen" args="--config_path $(find amrl)/enml --robot_config $(find unitree_gazebo)/config/robot.lua" />
+    <node pkg="amrl" type="enml" name="non_markov_localization" output="screen" args="--config_dir $(find amrl)/enml/config --robot_config laikago.lua --maps_dir $(find amrl)/enml/maps -d1" />
     
     <node pkg="amrl" type="navigation" name="graph_navigation" output="screen" args="--map $(arg graph_map_location)/$(arg graph_map_name)/$(arg graph_map_name).navigation.txt" >
        <remap from="/jackal_velocity_controller/odom" to="/odom"/>
