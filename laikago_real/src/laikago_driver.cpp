@@ -90,8 +90,8 @@ int main( int argc, char* argv[] )
     pthread_create(&tid, NULL, update_loop, NULL);
 
     // Covariance objects
-    RunningCovariance cov_accel_, cov_rpy_; // Need angular velocity covariance also
-    Eigen::Vector3d acceler_data_, rpy_data_, acceler_cov_vec, rpy_cov_vec, acceler_var_vec, rpy_var_vec;
+    RunningCovariance cov_accel_, cov_rpy_, cov_gyro_;
+    Eigen::Vector3d acceler_data_, rpy_data_, gyro_data_, acceler_cov_vec, rpy_cov_vec, gyro_cov_vec, acceler_var_vec, rpy_var_vec, gyro_var_vec;
     // Vars for collecting raw IMU data
     double quat_[4];
     double gyro_[3];
@@ -99,7 +99,7 @@ int main( int argc, char* argv[] )
     double rpy_[3];
     double linear_accel_cov[9]; 
     // STILL WAITING ON UNITREE TO CORRECTLY TELL US WHICH VALUE CORRESP.
-    // TO ANGULAR VELOCITY AND ORIENTATION
+    // TO ORIENTATION
 
     sensor_msgs::Imu imu_msg;
     // Begin Filler
@@ -149,38 +149,54 @@ int main( int argc, char* argv[] )
         imu_msg.linear_acceleration.x = acceler_[0];
         imu_msg.linear_acceleration.y = acceler_[1];
         imu_msg.linear_acceleration.z = acceler_[2];
+        // IMU Angular Velocity
+        imu_msg.angular_velocity.x = gyro_[0]; 
+        imu_msg.angular_velocity.y = gyro_[1];
+        imu_msg.angular_velocity.z = gyro_[2];
     	
         // Convert raw IMU data to Eigen
         acceler_data_[0] = acceler_[0]; acceler_data_[1] = acceler_[1]; acceler_data_[2] = acceler_[2];
-        rpy_data_[0] = rpy_[0]; rpy_data_[1] = rpy_[1]; rpy_data_[2] = rpy_[2];  
+        rpy_data_[0] = rpy_[0]; rpy_data_[1] = rpy_[1]; rpy_data_[2] = rpy_[2];
+        gyro_data_[0] = gyro_[0]; gyro_data_[0] = gyro_[1]; gyro_data_[0] = gyro_[2];  
         // Get covariance for Eigen data
         acceler_cov_vec = cov_accel_.Push(acceler_data_);
         rpy_cov_vec = cov_rpy_.Push(rpy_data_);
+        gyro_cov_vec = cov_gyro_.Push(gyro_data_);
+
         // Get variance for Eigen data
         acceler_var_vec = cov_accel_.Variance();
         rpy_var_vec = cov_rpy_.Variance();
-        // Collect covariance data for imu_msg
-        // Collect covariance values for linear acceleration
+        gyro_var_vec = cov_gyro_.Variance();
+
+        // COLLECT COVARIANCE DATA FOR IMU_MSG
+        //// Collect covariance values for linear acceleration
         imu_msg.linear_acceleration_covariance[1] = imu_msg.linear_acceleration_covariance[3] = acceler_cov_vec[0];
         imu_msg.linear_acceleration_covariance[5] = imu_msg.linear_acceleration_covariance[7] = acceler_cov_vec[1];
         imu_msg.linear_acceleration_covariance[2] = imu_msg.linear_acceleration_covariance[6] = acceler_cov_vec[2];
-        // Collect variance values for linear acceleration
+        //// Collect variance values for linear acceleration
         imu_msg.linear_acceleration_covariance[0] = acceler_var_vec[0];
         imu_msg.linear_acceleration_covariance[4] = acceler_var_vec[1];
         imu_msg.linear_acceleration_covariance[8] = acceler_var_vec[2];
-        // Collect covariance values for orientation
+        //// Collect covariance values for orientation
         imu_msg.orientation_covariance[1] = imu_msg.orientation_covariance[3] = rpy_cov_vec[0];
         imu_msg.orientation_covariance[5] = imu_msg.orientation_covariance[7] = rpy_cov_vec[1];
         imu_msg.orientation_covariance[2] = imu_msg.orientation_covariance[6] = rpy_cov_vec[2];
-        // Collect variance values for orientation
+        //// Collect variance values for orientation
         imu_msg.orientation_covariance[0] = rpy_var_vec[0];
         imu_msg.orientation_covariance[4] = rpy_var_vec[1];
         imu_msg.orientation_covariance[8] = rpy_var_vec[2];
+        //// Collect covariance values for angular velocity
+        imu_msg.angular_velocity_covariance[1] = imu_msg.angular_velocity_covariance[3] = gyro_cov_vec[0];
+        imu_msg.angular_velocity_covariance[5] = imu_msg.angular_velocity_covariance[7] = gyro_cov_vec[1];
+        imu_msg.angular_velocity_covariance[2] = imu_msg.angular_velocity_covariance[6] = gyro_cov_vec[2];
+        //// Collect variance values for angular velocity
+        imu_msg.angular_velocity_covariance[0] = gyro_var_vec[0];
+        imu_msg.angular_velocity_covariance[4] = gyro_var_vec[1];
+        imu_msg.angular_velocity_covariance[8] = gyro_var_vec[2];
 
         // Todo in IMU:
         // 1) Get correct frames
         // 2) Get correct covariance
-        // 3) Figure out which unitree_legged_msgs/IMU data corresponds to sensor_msgs/Imu angular_velocity
     	
         odom_pub.publish(imu_msg);
 	
