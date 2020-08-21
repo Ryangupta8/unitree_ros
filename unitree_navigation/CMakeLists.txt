@@ -57,5 +57,8 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GAZEBO_CXX_FLAGS}")
 # )
 
 
-add_executable(test_amrl_nav src/test_amrl_nav.cpp)
-target_link_libraries(test_amrl_nav ${catkin_LIBRARIES})
+add_executable(laikago_amrl_nav src/laikago_amrl_nav.cpp)
+target_link_libraries(laikago_amrl_nav ${catkin_LIBRARIES})
+
+add_executable(a1_amrl_nav src/a1_amrl_nav.cpp)
+target_link_libraries(a1_amrl_nav ${catkin_LIBRARIES})

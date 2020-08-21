@@ -2,6 +2,7 @@
 #include <gazebo_msgs/ModelState.h>
 #include <gazebo_msgs/ModelStates.h>
 #include <gazebo_msgs/LinkState.h>
+#include <nav_msgs/Odometry.h>
 #include <string>
 #include <stdio.h>  
 #include <tf/transform_datatypes.h>
@@ -44,8 +45,11 @@ int main(int argc, char **argv)
     bool first_time = true;
    	InputOutput listener;
 
+    double odom_x, odom_y; odom_x = 0.; odom_y = 0.;
+
     std_msgs::Bool bool_msg; bool_msg.data = true;
     gazebo_msgs::ModelState output;
+    nav_msgs::Odometry odom_msg;
 
     Eigen::Vector3d dxyz, angular;
     Eigen::AngleAxisd conversion;
@@ -60,9 +64,12 @@ int main(int argc, char **argv)
 
     ros::Publisher move_publisher = nh.advertise<gazebo_msgs::ModelState>("/gazebo/set_model_state", 1000);
     ros::Publisher bool_pub = nh.advertise<std_msgs::Bool>("/autonomy_arbiter/enabled", 1000);
+    ros::Publisher odom_pub = nh.advertise<nav_msgs::Odometry>("/correct_odom", 1000);
 
     ros::Rate loop_rate(100);
 
+    odom_msg.header.frame_id = "odom";
+    odom_msg.child_frame_id = "base";
 
     // gazebo_msgs/LinkStates is somehow not a vector of type gazebo_msgs/LinkState
     // So, the topic /gazebo/link_states does not seem to have a reference frame...
@@ -97,6 +104,15 @@ int main(int argc, char **argv)
         dori.z() = 1 * sin( angle/2. );
         dori.w() = cos( angle/2. );
 
+        odom_x += dxyz[0];
+        odom_y += dxyz[1];
+
+        odom_msg.pose.pose.position.x = odom_x;
+        odom_msg.pose.pose.position.y = odom_y;
+        odom_msg.twist.twist.linear.x = listener.linear[0];
+        odom_msg.twist.twist.linear.y = listener.linear[1];
+        odom_msg.twist.twist.linear.z = listener.linear[2];
+
         output.pose.position.x = dxyz[0];
         output.pose.position.y = dxyz[1];
         output.pose.orientation.x = dori.x();
@@ -111,6 +127,7 @@ int main(int argc, char **argv)
         // std::cout << "dxyz[1] = " << dxyz[1] << std::endl;
         
         move_publisher.publish(output);
+        odom_pub.publish(odom_msg);
         first_time = false;
 
         loop_rate.sleep();

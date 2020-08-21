@@ -12,7 +12,9 @@
     <param name="self_diagnose" value="false"/>
   </node>
 
-
+  <!-- Laikago Driver -->
   <node pkg="laikago_real" type="laikago_driver" name="laikago_ros_driver" />
+  <!-- Kinect -> GridMap Node -->
+  <node pkg="dynamic_tracker" type="kinect_to_gridmap" name="kinect_to_gridmap" />
 
 </launch>
