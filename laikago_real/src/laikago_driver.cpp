@@ -10,6 +10,7 @@ Use of this source code is governed by the MPL-2.0 license, see LICENSE.
 ///ROS Modules
 #include <ros/ros.h>
 #include <geometry_msgs/Twist.h>
+#include <geometry_msgs/PoseWithCovarianceStamped.h>
 #include <nav_msgs/Odometry.h>
 #include <sensor_msgs/Imu.h>
 
@@ -33,7 +34,6 @@ HighCmd SendHighLCM = {0};
 HighState RecvHighLCM = {0};
 unitree_legged_msgs::HighCmd SendHighROS;
 unitree_legged_msgs::HighState RecvHighROS;
-unitree_legged_msgs::IMU RecvIMUo;
 
 Control control(HIGHLEVEL);
 LCM roslcm;
@@ -51,10 +51,10 @@ void* update_loop(void* data)
 
 class Listener{
 public:
-	double dx, dy, drz;
+	double pose, dx, dy, drz;
 
 
-// Callback function for subscriber
+// Callback function for /cmd_vel subscriber
 	void twist_callback(const geometry_msgs::Twist::ConstPtr& vel_cmd)
 	{
 		dx = vel_cmd->linear.x;
@@ -65,6 +65,12 @@ public:
 		ROS_INFO("[v_z] I heard: [%s]", vel_cmd->angular.z);
 		cout << "Twist Received" << endl;
 	}
+
+    void ekf_pose_callback(const geometry_msgs::PoseWithCovarianceStamped::ConstPtr& filtered_pose)
+    {
+        pose = filtered_pose->pose;
+        cout << "Robot Pose EKF received" << endl;
+    }
 };
 
 int main( int argc, char* argv[] )
@@ -83,36 +89,44 @@ int main( int argc, char* argv[] )
 	ros::Rate loop_rate(500);
 	ros::Publisher pub = n.advertise<nav_msgs::Odometry>("odom", 1000);
     ros::Publisher odom_pub = n.advertise<sensor_msgs::Imu>("imu_data", 1000);
+    ros::Publisher filtered_odom_pub = n.advertise<nav_msgs::Odometry>("filtered_odom", 1000);
 	roslcm.SubscribeState();
 	ros::Subscriber sub = n.subscribe("/cmd_vel", 1000, &Listener::twist_callback, &listener);
+    ros::Subscriber ekf_pose_sub = n.subscribe("/robot_pose_ekf/odom_combined", 1000, &Listener::ekf_pose_callback, &listener);
 
 	pthread_t tid;
     pthread_create(&tid, NULL, update_loop, NULL);
 
     // Covariance objects
-    RunningCovariance cov_accel_, cov_rpy_, cov_gyro_;
-    Eigen::Vector3d acceler_data_, rpy_data_, gyro_data_, acceler_cov_vec, rpy_cov_vec, gyro_cov_vec, acceler_var_vec, rpy_var_vec, gyro_var_vec;
+    RunningCovariance cov_accel_, cov_rpy_, cov_gyro_, cov_pose_posit_, cov_pose_orient_, cov_twist_lin_, cov_twist_ang_;
+    Eigen::Vector3d acceler_data_, rpy_data_, gyro_data_, pose_posit_data_, pose_orient_data_, twist_lin_data_, twist_ang_data_, acceler_cov_vec, rpy_cov_vec, gyro_cov_vec, pose_posit_cov_vec, pose_orient_cov_vec, twist_lin_cov_vec, twist_ang_cov_vec, acceler_var_vec, rpy_var_vec, gyro_var_vec, pose_posit_var_vec, pose_orient_var_vec, twist_lin_var_vec, twist_ang_var_vec;
     // Vars for collecting raw IMU data
     double quat_[4];
     double gyro_[3];
     double acceler_[3];
     double rpy_[3];
-    double linear_accel_cov[9]; 
+    // delete - double linear_accel_cov[9]; 
     // STILL WAITING ON UNITREE TO CORRECTLY TELL US WHICH VALUE CORRESP.
     // TO ORIENTATION
 
     sensor_msgs::Imu imu_msg;
+    nav_msgs::Odometry odom;
     // Begin Filler
     // There are some issue with the covariance calc that I am using
     // because covariance of a vector3d should be a 3x3 matrix. 
     // Note: the sensor_msgs/Imu expects a flattened version of this 3x3 matrix hence array[9]
-    imu_msg.linear_acceleration_covariance[0] = 0; imu_msg.linear_acceleration_covariance[1] = 0; imu_msg.linear_acceleration_covariance[2] = 0;
-    imu_msg.linear_acceleration_covariance[3] = 0; imu_msg.linear_acceleration_covariance[4] = 0; imu_msg.linear_acceleration_covariance[5] = 0;
-    imu_msg.linear_acceleration_covariance[6] = 0; imu_msg.linear_acceleration_covariance[7] = 0; imu_msg.linear_acceleration_covariance[8] = 0;
 
-    imu_msg.orientation_covariance[0] = 0; imu_msg.orientation_covariance[1] = 0; imu_msg.orientation_covariance[2] = 0;
-    imu_msg.orientation_covariance[3] = 0; imu_msg.orientation_covariance[4] = 0; imu_msg.orientation_covariance[5] = 0;
-    imu_msg.orientation_covariance[6] = 0; imu_msg.orientation_covariance[7] = 0; imu_msg.orientation_covariance[8] = 0;
+    // for loop to initialize covariance matrices
+    for (int i = 0; i < 9; i++){
+        imu_msg.linear_acceleration_covariance[i] = 0;
+        imu_msg.orientation_covariance[i] = 0;
+        odom.pose.covariance[i] = 0;
+        odom.twist.covariance[i] = 0;
+    }
+    for (int i=9; i < 36; i++){
+        odom.pose.covariance[i] = 0;
+        odom.twist.covariance[i] = 0;
+    }
 
     while (ros::ok()){
 
@@ -204,7 +218,6 @@ int main( int argc, char* argv[] )
         //// Local Odom here //////      Odometry msg:i
         //////////////////////////       frame_id = where position and orientation are (map or odom)
     	// 				                 child_frame_id = twist data (base_link)
-        nav_msgs::Odometry odom;
         odom.header.stamp = ros::Time::now();
         odom.header.frame_id = "odom";
         //robot's position in x,y, and z
@@ -214,9 +227,7 @@ int main( int argc, char* argv[] )
         odom.pose.pose.position.y = RecvHighROS.sidePosition;
         odom.pose.pose.position.z = 0.0;
         // robot's heading
-	// odom.pose.pose.orientation = RecvIMU.quaternion;
-	// Did Ryan do this line above? Not good to push code that doesnt build
-
+	    odom.pose.pose.orientation = RecvHighROS.imu.quaternion;
 
         // odom.child_frame_id = ?? 
         // linear speed
@@ -229,9 +240,94 @@ int main( int argc, char* argv[] )
         odom.twist.twist.angular.y = 0.0;
         odom.twist.twist.angular.z = RecvHighROS.rotateSpeed;
 
-        // include covariance matrix in odom topic??
+        // convert raw data to Eigen
+        ////position
+        pose_posit_data_[0] = RecvHighROS.forwardPosition;
+        pose_posit_data_[1] = RecvHighROS.sidePosition;
+        pose_posit_data_[2] = 0.0;
+        ////orientation same as rpy_
+        pose_orient_data_[0] = rpy_[0];
+        pose_orient_data_[1] = rpy_[1];
+        pose_orient_data[2] = rpy_[2];
+        ////twist
+        twist_lin_data_[0] = RecvHighROS.forwardSpeed;
+        twist_lin_data_[1] = RecvHighROS.sideSpeed;
+        twist_lin_data_[2] = 0.0;
+        twist_ang_data_[0] = 0.0;
+        twist_ang_data_[1] = 0.0;
+        twist_ang_data_[2] = RecvHighROS.rotateSpeed;
+
+        //Get covariance for Eigen data
+        pose_posit_cov_vec = cov_pose_posit_.Push(pose_posit_data_);
+        pose_orient_cov_vec = cov_pose_orient_.Push(pose_orient_data_);
+        twist_lin_cov_vec = cov_twist_lin_.Push(twist_lin_data_);
+        twist_ang_cov_vec = cov_twist_ang_.Push(twist_ang_data_);
+
+        //Get variance for Eigen data
+        pose_posit_var_vec = cov_pose_posit_.Variance();
+        pose_orient_var_vec = cov_pose_orient_.Variance();
+        twist_lin_var_vec = cov_twist_lin_.Variance();
+        twist_ang_var_vec = cov_twist_ang_.Variance();
+
+        // COLLECT COVARIANCE DATA FOR ODOM
+        //// Covariance of Pose
+        //////// Collect covariance values for position
+        odom.covariance[1] = odom.covariance[3] = pose_posit_cov_vec[0];
+        odom.covariance[5] = odom.covariance[7] = pose_posit_cov_vec[1];
+        odom.covariance[2] = odom.covariance[6] = pose_posit_cov_vec[2];
+        //////// Collect variance values for position
+        odom.covariance[0] = pose_posit_var_vec[0];
+        odom.covariance[4] = pose_posit_var_vec[1];
+        odom.covariance[8] = pose_posit_var_vec[2];
+
+        // Leaving odom.covariance[9] through odom.covariance[27] equal to zero for now.
+
+        //////// Collect covariance values for orientation
+        odom.covariance[28] = odom.covariance[30] = pose_orient_cov_vec[0];
+        odom.covariance[32] = odom.covariance[34] = pose_orient_cov_vec[1];
+        odom.covariance[29] = odom.covariance[33] = pose_orient_cov_vec[2];
+        //////// Collect variance values for orientation
+        odom.covariance[27] = pose_orient_var_vec[0];
+        odom.covariance[31] = pose_orient_var_vec[1];
+        odom.covariance[35] = pose_orient_var_vec[2];
+
+		// COLLECT COVARIANCE DATA FOR TWIST
+        //// Covariance of Twist
+        //////// Collect covariance values for linear velocity
+		twist.covariance[1] = twist.covariance[3] = twist_lin_cov_vec[0];       
+        twist.covariance[5] = twist.covariance[7] = twist_lin_cov_vec[1];
+        twist.covariance[2] = twist.covariance[6] = twist_lin_cov_vec[2];
+        //////// Collect variance values for linear velocity
+        twist.covariance[0] = twist_lin_var_vec[0];
+        twist.covariance[4] = twist_lin_var_vec[1];
+        twist.covariance[8] = twist_lin_var_vec[2];
+
+        // Leaving twist.covariance[9] through twist.covariance[27] equal to zero for now.
+
+        //////// Collect covariance values for angular velocity
+        twist.covariance[28] = twist.covariance[30] = twist_ang_cov_vec[0]; 
+        twist.covariance[32] = twist.covariance[34] = twist_ang_cov_vec[1];
+        twist.covariance[29] = twist.covariance[33] = twist_ang_cov_vec[2];
+        //////// Collect variance values for orientation
+        twist.covariance[27] = twist_ang_var_vec[0]; 
+        twist.covariance[31] = twist_ang_var_vec[1];
+        twist.covariance[35] = twist_ang_var_vec[2];
 
         pub.publish(odom);
+
+ 		//////////////////////////////
+        // Filtered odom publish ////
+        ////////////////////////////
+
+        nav_msgs::Odometry filtered_odom;
+
+        filtere_odom.header.stamp = ros::Time::now();
+        odom.header.frame_id = "filtered_odom";
+        //odom.child_frame_id = ??
+
+        filtered_odom.pose = listener.pose;
+
+        pub.publish(filtered_odom);
 
         //////////////////////////////
         // command Laikago to move //
@@ -291,6 +387,3 @@ int main( int argc, char* argv[] )
     }
     return 0;            	    
 }
-
-
-
