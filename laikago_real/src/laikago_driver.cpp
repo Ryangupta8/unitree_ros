@@ -11,6 +11,8 @@ Use of this source code is governed by the MPL-2.0 license, see LICENSE.
 #include <ros/ros.h>
 #include <geometry_msgs/Twist.h>
 #include <geometry_msgs/PoseWithCovarianceStamped.h>
+#include <geometry_msgs/PoseWithCovariance.h>
+#include <geometry_msgs/Pose.h>
 #include <nav_msgs/Odometry.h>
 #include <sensor_msgs/Imu.h>
 
@@ -51,7 +53,8 @@ void* update_loop(void* data)
 
 class Listener{
 public:
-	double pose, dx, dy, drz;
+	double dx, dy, drz; 
+    geometry_msgs::PoseWithCovariance pose;
 
 
 // Callback function for /cmd_vel subscriber
@@ -227,7 +230,10 @@ int main( int argc, char* argv[] )
         odom.pose.pose.position.y = RecvHighROS.sidePosition;
         odom.pose.pose.position.z = 0.0;
         // robot's heading
-	    odom.pose.pose.orientation = RecvHighROS.imu.quaternion;
+	    odom.pose.pose.orientation.x = RecvHighROS.imu.quaternion[0]; // here
+        odom.pose.pose.orientation.y = RecvHighROS.imu.quaternion[1];
+        odom.pose.pose.orientation.z = RecvHighROS.imu.quaternion[2];
+        odom.pose.pose.orientation.w = RecvHighROS.imu.quaternion[3];
 
         // odom.child_frame_id = ?? 
         // linear speed
@@ -248,7 +254,7 @@ int main( int argc, char* argv[] )
         ////orientation same as rpy_
         pose_orient_data_[0] = rpy_[0];
         pose_orient_data_[1] = rpy_[1];
-        pose_orient_data[2] = rpy_[2];
+        pose_orient_data_[2] = rpy_[2];
         ////twist
         twist_lin_data_[0] = RecvHighROS.forwardSpeed;
         twist_lin_data_[1] = RecvHighROS.sideSpeed;
@@ -272,46 +278,45 @@ int main( int argc, char* argv[] )
         // COLLECT COVARIANCE DATA FOR ODOM
         //// Covariance of Pose
         //////// Collect covariance values for position
-        odom.covariance[1] = odom.covariance[3] = pose_posit_cov_vec[0];
-        odom.covariance[5] = odom.covariance[7] = pose_posit_cov_vec[1];
-        odom.covariance[2] = odom.covariance[6] = pose_posit_cov_vec[2];
-        //////// Collect variance values for position
-        odom.covariance[0] = pose_posit_var_vec[0];
-        odom.covariance[4] = pose_posit_var_vec[1];
-        odom.covariance[8] = pose_posit_var_vec[2];
+        odom.pose.covariance[1] = odom.pose.covariance[3] = pose_posit_cov_vec[0]; // here
+        odom.pose.covariance[5] = odom.pose.covariance[7] = pose_posit_cov_vec[1];
+        odom.pose.covariance[2] = odom.pose.covariance[6] = pose_posit_cov_vec[2];
+        odom.pose.covariance[0] = pose_posit_var_vec[0];
+        odom.pose.covariance[4] = pose_posit_var_vec[1];
+        odom.pose.covariance[8] = pose_posit_var_vec[2];
 
         // Leaving odom.covariance[9] through odom.covariance[27] equal to zero for now.
 
         //////// Collect covariance values for orientation
-        odom.covariance[28] = odom.covariance[30] = pose_orient_cov_vec[0];
-        odom.covariance[32] = odom.covariance[34] = pose_orient_cov_vec[1];
-        odom.covariance[29] = odom.covariance[33] = pose_orient_cov_vec[2];
+        odom.pose.covariance[28] = odom.pose.covariance[30] = pose_orient_cov_vec[0];
+        odom.pose.covariance[32] = odom.pose.covariance[34] = pose_orient_cov_vec[1];
+        odom.pose.covariance[29] = odom.pose.covariance[33] = pose_orient_cov_vec[2];
         //////// Collect variance values for orientation
-        odom.covariance[27] = pose_orient_var_vec[0];
-        odom.covariance[31] = pose_orient_var_vec[1];
-        odom.covariance[35] = pose_orient_var_vec[2];
+        odom.pose.covariance[27] = pose_orient_var_vec[0];
+        odom.pose.covariance[31] = pose_orient_var_vec[1];
+        odom.pose.covariance[35] = pose_orient_var_vec[2];
 
 		// COLLECT COVARIANCE DATA FOR TWIST
         //// Covariance of Twist
         //////// Collect covariance values for linear velocity
-		twist.covariance[1] = twist.covariance[3] = twist_lin_cov_vec[0];       
-        twist.covariance[5] = twist.covariance[7] = twist_lin_cov_vec[1];
-        twist.covariance[2] = twist.covariance[6] = twist_lin_cov_vec[2];
+		odom.twist.covariance[1] = odom.twist.covariance[3] = twist_lin_cov_vec[0];       
+        odom.twist.covariance[5] = odom.twist.covariance[7] = twist_lin_cov_vec[1];
+        odom.twist.covariance[2] = odom.twist.covariance[6] = twist_lin_cov_vec[2];
         //////// Collect variance values for linear velocity
-        twist.covariance[0] = twist_lin_var_vec[0];
-        twist.covariance[4] = twist_lin_var_vec[1];
-        twist.covariance[8] = twist_lin_var_vec[2];
+        odom.twist.covariance[0] = twist_lin_var_vec[0];
+        odom.twist.covariance[4] = twist_lin_var_vec[1];
+        odom.twist.covariance[8] = twist_lin_var_vec[2];
 
         // Leaving twist.covariance[9] through twist.covariance[27] equal to zero for now.
 
         //////// Collect covariance values for angular velocity
-        twist.covariance[28] = twist.covariance[30] = twist_ang_cov_vec[0]; 
-        twist.covariance[32] = twist.covariance[34] = twist_ang_cov_vec[1];
-        twist.covariance[29] = twist.covariance[33] = twist_ang_cov_vec[2];
+        odom.twist.covariance[28] = odom.twist.covariance[30] = twist_ang_cov_vec[0]; 
+        odom.twist.covariance[32] = odom.twist.covariance[34] = twist_ang_cov_vec[1];
+        odom.twist.covariance[29] = odom.twist.covariance[33] = twist_ang_cov_vec[2];
         //////// Collect variance values for orientation
-        twist.covariance[27] = twist_ang_var_vec[0]; 
-        twist.covariance[31] = twist_ang_var_vec[1];
-        twist.covariance[35] = twist_ang_var_vec[2];
+        odom.twist.covariance[27] = twist_ang_var_vec[0]; 
+        odom.twist.covariance[31] = twist_ang_var_vec[1];
+        odom.twist.covariance[35] = twist_ang_var_vec[2];
 
         pub.publish(odom);
 
@@ -321,7 +326,7 @@ int main( int argc, char* argv[] )
 
         nav_msgs::Odometry filtered_odom;
 
-        filtere_odom.header.stamp = ros::Time::now();
+        filtered_odom.header.stamp = ros::Time::now();
         odom.header.frame_id = "filtered_odom";
         //odom.child_frame_id = ??
 
@@ -342,44 +347,16 @@ int main( int argc, char* argv[] )
         SendHighROS.pitch = 0;
         SendHighROS.yaw = 0;
 
-        if(motiontime>1000 && motiontime<1500){
-            SendHighROS.roll = 0.5f;
+        SendHighROS.mode = 2;
+        if(listener.dx > 0.8) {
+            SendHighROS.forwardSpeed = 0.8;
         }
-
-        if(motiontime>1500 && motiontime<2000){
-            SendHighROS.pitch = 0.3f;
-        }
-
-        if(motiontime>2000 && motiontime<2500){
-            SendHighROS.yaw = 0.3f;
-        }
-
-        if(motiontime>2500 && motiontime<3000){
-            SendHighROS.bodyHeight = -0.3f;
-        }
-
-        if(motiontime>3000 && motiontime<3500){
-            SendHighROS.bodyHeight = 0.3f;
-        }
-
-        if(motiontime>3500 && motiontime<4000){
-            SendHighROS.bodyHeight = 0.0f;
-        }
-
-        if(motiontime>4000 && motiontime<5000){
-            SendHighROS.mode = 2;
-        }
-
-        if (motiontime>5000 && motiontime<21000){
-        	SendHighROS.forwardSpeed = listener.dx;
-        	SendHighROS.sideSpeed = listener.dy;
-        	SendHighROS.rotateSpeed = listener.drz;
-        }
-
-        if(motiontime>20000 && motiontime<21000){
-            SendHighROS.mode = 1;
-        }
-
+        else{
+            SendHighROS.forwardSpeed = listener.dx;
+        }     
+        SendHighROS.sideSpeed = listener.dy;
+        SendHighROS.rotateSpeed = listener.drz;
+        
         memcpy(&SendHighLCM, &SendHighROS, sizeof(HighCmd));
         roslcm.Send(SendHighLCM);
         ros::spinOnce();
