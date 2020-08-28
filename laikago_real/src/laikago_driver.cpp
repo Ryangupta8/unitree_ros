@@ -333,7 +333,7 @@ int main( int argc, char* argv[] )
 
         filtered_odom.pose = listener.pose;
 
-        pub.publish(filtered_odom);
+        filtered_odom_pub.publish(filtered_odom);
 
         //////////////////
         // Laikago SDK //

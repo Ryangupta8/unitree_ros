@@ -282,7 +282,7 @@ int main(int argc, char *argv[])
         odom.twist.covariance[31] = twist_ang_var_vec[1];
         odom.twist.covariance[35] = twist_ang_var_vec[2];
 
-        pub.publish(odom);
+        filtered_odom_pub.publish(odom);
 
         ///////////////////////////////
         // Publish robot_pose_ekf ////
@@ -295,7 +295,7 @@ int main(int argc, char *argv[])
 
         filtered_odom.pose = listener.pose;
 
-        pub.publish(filtered_odom);
+        filtered_odom_pub.publish(filtered_odom);
 
         ////////////////////////
         // Unitre Legged SDK //
