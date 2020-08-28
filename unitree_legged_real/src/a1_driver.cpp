@@ -3,71 +3,53 @@ Copyright (c) 2018-2019, Unitree Robotics.Co.Ltd. All rights reserved.
 Use of this source code is governed by the MPL-2.0 license, see LICENSE.
 ************************************************************************/
 
-//Author: Nick Machak
-//Co-author: Ryan Gupta
-//Co-author: Cem Karamanli
+// Author: Ryan Gupta
+// Co-author: Nick Machak
 
-///ROS Modules
-#include <ros/ros.h>
-#include <geometry_msgs/Twist.h>
-#include <geometry_msgs/PoseWithCovarianceStamped.h>
-#include <geometry_msgs/PoseWithCovariance.h>
-#include <geometry_msgs/Pose.h>
-#include <nav_msgs/Odometry.h>
-#include <sensor_msgs/Imu.h>
-
-#include "math_utils/running_covariance.h"
-
-//Laikago SDK Modules
 #include <pthread.h>
 #include <boost/thread.hpp>
 #include <boost/thread/mutex.hpp>
 #include <unitree_legged_msgs/HighCmd.h>
 #include <unitree_legged_msgs/HighState.h>
-#include "laikago_sdk/laikago_sdk.hpp"
+#include "unitree_legged_sdk/unitree_legged_sdk.h"
+#include "convert.h"
 
-// Command Laikago to drive, as per walk_mode.cpp
+///ROS Modules
+#include <ros/ros.h>
+#include <geometry_msgs/Twist.h>
+#include <geometry_msgs/PoseWithCovarianceStamped.h>
+#include <nav_msgs/Odometry.h>
+#include <sensor_msgs/Imu.h>
 
-using namespace laikago;
+#include "math_utils/running_covariance.h"
+
+using namespace UNITREE_LEGGED_SDK;
 using namespace std;
 
-static long motiontime = 0;
-HighCmd SendHighLCM = {0};
-HighState RecvHighLCM = {0};
-unitree_legged_msgs::HighCmd SendHighROS;
-unitree_legged_msgs::HighState RecvHighROS;
 
-Control control(HIGHLEVEL);
-LCM roslcm;
-boost::mutex mutex;
-
-void* update_loop(void* data)
+void* update_loop(void* param)
 {
+    LCM *data = (LCM *)param;
     while(ros::ok){
-        boost::mutex::scoped_lock lock(mutex);
-        roslcm.Recv();
-        lock.unlock();
+        data->Recv();
         usleep(2000);
     }
 }
 
 class Listener{
 public:
-	double dx, dy, drz; 
+    double dx, dy, drz; 
     geometry_msgs::PoseWithCovariance pose;
 
 
 // Callback function for /cmd_vel subscriber
-	void twist_callback(const geometry_msgs::Twist::ConstPtr& vel_cmd)
-	{
-		dx = vel_cmd->linear.x;
-		dy = vel_cmd->linear.y;
-		drz = vel_cmd->angular.z;
-		ROS_INFO("[v_x] I heard: [%s]", vel_cmd->linear.x);
-		ROS_INFO("[v_y] I heard: [%s]", vel_cmd->linear.y);
-		ROS_INFO("[v_z] I heard: [%s]", vel_cmd->angular.z);
-		cout << "Twist Received" << endl;
-	}
+    void twist_callback(const geometry_msgs::Twist::ConstPtr& vel_cmd)
+    {
+        dx = vel_cmd->linear.x;
+        dy = vel_cmd->linear.y;
+        drz = vel_cmd->angular.z;
+        cout << "Twist Received" << endl;
+    }
 
     void ekf_pose_callback(const geometry_msgs::PoseWithCovarianceStamped::ConstPtr& filtered_pose)
     {
@@ -76,30 +58,25 @@ public:
     }
 };
 
-int main( int argc, char* argv[] )
+int main(int argc, char *argv[])
 {
     std::cout << "WARNING: Control level is set to HIGH-level." << std::endl
               << "Make sure the robot is standing on the ground." << std::endl
               << "Press Enter to continue..." << std::endl;
     std::cin.ignore();
 
-	ros::init(argc, argv, "laikago_ros_driver");
-	
-	ros::NodeHandle n;
+    ros::init(argc, argv, "a1_driver_node");
+    ros::NodeHandle n;
+    ros::Rate loop_rate(500);
 
-	Listener listener;
-	
-	ros::Rate loop_rate(500);
-	ros::Publisher pub = n.advertise<nav_msgs::Odometry>("odom", 1000);
+    Listener listener;
+
+    // Publisher Subscriber
+    ros::Publisher pub = n.advertise<nav_msgs::Odometry>("odom", 1000);
     ros::Publisher odom_pub = n.advertise<sensor_msgs::Imu>("imu_data", 1000);
     ros::Publisher filtered_odom_pub = n.advertise<nav_msgs::Odometry>("filtered_odom", 1000);
-	roslcm.SubscribeState();
-	ros::Subscriber sub = n.subscribe("/cmd_vel", 1000, &Listener::twist_callback, &listener);
+    ros::Subscriber sub = n.subscribe("/cmd_vel", 1000, &Listener::twist_callback, &listener);
     ros::Subscriber ekf_pose_sub = n.subscribe("/robot_pose_ekf/odom_combined", 1000, &Listener::ekf_pose_callback, &listener);
-
-	pthread_t tid;
-    pthread_create(&tid, NULL, update_loop, NULL);
-
     // Covariance objects
     RunningCovariance cov_accel_, cov_rpy_, cov_gyro_, cov_pose_posit_, cov_pose_orient_, cov_twist_lin_, cov_twist_ang_;
     Eigen::Vector3d acceler_data_, rpy_data_, gyro_data_, pose_posit_data_, pose_orient_data_, twist_lin_data_, twist_ang_data_, acceler_cov_vec, rpy_cov_vec, gyro_cov_vec, pose_posit_cov_vec, pose_orient_cov_vec, twist_lin_cov_vec, twist_ang_cov_vec, acceler_var_vec, rpy_var_vec, gyro_var_vec, pose_posit_var_vec, pose_orient_var_vec, twist_lin_var_vec, twist_ang_var_vec;
@@ -108,18 +85,10 @@ int main( int argc, char* argv[] )
     double gyro_[3];
     double acceler_[3];
     double rpy_[3];
-    // delete - double linear_accel_cov[9]; 
-    // STILL WAITING ON UNITREE TO CORRECTLY TELL US WHICH VALUE CORRESP.
-    // TO ORIENTATION
-
+    // ROS Msgs
     sensor_msgs::Imu imu_msg;
     nav_msgs::Odometry odom;
-    // Begin Filler
-    // There are some issue with the covariance calc that I am using
-    // because covariance of a vector3d should be a 3x3 matrix. 
-    // Note: the sensor_msgs/Imu expects a flattened version of this 3x3 matrix hence array[9]
-
-    // for loop to initialize covariance matrices
+    // Initialize covariance matrices
     for (int i = 0; i < 9; i++){
         imu_msg.linear_acceleration_covariance[i] = 0;
         imu_msg.orientation_covariance[i] = 0;
@@ -131,18 +100,29 @@ int main( int argc, char* argv[] )
         odom.twist.covariance[i] = 0;
     }
 
-    while (ros::ok()){
+    // SetLevel(HIGHLEVEL);
+    long motiontime = 0;
+    HighCmd SendHighLCM = {0};
+    HighState RecvHighLCM = {0};
+    unitree_legged_msgs::HighCmd SendHighROS;
+    unitree_legged_msgs::HighState RecvHighROS;
+    LCM roslcm;
 
+    roslcm.SubscribeState();
+
+    pthread_t tid;
+    pthread_create(&tid, NULL, update_loop, &roslcm);
+
+    while (ros::ok()){
         motiontime = motiontime+2;
         roslcm.Get(RecvHighLCM);
-        memcpy(&RecvHighROS, &RecvHighLCM, sizeof(HighState));
-        printf("%f\n",  RecvHighROS.forwardSpeed);
+        RecvHighROS = ToRos(RecvHighLCM);
 
         ////////////////////////////
         ////// IMU Here ///////////
         //////////////////////////
-    	// Get IMU data
-    	quat_[0] = RecvHighROS.imu.quaternion[0]; quat_[1] = RecvHighROS.imu.quaternion[1]; 
+        // Get IMU data
+        quat_[0] = RecvHighROS.imu.quaternion[0]; quat_[1] = RecvHighROS.imu.quaternion[1]; 
         quat_[2] = RecvHighROS.imu.quaternion[2]; quat_[3] = RecvHighROS.imu.quaternion[3];
         
         gyro_[0] = RecvHighROS.imu.gyroscope[0]; gyro_[1] = RecvHighROS.imu.gyroscope[1]; gyro_[2] = RecvHighROS.imu.gyroscope[2];
@@ -152,11 +132,7 @@ int main( int argc, char* argv[] )
 
         rpy_[0] = RecvHighROS.imu.rpy[0]; rpy_[1] = RecvHighROS.imu.rpy[1]; rpy_[2] = RecvHighROS.imu.rpy[2];
 
-        // robot_localization assumes East North Up (ENU) 
-        // frame for all IMU data
-        // i.e. y = magnetic north, x = east, z = up
-        imu_msg.header.frame_id = "base_link"; 
-        
+        imu_msg.header.frame_id = "base_link";  
         // IMU Orientation                   
         imu_msg.orientation.x = quat_[0];
         imu_msg.orientation.y = quat_[1];
@@ -170,7 +146,7 @@ int main( int argc, char* argv[] )
         imu_msg.angular_velocity.x = gyro_[0]; 
         imu_msg.angular_velocity.y = gyro_[1];
         imu_msg.angular_velocity.z = gyro_[2];
-    	
+
         // Convert raw IMU data to Eigen
         acceler_data_[0] = acceler_[0]; acceler_data_[1] = acceler_[1]; acceler_data_[2] = acceler_[2];
         rpy_data_[0] = rpy_[0]; rpy_data_[1] = rpy_[1]; rpy_data_[2] = rpy_[2];
@@ -185,7 +161,6 @@ int main( int argc, char* argv[] )
         rpy_var_vec = cov_rpy_.Variance();
         gyro_var_vec = cov_gyro_.Variance();
 
-        // COLLECT COVARIANCE DATA FOR IMU_MSG
         //// Collect covariance values for linear acceleration
         imu_msg.linear_acceleration_covariance[1] = imu_msg.linear_acceleration_covariance[3] = acceler_cov_vec[0];
         imu_msg.linear_acceleration_covariance[5] = imu_msg.linear_acceleration_covariance[7] = acceler_cov_vec[1];
@@ -211,31 +186,20 @@ int main( int argc, char* argv[] )
         imu_msg.angular_velocity_covariance[4] = gyro_var_vec[1];
         imu_msg.angular_velocity_covariance[8] = gyro_var_vec[2];
 
-        // Todo in IMU:
-        // 1) Get correct frames
-        // 2) Get correct covariance
-    	
         odom_pub.publish(imu_msg);
-	
-    	////////////////////////////
-        //// Local Odom here //////      Odometry msg:i
-        //////////////////////////       frame_id = where position and orientation are (map or odom)
-    	// 				                 child_frame_id = twist data (base_link)
+
+        ////////////////////////////
+        //// Local Odom here //////      
+        //////////////////////////       
         odom.header.stamp = ros::Time::now();
         odom.header.frame_id = "odom";
-        //robot's position in x,y, and z
-        //nav_msgs/Odometry -> float64
-        //RecvHighROS -> float32
+        // robot's position in x, y, z
         odom.pose.pose.position.x = RecvHighROS.forwardPosition;
         odom.pose.pose.position.y = RecvHighROS.sidePosition;
         odom.pose.pose.position.z = 0.0;
         // robot's heading
-	    odom.pose.pose.orientation.x = RecvHighROS.imu.quaternion[0]; // here
-        odom.pose.pose.orientation.y = RecvHighROS.imu.quaternion[1];
-        odom.pose.pose.orientation.z = RecvHighROS.imu.quaternion[2];
-        odom.pose.pose.orientation.w = RecvHighROS.imu.quaternion[3];
+        odom.pose.pose.orientation = RecvHighROS.imu.quaternion;
 
-        // odom.child_frame_id = ?? 
         // linear speed
         odom.twist.twist.linear.x = RecvHighROS.forwardSpeed;
         odom.twist.twist.linear.y = RecvHighROS.sideSpeed;
@@ -247,15 +211,15 @@ int main( int argc, char* argv[] )
         odom.twist.twist.angular.z = RecvHighROS.rotateSpeed;
 
         // convert raw data to Eigen
-        ////position
+        //// position
         pose_posit_data_[0] = RecvHighROS.forwardPosition;
         pose_posit_data_[1] = RecvHighROS.sidePosition;
         pose_posit_data_[2] = 0.0;
-        ////orientation same as rpy_
+        //// orientation same as rpy_
         pose_orient_data_[0] = rpy_[0];
         pose_orient_data_[1] = rpy_[1];
-        pose_orient_data_[2] = rpy_[2];
-        ////twist
+        pose_orient_data[2] = rpy_[2];
+        //// twist
         twist_lin_data_[0] = RecvHighROS.forwardSpeed;
         twist_lin_data_[1] = RecvHighROS.sideSpeed;
         twist_lin_data_[2] = 0.0;
@@ -296,10 +260,10 @@ int main( int argc, char* argv[] )
         odom.pose.covariance[31] = pose_orient_var_vec[1];
         odom.pose.covariance[35] = pose_orient_var_vec[2];
 
-		// COLLECT COVARIANCE DATA FOR TWIST
+        // COLLECT COVARIANCE DATA FOR TWIST
         //// Covariance of Twist
         //////// Collect covariance values for linear velocity
-		odom.twist.covariance[1] = odom.twist.covariance[3] = twist_lin_cov_vec[0];       
+        odom.twist.covariance[1] = odom.twist.covariance[3] = twist_lin_cov_vec[0];       
         odom.twist.covariance[5] = odom.twist.covariance[7] = twist_lin_cov_vec[1];
         odom.twist.covariance[2] = odom.twist.covariance[6] = twist_lin_cov_vec[2];
         //////// Collect variance values for linear velocity
@@ -328,20 +292,19 @@ int main( int argc, char* argv[] )
 
         filtered_odom.header.stamp = ros::Time::now();
         odom.header.frame_id = "filtered_odom";
-        // odom.child_frame_id used for twist part of this msg
-        // which is unused by AMRL code 
 
         filtered_odom.pose = listener.pose;
 
         pub.publish(filtered_odom);
 
-        //////////////////
-        // Laikago SDK //
-        ////////////////
+        ////////////////////////
+        // Unitre Legged SDK //
+        //////////////////////
+
         SendHighROS.forwardSpeed = 0.0f;
         SendHighROS.sideSpeed = 0.0f;
         SendHighROS.rotateSpeed = 0.0f;
-        SendHighROS.forwardSpeed = 0.0f;
+        SendHighROS.bodyHeight = 0.0f;
 
         SendHighROS.mode = 0;
         SendHighROS.roll  = 0;
@@ -349,19 +312,22 @@ int main( int argc, char* argv[] )
         SendHighROS.yaw = 0;
 
         SendHighROS.mode = 2;
-        if(listener.dx > 0.8) {
-            SendHighROS.forwardSpeed = 0.8;
-        }
-        else{
-            SendHighROS.forwardSpeed = listener.dx;
-        }     
+        SendHighROS.forwardSpeed = 0.8 ;
         SendHighROS.sideSpeed = listener.dy;
         SendHighROS.rotateSpeed = listener.drz;
-        
-        memcpy(&SendHighLCM, &SendHighROS, sizeof(HighCmd));
+
+        SendHighLCM = ToLcm(SendHighROS);
         roslcm.Send(SendHighLCM);
+        
+
+        // Kill program after 10000 = 10 seconds
+        if(motiontime > 10000){
+            ros::shutdown();
+        }
+
         ros::spinOnce();
         loop_rate.sleep(); 
     }
-    return 0;            	    
+    return 0;
 }
+
