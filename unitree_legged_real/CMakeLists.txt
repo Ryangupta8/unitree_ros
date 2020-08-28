@@ -9,11 +9,13 @@ find_package(catkin REQUIRED COMPONENTS
     tf
     geometry_msgs
     unitree_legged_msgs
+    math_utils
 )
 
 find_package(Eigen3 REQUIRED)
 
-catkin_package(
+catkin_package( CATKIN_DEPENDS
+    math_utils
 )
 
 include_directories(
@@ -47,7 +49,19 @@ add_executable(walk_lcm src/exe/walk_mode.cpp)
 target_link_libraries(walk_lcm ${EXTRA_LIBS} ${catkin_LIBRARIES})
 add_dependencies(walk_lcm ${${PEOJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
+add_executable(example_walk src/exe/walk_example.cpp)
+target_link_libraries(example_walk ${EXTRA_LIBS} ${catkin_LIBRARIES})
+add_dependencies(example_walk ${${PEOJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+
 
 add_executable(lcm_server /home/knapsack/robots/unitree_legged_sdk/examples/lcm_server.cpp)
 target_link_libraries(lcm_server ${EXTRA_LIBS} ${catkin_LIBRARIES})
 add_dependencies(lcm_server ${${PEOJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+
+# add_executable(a1_driver src/a1_driver.cpp)
+# target_link_libraries(a1_driver 
+#     ${EXTRA_LIBS} 
+#     ${catkin_LIBRARIES} 
+#     ${RUNNING_COVARIANCE_LIBRARY}
+# )
+# add_dependencies(a1_driver ${${PEOJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
