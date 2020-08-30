@@ -33,7 +33,7 @@
     <group if="$(arg ahg_sim)">
       <include file="$(find ahg_gazebo_simulation)/launch/ahg_apartment.launch">
         <arg name="gui" value="true" />
-        <arg name="use_sim_time" value="true"/>
+        <arg name="use_sim_time" value="false"/>
       </include>
     </group>
 

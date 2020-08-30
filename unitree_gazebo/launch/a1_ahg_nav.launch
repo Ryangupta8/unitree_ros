@@ -19,6 +19,7 @@
      <arg name="rname" value="a1"/>
      <arg name="x_pos" value="8.0"/>
      <arg name="y_pos" value="-2.0"/>
+     <arg name="use_sim_time" value="false"/>
      <arg name="z_pos" value="0.2"/>
   </include>
 
