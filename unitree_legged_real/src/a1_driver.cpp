@@ -198,7 +198,10 @@ int main(int argc, char *argv[])
         odom.pose.pose.position.y = RecvHighROS.sidePosition;
         odom.pose.pose.position.z = 0.0;
         // robot's heading
-        odom.pose.pose.orientation = RecvHighROS.imu.quaternion;
+        odom.pose.pose.orientation.x = RecvHighROS.imu.quaternion[0]; 
+        odom.pose.pose.orientation.y = RecvHighROS.imu.quaternion[1];
+        odom.pose.pose.orientation.z = RecvHighROS.imu.quaternion[2];
+        odom.pose.pose.orientation.w = RecvHighROS.imu.quaternion[3];
 
         // linear speed
         odom.twist.twist.linear.x = RecvHighROS.forwardSpeed;
@@ -218,7 +221,7 @@ int main(int argc, char *argv[])
         //// orientation same as rpy_
         pose_orient_data_[0] = rpy_[0];
         pose_orient_data_[1] = rpy_[1];
-        pose_orient_data[2] = rpy_[2];
+        pose_orient_data_[2] = rpy_[2];
         //// twist
         twist_lin_data_[0] = RecvHighROS.forwardSpeed;
         twist_lin_data_[1] = RecvHighROS.sideSpeed;
