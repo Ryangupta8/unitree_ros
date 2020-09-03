@@ -71,8 +71,8 @@ int main(int argc, char **argv)
     ros::Rate loop_rate(100);
 
     // Odometry Vars
-    double x = 0.0;
-    double y = 0.0;
+    double x = 8.0;
+    double y = -2.0;
     double th = 0.0;
 
     tf::TransformBroadcaster odom_broadcaster;
@@ -107,20 +107,20 @@ int main(int argc, char **argv)
 
         //compute odometry in a typical way given the velocities of the robot
         double dt = (current_time - last_time).toSec();
-        double delta_x = (listener.linear[0] * cos(listener.angular[2]) - listener.linear[1] * sin(listener.angular[2])) * dt;
-        double delta_y = (listener.linear[0] * sin(listener.angular[2]) + listener.linear[1] * cos(listener.angular[2])) * dt;
+        double delta_x = (listener.linear[0] * cos(th) - listener.linear[1] * sin(th)) * dt;
+        double delta_y = (listener.linear[0] * sin(th) + listener.linear[1] * cos(th)) * dt;
         double delta_th = listener.angular[2] * dt;
 
-        // Get AngleAxis for rotation
-        conversion.axis() = {0, 0, 1}; 
-        conversion.angle() = listener.angular[2];//delta_th; //listener.angular[2];
+        // // Get AngleAxis for rotation
+        // conversion.axis() = {0, 0, 1}; 
+        // conversion.angle() = delta_th; //listener.angular[2];
   
-        // Convert result to Quaternion
-        double angle; angle = conversion.angle() * timestep;/////////
-        dori.x() = 0;
-        dori.y() = 0;
-        dori.z() = 1 * sin( angle/2. );
-        dori.w() = cos( angle/2. );
+        // // Convert result to Quaternion
+        // double angle; angle = conversion.angle() * timestep;/////////
+        // dori.x() = 0;
+        // dori.y() = 0;
+        // dori.z() = 1 * sin( angle/2. );
+        // dori.w() = cos( angle/2. );
 
         x += delta_x;
         y += delta_y;
@@ -161,13 +161,17 @@ int main(int argc, char **argv)
         /////////////////
         //// NAVI //////
         ///////////////
-        output.pose.position.x = delta_x;
-        output.pose.position.y = delta_y;
-        output.pose.orientation.x = dori.x();
-        output.pose.orientation.y = dori.y();
-        output.pose.orientation.z = dori.z();
-        output.pose.orientation.w = dori.w();
-        output.reference_frame = "base"; 
+        // output.pose.position.x = delta_x;
+        // output.pose.position.y = delta_y;
+        // output.pose.orientation = odom_quat;
+        // output.pose.orientation.x = dori.x();
+        // output.pose.orientation.y = dori.y();
+        // output.pose.orientation.z = dori.z();
+        // output.pose.orientation.w = dori.w();
+        output.pose.position.x = x;
+        output.pose.position.y = y;
+        output.pose.orientation = odom_quat;
+        output.reference_frame = "map"; 
         output.model_name = "a1_gazebo";
 
         last_time = current_time;
