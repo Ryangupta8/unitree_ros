@@ -6,8 +6,10 @@
 #include <string>
 #include <stdio.h>  
 #include <tf/transform_datatypes.h>
+#include <tf/transform_broadcaster.h>
 #include <std_msgs/Bool.h>
 #include "geometry_msgs/Twist.h"
+#include "geometry_msgs/Quaternion.h"
 #include <math.h>
 #include <iostream>
 #include <Eigen/Dense>
@@ -51,7 +53,7 @@ int main(int argc, char **argv)
     gazebo_msgs::ModelState output;
     nav_msgs::Odometry odom_msg;
 
-    Eigen::Vector3d dxyz, angular;
+    Eigen::Vector3d  angular;
     Eigen::AngleAxisd conversion;
     Eigen::Quaternion<double> dori;
 
@@ -68,8 +70,16 @@ int main(int argc, char **argv)
 
     ros::Rate loop_rate(100);
 
-    odom_msg.header.frame_id = "odom";
-    odom_msg.child_frame_id = "base";
+    // Odometry Vars
+    double x = 0.0;
+    double y = 0.0;
+    double th = 0.0;
+
+    tf::TransformBroadcaster odom_broadcaster;
+
+    ros::Time current_time, last_time;
+    current_time = ros::Time::now();
+    last_time = ros::Time::now();
 
     // gazebo_msgs/LinkStates is somehow not a vector of type gazebo_msgs/LinkState
     // So, the topic /gazebo/link_states does not seem to have a reference frame...
@@ -89,13 +99,21 @@ int main(int argc, char **argv)
         else{
             output.pose.position.z = 0.0;  
         } 
-        
-        // Get change of position
-        dxyz = listener.linear * timestep;
+
+        /////////////////
+        //// ODOM //////
+        ///////////////
+        current_time = ros::Time::now();
+
+        //compute odometry in a typical way given the velocities of the robot
+        double dt = (current_time - last_time).toSec();
+        double delta_x = (listener.linear[0] * cos(listener.angular[2]) - listener.linear[1] * sin(listener.angular[2])) * dt;
+        double delta_y = (listener.linear[0] * sin(listener.angular[2]) + listener.linear[1] * cos(listener.angular[2])) * dt;
+        double delta_th = listener.angular[2] * dt;
+
         // Get AngleAxis for rotation
-        conversion.axis() = {0, 0, 1};
-        angular = listener.angular * timestep ; 
-        conversion.angle() = angular[2]; //listener.angular[2];
+        conversion.axis() = {0, 0, 1}; 
+        conversion.angle() = listener.angular[2];//delta_th; //listener.angular[2];
   
         // Convert result to Quaternion
         double angle; angle = conversion.angle() * timestep;/////////
@@ -104,17 +122,47 @@ int main(int argc, char **argv)
         dori.z() = 1 * sin( angle/2. );
         dori.w() = cos( angle/2. );
 
-        odom_x += dxyz[0];
-        odom_y += dxyz[1];
+        x += delta_x;
+        y += delta_y;
+        th += delta_th;
 
-        odom_msg.pose.pose.position.x = odom_x;
-        odom_msg.pose.pose.position.y = odom_y;
+        //since all odometry is 6DOF we'll need a quaternion created from yaw
+        geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromYaw(th);
+
+        //first, we'll publish the transform over tf
+        geometry_msgs::TransformStamped odom_trans;
+        odom_trans.header.stamp = current_time;
+        odom_trans.header.frame_id = "odom";
+        odom_trans.child_frame_id = "base";
+
+        odom_trans.transform.translation.x = x;
+        odom_trans.transform.translation.y = y;
+        odom_trans.transform.translation.z = 0.0;
+        odom_trans.transform.rotation = odom_quat;
+
+        //send the transform
+        odom_broadcaster.sendTransform(odom_trans);
+
+        odom_msg.header.stamp = current_time;
+        odom_msg.header.frame_id = "odom";
+
+        //set the position
+        odom_msg.pose.pose.position.x = x;
+        odom_msg.pose.pose.position.y = y;
+        odom_msg.pose.pose.position.z = 0.0;
+        odom_msg.pose.pose.orientation = odom_quat;
+
+        //set the velocity
+        odom_msg.child_frame_id = "base";
         odom_msg.twist.twist.linear.x = listener.linear[0];
         odom_msg.twist.twist.linear.y = listener.linear[1];
-        odom_msg.twist.twist.linear.z = listener.linear[2];
+        odom_msg.twist.twist.angular.z = listener.angular[2];
 
-        output.pose.position.x = dxyz[0];
-        output.pose.position.y = dxyz[1];
+        /////////////////
+        //// NAVI //////
+        ///////////////
+        output.pose.position.x = delta_x;
+        output.pose.position.y = delta_y;
         output.pose.orientation.x = dori.x();
         output.pose.orientation.y = dori.y();
         output.pose.orientation.z = dori.z();
@@ -122,10 +170,8 @@ int main(int argc, char **argv)
         output.reference_frame = "base"; 
         output.model_name = "a1_gazebo";
 
-        // std::cout << "angular[2] = " << angular[2] << std::endl;
-        // std::cout << "dxyz[0] = " << dxyz[0] << std::endl;
-        // std::cout << "dxyz[1] = " << dxyz[1] << std::endl;
-        
+        last_time = current_time;
+
         move_publisher.publish(output);
         odom_pub.publish(odom_msg);
         first_time = false;
