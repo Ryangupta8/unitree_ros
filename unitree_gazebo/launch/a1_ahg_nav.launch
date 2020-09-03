@@ -7,9 +7,9 @@
   <arg name="move_base" default="false"/>
   <arg name="graph_map_location" default="$(find amrl_maps)"/>
   <arg name="graph_map_name" default="AHG_Apartment"/>
-  <arg name="odom_topic" default="/odom"/>
+  <arg name="odom_topic" default="/correct_odom"/>
   <arg name="scan_topic" default="/scan"/>
-  <arg name="localization_topic" default="/amcl_pose"/>
+  <arg name="localization_topic" default="/localization"/>
 
 
   <param name="use_sim_time" value="false"/>
@@ -19,7 +19,7 @@
      <arg name="rname" value="a1"/>
      <arg name="x_pos" value="8.0"/>
      <arg name="y_pos" value="-2.0"/>
-     <arg name="use_sim_time" value="false"/>
+     <arg name="use_sim_time" value="true"/>
      <arg name="z_pos" value="0.2"/>
   </include>
 
