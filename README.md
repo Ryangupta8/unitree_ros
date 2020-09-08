@@ -1,4 +1,4 @@
-# To Run Laikago Simulation
+# To Run A1 Simulation
 In one terminal:
 ```
 source ws_name/devel/setup.bash
@@ -8,12 +8,18 @@ cd amrl_maps
 export ROS_PACKAGE_PATH=`pwd`:$ROS_PACKAGE_PATH
 cd ../amrl_msgs
 export ROS_PACKAGE_PATH=`pwd`:$ROS_PACKAGE_PATH
-roslaunch unitree_gazebo laikago_empty_nav.launch gui:=false
+roslaunch unitree_gazebo a1_ahg_nav.launch gui:=false
 ```
 In another terminal:
 ```
 source wsname/devel/setup.bash
-rosrun unitree_navigation test_amrl_nav
+cd ws_name/src/amrl/
+export ROS_PACKAGE_PATH=`pwd`:$ROS_PACKAGE_PATH
+cd amrl_maps
+export ROS_PACKAGE_PATH=`pwd`:$ROS_PACKAGE_PATH
+cd ../amrl_msgs
+export ROS_PACKAGE_PATH=`pwd`:$ROS_PACKAGE_PATH
+rosrun unitree_navigation a1_amrl_nav
 ```
 In another terminal:
 ```
@@ -36,8 +42,28 @@ y: 30.0
 theta: 0.0"
 ```
  
+# To Run A1 Real
+## Preparing to use the Velodyne:
+```
+sudo ifconfig eth0 up
+sudo ip addr add 192.168.1.200 dev eth0
+sudo route add -net 192.168.1.0 netmask 255.255.255.0 dev eth0
+```
+You can test that it is working by running:
+```
+roslaunch velodyne_pointcloud VLP16_points.launch
+rosrun rviz rviz -f velodyne
+``` 
+in separate terminals. Also, try going to http://192.168.1.201/ in your browser to ensure you are connected.
 
-
+## Preparing to connect to the x86 on A1 (The control PC):
+First, follow the Unitree instructions at the end of this file in order to set up the unitree_legged_real/ipconfig.sh.
+```
+./unitree_legged_real/ipconfig.sh
+sudo su
+source ~/catkin_ws/devel/setup.bash
+roslaunch unitree_legged_real a1_ahg.launch rname:=a1 ctrl_level:=highlevel
+```
 
 # Introduction
 Here are the ROS packages of Unitree robots, namely Laikago, Aliengo and A1. You can load robots and joint controllers in Gazebo. And we also offered a basic standing controller, a position and pose publisher and a tool to generate external force. Besides of these simulation functions, you can also control your real robots in ROS by the `unitree_legged_real`.
