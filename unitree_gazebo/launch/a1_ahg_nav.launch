@@ -10,7 +10,7 @@
   <arg name="odom_topic" default="/correct_odom"/>
   <arg name="scan_topic" default="/scan"/>
   <arg name="localization_topic" default="/localization"/>
-
+  <arg name="loc_topic" default="/localization"/>
 
 
   <param name="use_sim_time" value="false"/>

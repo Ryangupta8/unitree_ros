@@ -37,9 +37,22 @@ cd amrl_maps
 export ROS_PACKAGE_PATH=`pwd`:$ROS_PACKAGE_PATH
 cd ../amrl_msgs
 export ROS_PACKAGE_PATH=`pwd`:$ROS_PACKAGE_PATH
-rostopic pub /move_base_simple/goal amrl_msgs/Pose2Df "x: 30.0 
-y: 30.0
-theta: 0.0"
+rostopic pub /move_base_simple/goal geometry_msgs/PoseStamped "header:
+  seq: 0
+  stamp:
+    secs: 0
+    nsecs: 0
+  frame_id: ''
+pose:
+  position:
+    x: 2.0
+    y: 0.0
+    z: 0.0
+  orientation:
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 0.0" 
 ```
  
 # To Run A1 Real
