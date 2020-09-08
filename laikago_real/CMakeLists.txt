@@ -15,7 +15,8 @@ find_package(catkin REQUIRED COMPONENTS
 find_package(Eigen3 REQUIRED)
 
 
-find_library(RUNNING_COVARIANCE_LIBRARY running_covariance HINTS /home/knapsack/workspaces/unitree_ws/)
+find_library(RUNNING_COVARIANCE_LIBRARY running_covariance HINTS
+    /home/hcrlab/workspaces/amrl_ws/)
 
 catkin_package(
 
@@ -31,8 +32,8 @@ catkin_package(
 
 include_directories(
     include
-    /home/knapsack/robots/laikago_sdk/include
-    /home/knapsack/workspaces/unitree_ws/src/unitree_ros/math_utils/include
+    /home/hcrlab/srcs/laikago_sdk/include
+    /home/hcrlab/workspaces/amrl_ws/src/unitree_ros/math_utils/include
     ${Boost_INCLUDE_DIR}
     ${catkin_INCLUDE_DIRS}
     ${EIGEN3_INCLUDE_DIRS}
@@ -40,7 +41,7 @@ include_directories(
 
 add_compile_options(-std=c++11)
 
-link_directories(/home/knapsack/robots/laikago_sdk/lib)
+link_directories(/home/hcrlab/srcs/laikago_sdk/lib)
 set(EXTRA_LIBS liblaikago_comm.so lcm)
 
 add_executable(position_lcm src/position_mode.cpp)

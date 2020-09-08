@@ -1,0 +1,318 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+BRAKE	unitree_legged_control/include/joint_controller.h	27;"	d
+Clear	math_utils/src/running_stats.cpp	/^void RunningStats::Clear()$/;"	f	class:RunningStats
+Custom	unitree_legged_real/src/exe/position_mode.cpp	/^    Custom() {}$/;"	f	class:Custom
+Custom	unitree_legged_real/src/exe/position_mode.cpp	/^class Custom$/;"	c	file:
+FLcalfCallback	unitree_controller/src/servo.cpp	/^    void FLcalfCallback(const unitree_legged_msgs::MotorState& msg)$/;"	f	class:multiThread
+FLcalfCallback	unitree_controller/src/test_gazebo_pos_control.cpp	/^    void FLcalfCallback(const unitree_legged_msgs::MotorState& msg)$/;"	f	class:multiThread
+FLfootCallback	unitree_controller/src/servo.cpp	/^    void FLfootCallback(const geometry_msgs::WrenchStamped& msg)$/;"	f	class:multiThread
+FLfootCallback	unitree_controller/src/test_gazebo_pos_control.cpp	/^    void FLfootCallback(const geometry_msgs::WrenchStamped& msg)$/;"	f	class:multiThread
+FLhipCallback	unitree_controller/src/servo.cpp	/^    void FLhipCallback(const unitree_legged_msgs::MotorState& msg)$/;"	f	class:multiThread
+FLhipCallback	unitree_controller/src/test_gazebo_pos_control.cpp	/^    void FLhipCallback(const unitree_legged_msgs::MotorState& msg)$/;"	f	class:multiThread
+FLthighCallback	unitree_controller/src/servo.cpp	/^    void FLthighCallback(const unitree_legged_msgs::MotorState& msg)$/;"	f	class:multiThread
+FLthighCallback	unitree_controller/src/test_gazebo_pos_control.cpp	/^    void FLthighCallback(const unitree_legged_msgs::MotorState& msg)$/;"	f	class:multiThread
+FRcalfCallback	unitree_controller/src/servo.cpp	/^    void FRcalfCallback(const unitree_legged_msgs::MotorState& msg)$/;"	f	class:multiThread
+FRcalfCallback	unitree_controller/src/test_gazebo_pos_control.cpp	/^    void FRcalfCallback(const unitree_legged_msgs::MotorState& msg)$/;"	f	class:multiThread
+FRfootCallback	unitree_controller/src/servo.cpp	/^    void FRfootCallback(const geometry_msgs::WrenchStamped& msg)$/;"	f	class:multiThread
+FRfootCallback	unitree_controller/src/test_gazebo_pos_control.cpp	/^    void FRfootCallback(const geometry_msgs::WrenchStamped& msg)$/;"	f	class:multiThread
+FRhipCallback	unitree_controller/src/servo.cpp	/^    void FRhipCallback(const unitree_legged_msgs::MotorState& msg)$/;"	f	class:multiThread
+FRhipCallback	unitree_controller/src/test_gazebo_pos_control.cpp	/^    void FRhipCallback(const unitree_legged_msgs::MotorState& msg)$/;"	f	class:multiThread
+FRthighCallback	unitree_controller/src/servo.cpp	/^    void FRthighCallback(const unitree_legged_msgs::MotorState& msg)$/;"	f	class:multiThread
+FRthighCallback	unitree_controller/src/test_gazebo_pos_control.cpp	/^    void FRthighCallback(const unitree_legged_msgs::MotorState& msg)$/;"	f	class:multiThread
+Force	unitree_controller/src/external_force.cpp	/^    geometry_msgs::Wrench Force;$/;"	m	class:teleForceCmd	file:
+Fx	unitree_controller/src/external_force.cpp	/^    double Fx, Fy, Fz;$/;"	m	class:teleForceCmd	file:
+Fx	unitree_gazebo/plugin/draw_force_plugin.cc	/^            double Fx=0, Fy=0, Fz=0;$/;"	m	class:gazebo::UnitreeDrawForcePlugin	file:
+Fx	unitree_gazebo/plugin/foot_contact_plugin.cc	/^            double Fx=0, Fy=0, Fz=0;$/;"	m	class:gazebo::UnitreeFootContactPlugin	file:
+Fy	unitree_controller/src/external_force.cpp	/^    double Fx, Fy, Fz;$/;"	m	class:teleForceCmd	file:
+Fy	unitree_gazebo/plugin/draw_force_plugin.cc	/^            double Fx=0, Fy=0, Fz=0;$/;"	m	class:gazebo::UnitreeDrawForcePlugin	file:
+Fy	unitree_gazebo/plugin/foot_contact_plugin.cc	/^            double Fx=0, Fy=0, Fz=0;$/;"	m	class:gazebo::UnitreeFootContactPlugin	file:
+Fz	unitree_controller/src/external_force.cpp	/^    double Fx, Fy, Fz;$/;"	m	class:teleForceCmd	file:
+Fz	unitree_gazebo/plugin/draw_force_plugin.cc	/^            double Fx=0, Fy=0, Fz=0;$/;"	m	class:gazebo::UnitreeDrawForcePlugin	file:
+Fz	unitree_gazebo/plugin/foot_contact_plugin.cc	/^            double Fx=0, Fy=0, Fz=0;$/;"	m	class:gazebo::UnitreeFootContactPlugin	file:
+GetForceCallback	unitree_gazebo/plugin/draw_force_plugin.cc	/^        void GetForceCallback(const geometry_msgs::WrenchStamped & msg)$/;"	f	class:gazebo::UnitreeDrawForcePlugin
+InputOutput	unitree_navigation/src/a1_amrl_nav.cpp	/^class InputOutput{$/;"	c	file:
+InputOutput	unitree_navigation/src/laikago_amrl_nav.cpp	/^class InputOutput{$/;"	c	file:
+KEYCODE_DOWN	unitree_controller/src/external_force.cpp	13;"	d	file:
+KEYCODE_LEFT	unitree_controller/src/external_force.cpp	14;"	d	file:
+KEYCODE_RIGHT	unitree_controller/src/external_force.cpp	15;"	d	file:
+KEYCODE_SPACE	unitree_controller/src/external_force.cpp	16;"	d	file:
+KEYCODE_UP	unitree_controller/src/external_force.cpp	12;"	d	file:
+Kp	laikago_real/src/position_mode.cpp	/^float Kp[3] = {0};$/;"	v
+Kv	laikago_real/src/position_mode.cpp	/^float Kv[3] = {0};  $/;"	v
+Kv	laikago_real/src/velocity_mode.cpp	/^float Kv = 0.08;$/;"	v
+LCMRecv	unitree_legged_real/src/exe/position_mode.cpp	/^void Custom::LCMRecv()$/;"	f	class:Custom
+Listener	laikago_real/src/laikago_driver.cpp	/^class Listener{$/;"	c	file:
+Listener	unitree_legged_real/src/a1_driver.cpp	/^class Listener{$/;"	c	file:
+Load	unitree_gazebo/plugin/draw_force_plugin.cc	/^        void Load(rendering::VisualPtr _parent, sdf::ElementPtr _sdf )$/;"	f	class:gazebo::UnitreeDrawForcePlugin
+Load	unitree_gazebo/plugin/foot_contact_plugin.cc	/^        void Load(sensors::SensorPtr _sensor, sdf::ElementPtr _sdf)$/;"	f	class:gazebo::UnitreeFootContactPlugin
+Mean	math_utils/src/running_covariance.cpp	/^Eigen::Vector3d RunningCovariance::Mean()$/;"	f	class:RunningCovariance
+Mean	math_utils/src/running_stats.cpp	/^double RunningStats::Mean() const$/;"	f	class:RunningStats
+NumDataValues	math_utils/src/running_covariance.cpp	/^int RunningCovariance::NumDataValues()$/;"	f	class:RunningCovariance
+NumDataValues	math_utils/src/running_stats.cpp	/^int RunningStats::NumDataValues() const$/;"	f	class:RunningStats
+ORIENTATION_UTILS_H	math_utils/include/math_utils/orientation_utils.hpp	2;"	d
+OnUpdate	unitree_gazebo/plugin/draw_force_plugin.cc	/^        void OnUpdate()$/;"	f	class:gazebo::UnitreeDrawForcePlugin
+OnUpdate	unitree_gazebo/plugin/foot_contact_plugin.cc	/^        void OnUpdate()$/;"	f	class:gazebo::UnitreeFootContactPlugin	file:
+PMSM	unitree_legged_control/include/joint_controller.h	26;"	d
+PosStopF	unitree_controller/include/body.h	13;"	d
+PosStopF	unitree_legged_control/include/joint_controller.h	28;"	d
+Push	math_utils/src/running_covariance.cpp	/^Eigen::Vector3d RunningCovariance::Push(Eigen::Vector3d x)$/;"	f	class:RunningCovariance
+Push	math_utils/src/running_stats.cpp	/^void RunningStats::Push(double x)$/;"	f	class:RunningStats
+RLcalfCallback	unitree_controller/src/servo.cpp	/^    void RLcalfCallback(const unitree_legged_msgs::MotorState& msg)$/;"	f	class:multiThread
+RLcalfCallback	unitree_controller/src/test_gazebo_pos_control.cpp	/^    void RLcalfCallback(const unitree_legged_msgs::MotorState& msg)$/;"	f	class:multiThread
+RLfootCallback	unitree_controller/src/servo.cpp	/^    void RLfootCallback(const geometry_msgs::WrenchStamped& msg)$/;"	f	class:multiThread
+RLfootCallback	unitree_controller/src/test_gazebo_pos_control.cpp	/^    void RLfootCallback(const geometry_msgs::WrenchStamped& msg)$/;"	f	class:multiThread
+RLhipCallback	unitree_controller/src/servo.cpp	/^    void RLhipCallback(const unitree_legged_msgs::MotorState& msg)$/;"	f	class:multiThread
+RLhipCallback	unitree_controller/src/test_gazebo_pos_control.cpp	/^    void RLhipCallback(const unitree_legged_msgs::MotorState& msg)$/;"	f	class:multiThread
+RLthighCallback	unitree_controller/src/servo.cpp	/^    void RLthighCallback(const unitree_legged_msgs::MotorState& msg)$/;"	f	class:multiThread
+RLthighCallback	unitree_controller/src/test_gazebo_pos_control.cpp	/^    void RLthighCallback(const unitree_legged_msgs::MotorState& msg)$/;"	f	class:multiThread
+RRcalfCallback	unitree_controller/src/servo.cpp	/^    void RRcalfCallback(const unitree_legged_msgs::MotorState& msg)$/;"	f	class:multiThread
+RRcalfCallback	unitree_controller/src/test_gazebo_pos_control.cpp	/^    void RRcalfCallback(const unitree_legged_msgs::MotorState& msg)$/;"	f	class:multiThread
+RRfootCallback	unitree_controller/src/servo.cpp	/^    void RRfootCallback(const geometry_msgs::WrenchStamped& msg)$/;"	f	class:multiThread
+RRfootCallback	unitree_controller/src/test_gazebo_pos_control.cpp	/^    void RRfootCallback(const geometry_msgs::WrenchStamped& msg)$/;"	f	class:multiThread
+RRhipCallback	unitree_controller/src/servo.cpp	/^    void RRhipCallback(const unitree_legged_msgs::MotorState& msg)$/;"	f	class:multiThread
+RRhipCallback	unitree_controller/src/test_gazebo_pos_control.cpp	/^    void RRhipCallback(const unitree_legged_msgs::MotorState& msg)$/;"	f	class:multiThread
+RRthighCallback	unitree_controller/src/servo.cpp	/^    void RRthighCallback(const unitree_legged_msgs::MotorState& msg)$/;"	f	class:multiThread
+RRthighCallback	unitree_controller/src/test_gazebo_pos_control.cpp	/^    void RRthighCallback(const unitree_legged_msgs::MotorState& msg)$/;"	f	class:multiThread
+RUNNING_COVARIANCE_H	math_utils/include/math_utils/running_covariance.h	2;"	d
+RUNNING_STATS_H	math_utils/include/math_utils/running_stats.h	2;"	d
+RecvHighLCM	laikago_real/src/laikago_driver.cpp	/^HighState RecvHighLCM = {0};$/;"	v
+RecvHighLCM	laikago_real/src/walk_mode.cpp	/^HighState RecvHighLCM = {0};$/;"	v
+RecvHighROS	laikago_real/src/laikago_driver.cpp	/^unitree_legged_msgs::HighState RecvHighROS;$/;"	v
+RecvHighROS	laikago_real/src/walk_mode.cpp	/^unitree_legged_msgs::HighState RecvHighROS;$/;"	v
+RecvLowLCM	laikago_real/src/position_mode.cpp	/^LowState RecvLowLCM = {0};$/;"	v
+RecvLowLCM	laikago_real/src/torque_mode.cpp	/^LowState RecvLowLCM = {0};$/;"	v
+RecvLowLCM	laikago_real/src/velocity_mode.cpp	/^LowState RecvLowLCM = {0};$/;"	v
+RecvLowROS	laikago_real/src/position_mode.cpp	/^unitree_legged_msgs::LowState RecvLowROS;$/;"	v
+RecvLowROS	laikago_real/src/torque_mode.cpp	/^unitree_legged_msgs::LowState RecvLowROS;$/;"	v
+RecvLowROS	laikago_real/src/velocity_mode.cpp	/^unitree_legged_msgs::LowState RecvLowROS;$/;"	v
+RunningCovariance	math_utils/include/math_utils/running_covariance.h	/^class RunningCovariance{$/;"	c
+RunningCovariance	math_utils/src/running_covariance.cpp	/^RunningCovariance::RunningCovariance(){$/;"	f	class:RunningCovariance
+RunningStats	math_utils/include/math_utils/running_stats.h	/^class RunningStats$/;"	c
+RunningStats	math_utils/src/running_stats.cpp	/^RunningStats::RunningStats(){$/;"	f	class:RunningStats
+SendHighLCM	laikago_real/src/laikago_driver.cpp	/^HighCmd SendHighLCM = {0};$/;"	v
+SendHighLCM	laikago_real/src/walk_mode.cpp	/^HighCmd SendHighLCM = {0};$/;"	v
+SendHighROS	laikago_real/src/laikago_driver.cpp	/^unitree_legged_msgs::HighCmd SendHighROS;$/;"	v
+SendHighROS	laikago_real/src/walk_mode.cpp	/^unitree_legged_msgs::HighCmd SendHighROS;$/;"	v
+SendLowLCM	laikago_real/src/position_mode.cpp	/^LowCmd SendLowLCM = {0};$/;"	v
+SendLowLCM	laikago_real/src/torque_mode.cpp	/^LowCmd SendLowLCM = {0};$/;"	v
+SendLowLCM	laikago_real/src/velocity_mode.cpp	/^LowCmd SendLowLCM = {0};$/;"	v
+SendLowROS	laikago_real/src/position_mode.cpp	/^unitree_legged_msgs::LowCmd SendLowROS;$/;"	v
+SendLowROS	laikago_real/src/torque_mode.cpp	/^unitree_legged_msgs::LowCmd SendLowROS;$/;"	v
+SendLowROS	laikago_real/src/velocity_mode.cpp	/^unitree_legged_msgs::LowCmd SendLowROS;$/;"	v
+ServoCmd	unitree_legged_control/include/unitree_joint_control_tool.h	/^} ServoCmd;$/;"	t	typeref:struct:__anon1
+StandardDeviation	math_utils/src/running_stats.cpp	/^double RunningStats::StandardDeviation() const$/;"	f	class:RunningStats
+ToLcm	unitree_legged_real/include/convert.h	/^UNITREE_LEGGED_SDK::HighCmd ToLcm(unitree_legged_msgs::HighCmd& ros)$/;"	f
+ToLcm	unitree_legged_real/include/convert.h	/^UNITREE_LEGGED_SDK::LowCmd ToLcm(unitree_legged_msgs::LowCmd& ros)$/;"	f
+ToLcm	unitree_legged_real/include/convert.h	/^UNITREE_LEGGED_SDK::MotorCmd ToLcm(unitree_legged_msgs::MotorCmd& ros)$/;"	f
+ToRos	unitree_legged_real/include/convert.h	/^unitree_legged_msgs::HighState ToRos(UNITREE_LEGGED_SDK::HighState& lcm)$/;"	f
+ToRos	unitree_legged_real/include/convert.h	/^unitree_legged_msgs::IMU ToRos(UNITREE_LEGGED_SDK::IMU& lcm)$/;"	f
+ToRos	unitree_legged_real/include/convert.h	/^unitree_legged_msgs::LowState ToRos(UNITREE_LEGGED_SDK::LowState& lcm)$/;"	f
+ToRos	unitree_legged_real/include/convert.h	/^unitree_legged_msgs::MotorState ToRos(UNITREE_LEGGED_SDK::MotorState& lcm)$/;"	f
+Tpi	laikago_real/src/position_mode.cpp	/^unsigned long int Tpi = 0;$/;"	v
+Tpi	laikago_real/src/velocity_mode.cpp	/^unsigned long int Tpi =0;$/;"	v
+UnitreeDrawForcePlugin	unitree_gazebo/plugin/draw_force_plugin.cc	/^        UnitreeDrawForcePlugin():line(NULL){}$/;"	f	class:gazebo::UnitreeDrawForcePlugin
+UnitreeDrawForcePlugin	unitree_gazebo/plugin/draw_force_plugin.cc	/^    class UnitreeDrawForcePlugin : public VisualPlugin$/;"	c	namespace:gazebo	file:
+UnitreeFootContactPlugin	unitree_gazebo/plugin/foot_contact_plugin.cc	/^        UnitreeFootContactPlugin() : SensorPlugin(){}$/;"	f	class:gazebo::UnitreeFootContactPlugin
+UnitreeFootContactPlugin	unitree_gazebo/plugin/foot_contact_plugin.cc	/^    class UnitreeFootContactPlugin : public SensorPlugin$/;"	c	namespace:gazebo	file:
+UnitreeJointController	unitree_legged_control/include/joint_controller.h	/^    class UnitreeJointController: public controller_interface::Controller<hardware_interface::EffortJointInterface>$/;"	c	namespace:unitree_legged_control
+UnitreeJointController	unitree_legged_control/src/joint_controller.cpp	/^    UnitreeJointController::UnitreeJointController(){$/;"	f	class:unitree_legged_control::UnitreeJointController
+Variance	math_utils/src/running_covariance.cpp	/^Eigen::Vector3d RunningCovariance::Variance()$/;"	f	class:RunningCovariance
+Variance	math_utils/src/running_stats.cpp	/^double RunningStats::Variance() const$/;"	f	class:RunningStats
+VelStopF	unitree_controller/include/body.h	14;"	d
+VelStopF	unitree_legged_control/include/joint_controller.h	29;"	d
+_CONVERT_H_	unitree_legged_real/include/convert.h	6;"	d
+_LAIKAGO_CONTROL_TOOL_H_	unitree_legged_control/include/unitree_joint_control_tool.h	9;"	d
+_UNITREE_ROS_JOINT_CONTROLLER_H_	unitree_legged_control/include/joint_controller.h	7;"	d
+__BODY_H__	unitree_controller/include/body.h	7;"	d
+_n	math_utils/include/math_utils/running_covariance.h	/^	int _n;$/;"	m	class:RunningCovariance
+_newCovarianceSum	math_utils/include/math_utils/running_covariance.h	/^                    _oldCovarianceSum, _newCovarianceSum;$/;"	m	class:RunningCovariance
+_newMean	math_utils/include/math_utils/running_covariance.h	/^    Eigen::Vector3d _oldMean, _newMean,$/;"	m	class:RunningCovariance
+_newVarianceSum	math_utils/include/math_utils/running_covariance.h	/^                    _oldVarianceSum, _newVarianceSum,$/;"	m	class:RunningCovariance
+_oldCovarianceSum	math_utils/include/math_utils/running_covariance.h	/^                    _oldCovarianceSum, _newCovarianceSum;$/;"	m	class:RunningCovariance
+_oldMean	math_utils/include/math_utils/running_covariance.h	/^    Eigen::Vector3d _oldMean, _newMean,$/;"	m	class:RunningCovariance
+_oldVarianceSum	math_utils/include/math_utils/running_covariance.h	/^                    _oldVarianceSum, _newVarianceSum,$/;"	m	class:RunningCovariance
+angular	unitree_navigation/src/a1_amrl_nav.cpp	/^    Eigen::Vector3d pos, linear, angular; $/;"	m	class:InputOutput	file:
+angular	unitree_navigation/src/laikago_amrl_nav.cpp	/^    Eigen::Vector3d pos, linear, angular; $/;"	m	class:InputOutput	file:
+cmd_vel_cb	unitree_navigation/src/a1_amrl_nav.cpp	/^    void cmd_vel_cb(const geometry_msgs::Twist::ConstPtr& msg){$/;"	f	class:InputOutput
+cmd_vel_cb	unitree_navigation/src/laikago_amrl_nav.cpp	/^    void cmd_vel_cb(const geometry_msgs::Twist::ConstPtr& msg){$/;"	f	class:InputOutput
+command	unitree_legged_control/include/joint_controller.h	/^        realtime_tools::RealtimeBuffer<unitree_legged_msgs::MotorCmd> command;$/;"	m	class:unitree_legged_control::UnitreeJointController
+compute_quat_error	math_utils/src/orientation_utils.cpp	/^  void compute_quat_error(const Eigen::Quaterniond & des, const Eigen::Quaterniond & current, Eigen::Vector3d & error){$/;"	f	namespace:math_utils
+contact_namespace	unitree_gazebo/plugin/foot_contact_plugin.cc	/^            std::string contact_namespace;$/;"	m	class:gazebo::UnitreeFootContactPlugin	file:
+controller_state_publisher_	unitree_legged_control/include/joint_controller.h	/^        boost::scoped_ptr<realtime_tools::RealtimePublisher<unitree_legged_msgs::MotorState> > controller_state_publisher_ ;$/;"	m	class:unitree_legged_control::UnitreeJointController
+convert	math_utils/src/orientation_utils.cpp	/^  void convert(const Eigen::AngleAxisd & from, Eigen::Vector3d & to){$/;"	f	namespace:math_utils
+convert	math_utils/src/orientation_utils.cpp	/^  void convert(const Eigen::Quaterniond & from, Eigen::AngleAxisd & to){$/;"	f	namespace:math_utils
+convert	math_utils/src/orientation_utils.cpp	/^  void convert(const Eigen::Quaterniond & from, Eigen::Vector3d & to){$/;"	f	namespace:math_utils
+cooked	unitree_controller/src/external_force.cpp	/^struct termios cooked, raw;$/;"	v	typeref:struct:termios
+count	unitree_gazebo/plugin/foot_contact_plugin.cc	/^            int count = 0;$/;"	m	class:gazebo::UnitreeFootContactPlugin	file:
+curr_state_cb	unitree_navigation/src/a1_amrl_nav.cpp	/^    void curr_state_cb(const gazebo_msgs::ModelStates::ConstPtr& msg){$/;"	f	class:InputOutput
+curr_state_cb	unitree_navigation/src/laikago_amrl_nav.cpp	/^    void curr_state_cb(const gazebo_msgs::ModelStates::ConstPtr& msg){$/;"	f	class:InputOutput
+drz	laikago_real/src/laikago_driver.cpp	/^	double dx, dy, drz; $/;"	m	class:Listener	file:
+drz	unitree_legged_real/src/a1_driver.cpp	/^    double dx, dy, drz; $/;"	m	class:Listener	file:
+dx	laikago_real/src/laikago_driver.cpp	/^	double dx, dy, drz; $/;"	m	class:Listener	file:
+dx	unitree_legged_real/src/a1_driver.cpp	/^    double dx, dy, drz; $/;"	m	class:Listener	file:
+dy	laikago_real/src/laikago_driver.cpp	/^	double dx, dy, drz; $/;"	m	class:Listener	file:
+dy	unitree_legged_real/src/a1_driver.cpp	/^    double dx, dy, drz; $/;"	m	class:Listener	file:
+effortLimits	unitree_legged_control/src/joint_controller.cpp	/^    void UnitreeJointController::effortLimits(double &effort)$/;"	f	class:unitree_legged_control::UnitreeJointController
+ekf_pose_callback	laikago_real/src/laikago_driver.cpp	/^    void ekf_pose_callback(const geometry_msgs::PoseWithCovarianceStamped::ConstPtr& filtered_pose)$/;"	f	class:Listener
+ekf_pose_callback	unitree_legged_real/src/a1_driver.cpp	/^    void ekf_pose_callback(const geometry_msgs::PoseWithCovarianceStamped::ConstPtr& filtered_pose)$/;"	f	class:Listener
+footForce_sub	unitree_controller/src/servo.cpp	/^    ros::Subscriber servo_sub[12], footForce_sub[4], imu_sub;$/;"	m	class:multiThread	file:
+footForce_sub	unitree_controller/src/test_gazebo_pos_control.cpp	/^    ros::Subscriber servo_sub[12], footForce_sub[4], imu_sub;$/;"	m	class:multiThread	file:
+force	unitree_gazebo/plugin/foot_contact_plugin.cc	/^            geometry_msgs::WrenchStamped force;$/;"	m	class:gazebo::UnitreeFootContactPlugin	file:
+force_pub	unitree_controller/src/external_force.cpp	/^    ros::Publisher force_pub;$/;"	m	class:teleForceCmd	file:
+force_pub	unitree_gazebo/plugin/foot_contact_plugin.cc	/^            ros::Publisher force_pub;$/;"	m	class:gazebo::UnitreeFootContactPlugin	file:
+force_sub	unitree_gazebo/plugin/draw_force_plugin.cc	/^            ros::Subscriber force_sub;$/;"	m	class:gazebo::UnitreeDrawForcePlugin	file:
+gazebo	unitree_gazebo/plugin/draw_force_plugin.cc	/^namespace gazebo$/;"	n	file:
+gazebo	unitree_gazebo/plugin/foot_contact_plugin.cc	/^namespace gazebo$/;"	n	file:
+getGains	unitree_legged_control/src/joint_controller.cpp	/^    void UnitreeJointController::getGains(double &p, double &i, double &d, double &i_max, double &i_min)$/;"	f	class:unitree_legged_control::UnitreeJointController
+getGains	unitree_legged_control/src/joint_controller.cpp	/^    void UnitreeJointController::getGains(double &p, double &i, double &d, double &i_max, double &i_min, bool &antiwindup)$/;"	f	class:unitree_legged_control::UnitreeJointController
+imuCallback	unitree_controller/src/servo.cpp	/^    void imuCallback(const sensor_msgs::Imu & msg)$/;"	f	class:multiThread
+imuCallback	unitree_controller/src/test_gazebo_pos_control.cpp	/^    void imuCallback(const sensor_msgs::Imu & msg)$/;"	f	class:multiThread
+imu_sub	unitree_controller/src/servo.cpp	/^    ros::Subscriber servo_sub[12], footForce_sub[4], imu_sub;$/;"	m	class:multiThread	file:
+imu_sub	unitree_controller/src/test_gazebo_pos_control.cpp	/^    ros::Subscriber servo_sub[12], footForce_sub[4], imu_sub;$/;"	m	class:multiThread	file:
+init	unitree_legged_control/src/joint_controller.cpp	/^    bool UnitreeJointController::init(hardware_interface::EffortJointInterface *robot, ros::NodeHandle &n)$/;"	f	class:unitree_legged_control::UnitreeJointController
+isCalf	unitree_legged_control/include/joint_controller.h	/^        bool isHip, isThigh, isCalf, rqtTune;$/;"	m	class:unitree_legged_control::UnitreeJointController
+isHip	unitree_legged_control/include/joint_controller.h	/^        bool isHip, isThigh, isCalf, rqtTune;$/;"	m	class:unitree_legged_control::UnitreeJointController
+isThigh	unitree_legged_control/include/joint_controller.h	/^        bool isHip, isThigh, isCalf, rqtTune;$/;"	m	class:unitree_legged_control::UnitreeJointController
+joint	unitree_legged_control/include/joint_controller.h	/^        hardware_interface::JointHandle joint;$/;"	m	class:unitree_legged_control::UnitreeJointController
+jointLinearInterpolation	unitree_legged_real/src/exe/position_mode.cpp	/^double jointLinearInterpolation(double initPos, double targetPos, double rate)$/;"	f
+joint_name	unitree_legged_control/include/joint_controller.h	/^        std::string joint_name;$/;"	m	class:unitree_legged_control::UnitreeJointController
+joint_traj_cb	unitree_controller/src/test_gazebo_pos_control.cpp	/^void joint_traj_cb(const std_msgs::Float64MultiArray::ConstPtr& msg){$/;"	f
+joint_urdf	unitree_legged_control/include/joint_controller.h	/^        urdf::JointConstSharedPtr joint_urdf;$/;"	m	class:unitree_legged_control::UnitreeJointController
+keyLoop	unitree_controller/src/external_force.cpp	/^void teleForceCmd::keyLoop()$/;"	f	class:teleForceCmd
+kfd	unitree_controller/src/external_force.cpp	/^int kfd = 0;$/;"	v
+lastCmd	unitree_legged_control/include/joint_controller.h	/^        unitree_legged_msgs::MotorCmd lastCmd;$/;"	m	class:unitree_legged_control::UnitreeJointController
+lastState	unitree_legged_control/include/joint_controller.h	/^        unitree_legged_msgs::MotorState lastState;$/;"	m	class:unitree_legged_control::UnitreeJointController
+line	unitree_gazebo/plugin/draw_force_plugin.cc	/^            rendering::DynamicLines *line;$/;"	m	class:gazebo::UnitreeDrawForcePlugin	file:
+linear	unitree_navigation/src/a1_amrl_nav.cpp	/^    Eigen::Vector3d pos, linear, angular; $/;"	m	class:InputOutput	file:
+linear	unitree_navigation/src/laikago_amrl_nav.cpp	/^    Eigen::Vector3d pos, linear, angular; $/;"	m	class:InputOutput	file:
+lowCmd	unitree_controller/src/body.cpp	/^unitree_legged_msgs::LowCmd lowCmd;$/;"	m	namespace:unitree_model	file:
+lowState	unitree_controller/src/body.cpp	/^unitree_legged_msgs::LowState lowState;$/;"	m	namespace:unitree_model	file:
+m_n	math_utils/include/math_utils/running_stats.h	/^	int m_n;$/;"	m	class:RunningStats
+m_newM	math_utils/include/math_utils/running_stats.h	/^	double m_oldM, m_newM, m_oldS, m_newS;$/;"	m	class:RunningStats
+m_newS	math_utils/include/math_utils/running_stats.h	/^	double m_oldM, m_newM, m_oldS, m_newS;$/;"	m	class:RunningStats
+m_oldM	math_utils/include/math_utils/running_stats.h	/^	double m_oldM, m_newM, m_oldS, m_newS;$/;"	m	class:RunningStats
+m_oldS	math_utils/include/math_utils/running_stats.h	/^	double m_oldM, m_newM, m_oldS, m_newS;$/;"	m	class:RunningStats
+main	laikago_real/src/laikago_driver.cpp	/^int main( int argc, char* argv[] )$/;"	f
+main	laikago_real/src/position_mode.cpp	/^int main(int argc, char *argv[])$/;"	f
+main	laikago_real/src/torque_mode.cpp	/^int main(int argc, char *argv[])$/;"	f
+main	laikago_real/src/velocity_mode.cpp	/^int main(int argc, char *argv[])$/;"	f
+main	laikago_real/src/walk_mode.cpp	/^int main(int argc, char *argv[])$/;"	f
+main	unitree_controller/src/external_force.cpp	/^int main(int argc, char** argv)$/;"	f
+main	unitree_controller/src/move_publisher.cpp	/^int main(int argc, char **argv)$/;"	f
+main	unitree_controller/src/servo.cpp	/^int main(int argc, char **argv)$/;"	f
+main	unitree_controller/src/test_gazebo_pos_control.cpp	/^int main(int argc, char **argv)$/;"	f
+main	unitree_legged_real/src/a1_driver.cpp	/^int main(int argc, char *argv[])$/;"	f
+main	unitree_legged_real/src/exe/position_mode.cpp	/^int main(int argc, char *argv[])$/;"	f
+main	unitree_legged_real/src/exe/torque_mode.cpp	/^int main(int argc, char *argv[])$/;"	f
+main	unitree_legged_real/src/exe/velocity_mode.cpp	/^int main(int argc, char *argv[])$/;"	f
+main	unitree_legged_real/src/exe/walk_example.cpp	/^int main(int argc, char *argv[])$/;"	f
+main	unitree_legged_real/src/exe/walk_mode.cpp	/^int main(int argc, char *argv[])$/;"	f
+main	unitree_navigation/src/a1_amrl_nav.cpp	/^int main(int argc, char **argv)$/;"	f
+main	unitree_navigation/src/laikago_amrl_nav.cpp	/^int main(int argc, char **argv)$/;"	f
+math_utils	math_utils/include/math_utils/orientation_utils.hpp	/^namespace math_utils{$/;"	n
+math_utils	math_utils/src/orientation_utils.cpp	/^namespace math_utils{$/;"	n	file:
+mode	unitree_controller/src/external_force.cpp	/^int mode = 1; \/\/ pulsed mode or continuous mode$/;"	v
+mode	unitree_legged_control/include/unitree_joint_control_tool.h	/^    uint8_t mode;$/;"	m	struct:__anon1
+motion_init	unitree_controller/src/body.cpp	/^void motion_init()$/;"	f	namespace:unitree_model
+motiontime	laikago_real/src/laikago_driver.cpp	/^static long motiontime = 0;$/;"	v	file:
+motiontime	laikago_real/src/position_mode.cpp	/^static long motiontime = 0;$/;"	v	file:
+motiontime	laikago_real/src/torque_mode.cpp	/^static long motiontime=0;$/;"	v	file:
+motiontime	laikago_real/src/velocity_mode.cpp	/^static long motiontime=0;$/;"	v	file:
+motiontime	laikago_real/src/walk_mode.cpp	/^static long motiontime = 0;$/;"	v	file:
+moveAllPosition	unitree_controller/src/body.cpp	/^void moveAllPosition(double* targetPos, double duration)$/;"	f	namespace:unitree_model
+movejoint1	laikago_real/src/position_mode.cpp	/^float movejoint1 = 0, movejoint2 = 0;$/;"	v
+movejoint2	laikago_real/src/position_mode.cpp	/^float movejoint1 = 0, movejoint2 = 0;$/;"	v
+multiThread	unitree_controller/src/servo.cpp	/^    multiThread(string rname){$/;"	f	class:multiThread
+multiThread	unitree_controller/src/servo.cpp	/^class multiThread$/;"	c	file:
+multiThread	unitree_controller/src/test_gazebo_pos_control.cpp	/^    multiThread(string rname){$/;"	f	class:multiThread
+multiThread	unitree_controller/src/test_gazebo_pos_control.cpp	/^class multiThread$/;"	c	file:
+mutex	laikago_real/src/laikago_driver.cpp	/^boost::mutex mutex;$/;"	v
+mutex	laikago_real/src/position_mode.cpp	/^boost::mutex mutex;$/;"	v
+mutex	laikago_real/src/torque_mode.cpp	/^boost::mutex mutex;$/;"	v
+mutex	laikago_real/src/velocity_mode.cpp	/^boost::mutex mutex;$/;"	v
+mutex	laikago_real/src/walk_mode.cpp	/^boost::mutex mutex;$/;"	v
+n	unitree_controller/src/external_force.cpp	/^    ros::NodeHandle n;$/;"	m	class:teleForceCmd	file:
+name_space	unitree_legged_control/include/joint_controller.h	/^        std::string name_space;$/;"	m	class:unitree_legged_control::UnitreeJointController
+nm	unitree_controller/src/servo.cpp	/^    ros::NodeHandle nm;$/;"	m	class:multiThread	file:
+nm	unitree_controller/src/test_gazebo_pos_control.cpp	/^    ros::NodeHandle nm;$/;"	m	class:multiThread	file:
+ori	unitree_navigation/src/a1_amrl_nav.cpp	/^    Eigen::Quaternion<double> ori;$/;"	m	class:InputOutput	file:
+ori	unitree_navigation/src/laikago_amrl_nav.cpp	/^    Eigen::Quaternion<double> ori;$/;"	m	class:InputOutput	file:
+paramInit	unitree_controller/src/body.cpp	/^void paramInit()$/;"	f	namespace:unitree_model
+parentSensor	unitree_gazebo/plugin/foot_contact_plugin.cc	/^            sensors::ContactSensorPtr parentSensor;      $/;"	m	class:gazebo::UnitreeFootContactPlugin	file:
+pid_controller_	unitree_legged_control/include/joint_controller.h	/^        control_toolbox::Pid pid_controller_;$/;"	m	class:unitree_legged_control::UnitreeJointController
+pos	unitree_legged_control/include/unitree_joint_control_tool.h	/^    double pos;$/;"	m	struct:__anon1
+pos	unitree_navigation/src/a1_amrl_nav.cpp	/^    Eigen::Vector3d pos, linear, angular; $/;"	m	class:InputOutput	file:
+pos	unitree_navigation/src/laikago_amrl_nav.cpp	/^    Eigen::Vector3d pos, linear, angular; $/;"	m	class:InputOutput	file:
+posStiffness	unitree_legged_control/include/unitree_joint_control_tool.h	/^    double posStiffness;$/;"	m	struct:__anon1
+posStopF	unitree_legged_control/include/unitree_joint_control_tool.h	16;"	d
+pose	laikago_real/src/laikago_driver.cpp	/^    geometry_msgs::PoseWithCovariance pose;$/;"	m	class:Listener	file:
+pose	unitree_legged_real/src/a1_driver.cpp	/^    geometry_msgs::PoseWithCovariance pose;$/;"	m	class:Listener	file:
+positionLimits	unitree_legged_control/src/joint_controller.cpp	/^    void UnitreeJointController::positionLimits(double &position)$/;"	f	class:unitree_legged_control::UnitreeJointController
+printQuat	math_utils/src/orientation_utils.cpp	/^  void printQuat(const Eigen::Quaterniond & quat){$/;"	f	namespace:math_utils
+pubForce	unitree_controller/src/external_force.cpp	/^void teleForceCmd::pubForce(double x, double y, double z)$/;"	f	class:teleForceCmd
+quit	unitree_controller/src/external_force.cpp	/^void quit(int sig)$/;"	f
+raw	unitree_controller/src/external_force.cpp	/^struct termios cooked, raw;$/;"	v	typeref:struct:
+robot_name	unitree_controller/src/servo.cpp	/^    string robot_name;$/;"	m	class:multiThread	file:
+robot_name	unitree_controller/src/test_gazebo_pos_control.cpp	/^    string robot_name;$/;"	m	class:multiThread	file:
+roslcm	laikago_real/src/laikago_driver.cpp	/^LCM roslcm;$/;"	v
+roslcm	laikago_real/src/position_mode.cpp	/^LCM roslcm;$/;"	v
+roslcm	laikago_real/src/torque_mode.cpp	/^LCM roslcm;$/;"	v
+roslcm	laikago_real/src/velocity_mode.cpp	/^LCM roslcm;$/;"	v
+roslcm	laikago_real/src/walk_mode.cpp	/^LCM roslcm;$/;"	v
+roslcm	unitree_legged_real/src/exe/position_mode.cpp	/^    LCM roslcm;$/;"	m	class:Custom	file:
+rosnode	unitree_gazebo/plugin/draw_force_plugin.cc	/^            ros::NodeHandle* rosnode;$/;"	m	class:gazebo::UnitreeDrawForcePlugin	file:
+rosnode	unitree_gazebo/plugin/foot_contact_plugin.cc	/^            ros::NodeHandle* rosnode;$/;"	m	class:gazebo::UnitreeFootContactPlugin	file:
+rqtTune	unitree_legged_control/include/joint_controller.h	/^        bool isHip, isThigh, isCalf, rqtTune;$/;"	m	class:unitree_legged_control::UnitreeJointController
+sendServoCmd	unitree_controller/src/body.cpp	/^void sendServoCmd()$/;"	f	namespace:unitree_model
+sensor_torque	unitree_legged_control/include/joint_controller.h	/^        float sensor_torque;$/;"	m	class:unitree_legged_control::UnitreeJointController
+servoCmd	unitree_legged_control/include/joint_controller.h	/^        ServoCmd servoCmd;$/;"	m	class:unitree_legged_control::UnitreeJointController
+servo_pub	unitree_controller/src/body.cpp	/^ros::Publisher servo_pub[12];$/;"	m	namespace:unitree_model	file:
+servo_sub	unitree_controller/src/servo.cpp	/^    ros::Subscriber servo_sub[12], footForce_sub[4], imu_sub;$/;"	m	class:multiThread	file:
+servo_sub	unitree_controller/src/test_gazebo_pos_control.cpp	/^    ros::Subscriber servo_sub[12], footForce_sub[4], imu_sub;$/;"	m	class:multiThread	file:
+setCommandCB	unitree_legged_control/src/joint_controller.cpp	/^    void UnitreeJointController::setCommandCB(const unitree_legged_msgs::MotorCmdConstPtr& msg)$/;"	f	class:unitree_legged_control::UnitreeJointController
+setGains	unitree_legged_control/src/joint_controller.cpp	/^    void UnitreeJointController::setGains(const double &p, const double &i, const double &d, const double &i_max, const double &i_min, const bool &antiwindup)$/;"	f	class:unitree_legged_control::UnitreeJointController
+setTorqueCB	unitree_legged_control/src/joint_controller.cpp	/^    void UnitreeJointController::setTorqueCB(const geometry_msgs::WrenchStampedConstPtr& msg)$/;"	f	class:unitree_legged_control::UnitreeJointController
+speed	laikago_real/src/velocity_mode.cpp	/^float speed = 0;$/;"	v
+stand	unitree_controller/src/body.cpp	/^void stand()$/;"	f	namespace:unitree_model
+starting	unitree_legged_control/src/joint_controller.cpp	/^    void UnitreeJointController::starting(const ros::Time& time)$/;"	f	class:unitree_legged_control::UnitreeJointController
+stopping	unitree_legged_control/src/joint_controller.cpp	/^    void UnitreeJointController::stopping(){}$/;"	f	class:unitree_legged_control::UnitreeJointController
+sub_cmd	unitree_legged_control/include/joint_controller.h	/^        ros::Subscriber sub_cmd, sub_ft;$/;"	m	class:unitree_legged_control::UnitreeJointController
+sub_ft	unitree_legged_control/include/joint_controller.h	/^        ros::Subscriber sub_cmd, sub_ft;$/;"	m	class:unitree_legged_control::UnitreeJointController
+teleForceCmd	unitree_controller/src/external_force.cpp	/^class teleForceCmd$/;"	c	file:
+teleForceCmd	unitree_controller/src/external_force.cpp	/^teleForceCmd::teleForceCmd()$/;"	f	class:teleForceCmd
+topic_name	unitree_gazebo/plugin/draw_force_plugin.cc	/^            std::string topic_name;$/;"	m	class:gazebo::UnitreeDrawForcePlugin	file:
+torque	laikago_real/src/torque_mode.cpp	/^float torque = 0;$/;"	v
+torque	unitree_legged_control/include/unitree_joint_control_tool.h	/^    double torque;$/;"	m	struct:__anon1
+twist_callback	laikago_real/src/laikago_driver.cpp	/^	void twist_callback(const geometry_msgs::Twist::ConstPtr& vel_cmd)$/;"	f	class:Listener
+twist_callback	unitree_legged_real/src/a1_driver.cpp	/^    void twist_callback(const geometry_msgs::Twist::ConstPtr& vel_cmd)$/;"	f	class:Listener
+unitree_legged_control	unitree_legged_control/include/joint_controller.h	/^namespace unitree_legged_control$/;"	n
+unitree_legged_control	unitree_legged_control/src/joint_controller.cpp	/^namespace unitree_legged_control $/;"	n	file:
+unitree_model	unitree_controller/include/body.h	/^namespace unitree_model {$/;"	n
+unitree_model	unitree_controller/src/body.cpp	/^namespace unitree_model {$/;"	n	file:
+update	unitree_legged_control/src/joint_controller.cpp	/^    void UnitreeJointController::update(const ros::Time& time, const ros::Duration& period)$/;"	f	class:unitree_legged_control::UnitreeJointController
+update_connection	unitree_gazebo/plugin/draw_force_plugin.cc	/^            event::ConnectionPtr update_connection;$/;"	m	class:gazebo::UnitreeDrawForcePlugin	file:
+update_connection	unitree_gazebo/plugin/foot_contact_plugin.cc	/^            event::ConnectionPtr update_connection;$/;"	m	class:gazebo::UnitreeFootContactPlugin	file:
+update_loop	laikago_real/src/laikago_driver.cpp	/^void* update_loop(void* data)$/;"	f
+update_loop	laikago_real/src/position_mode.cpp	/^void* update_loop(void* data)$/;"	f
+update_loop	laikago_real/src/torque_mode.cpp	/^void* update_loop(void* data)$/;"	f
+update_loop	laikago_real/src/velocity_mode.cpp	/^void* update_loop(void* data)$/;"	f
+update_loop	laikago_real/src/walk_mode.cpp	/^void* update_loop(void* data)$/;"	f
+update_loop	unitree_legged_real/src/a1_driver.cpp	/^void* update_loop(void* param)$/;"	f
+update_loop	unitree_legged_real/src/exe/torque_mode.cpp	/^void* update_loop(void* param)$/;"	f
+update_loop	unitree_legged_real/src/exe/velocity_mode.cpp	/^void* update_loop(void* param)$/;"	f
+update_loop	unitree_legged_real/src/exe/walk_example.cpp	/^void* update_loop(void* param)$/;"	f
+update_loop	unitree_legged_real/src/exe/walk_mode.cpp	/^void* update_loop(void* param)$/;"	f
+vel	unitree_legged_control/include/unitree_joint_control_tool.h	/^    double vel;$/;"	m	struct:__anon1
+velStiffness	unitree_legged_control/include/unitree_joint_control_tool.h	/^    double velStiffness;$/;"	m	struct:__anon1
+velStopF	unitree_legged_control/include/unitree_joint_control_tool.h	17;"	d
+velocityLimits	unitree_legged_control/src/joint_controller.cpp	/^    void UnitreeJointController::velocityLimits(double &velocity)$/;"	f	class:unitree_legged_control::UnitreeJointController
+visual	unitree_gazebo/plugin/draw_force_plugin.cc	/^            rendering::VisualPtr visual;$/;"	m	class:gazebo::UnitreeDrawForcePlugin	file:
+visual_namespace	unitree_gazebo/plugin/draw_force_plugin.cc	/^            std::string visual_namespace;$/;"	m	class:gazebo::UnitreeDrawForcePlugin	file:
+~UnitreeDrawForcePlugin	unitree_gazebo/plugin/draw_force_plugin.cc	/^        ~UnitreeDrawForcePlugin(){$/;"	f	class:gazebo::UnitreeDrawForcePlugin
+~UnitreeFootContactPlugin	unitree_gazebo/plugin/foot_contact_plugin.cc	/^        ~UnitreeFootContactPlugin(){}$/;"	f	class:gazebo::UnitreeFootContactPlugin
+~UnitreeJointController	unitree_legged_control/src/joint_controller.cpp	/^    UnitreeJointController::~UnitreeJointController(){$/;"	f	class:unitree_legged_control::UnitreeJointController

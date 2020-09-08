@@ -49,8 +49,8 @@
     </node>
   </group>  
 
-<!--   <group if="$(arg gui)">
-     <node pkg="rviz" type="rviz" name="rviz" args="-d $(find unitree_gazebo)/config/laikago.rviz" output="screen"/>
+   <group if="$(arg gui)">
+     <node pkg="rviz" type="rviz" name="rviz" args="-d $(find unitree_gazebo)/config/a1.rviz" output="screen"/>
   </group> -->
 
 
