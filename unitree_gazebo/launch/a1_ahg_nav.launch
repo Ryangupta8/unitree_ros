@@ -20,15 +20,9 @@
      <arg name="rname" value="a1"/>
      <arg name="x_pos" value="8.0"/>
      <arg name="y_pos" value="-2.0"/>
-     <arg name="use_sim_time" value="false"/>
+     <arg name="use_sim_time" value="true"/>
      <arg name="z_pos" value="0.2"/>
   </include>
-
-  <!-- Azure Kinect -->
-<!--   <include file="$(find azure_kinect_ros_driver)/launch/driver.launch">
-     <arg name="ahg_sim" value="true"/>
-     <arg name="rname" value="laikago"/>
-  </include> -->
 
   <group if="$(arg slam)">
     <include file="$(find unitree_navigation)/launch/gmapping.launch"/>
@@ -40,7 +34,7 @@
     </include>
   </group>
   <group unless="$(arg move_base)">  
-    <node pkg="amrl" type="enml" name="non_markov_localization" output="screen" args="--config_dir $(find amrl)/enml/config --robot_config a1.lua --maps_dir $(find amrl)/enml/maps -d1" />
+    <node pkg="amrl" type="enml" name="non_markov_localization" output="screen" args="--config_dir $(find amrl)/enml/config --robot_config a1_gazebo.lua --maps_dir $(find amrl)/enml/maps -d1" />
     
     <node pkg="amrl" type="navigation" name="graph_navigation" output="screen" args="--map $(arg graph_map_location)/$(arg graph_map_name)/$(arg graph_map_name).navigation.txt" >
        <remap from="/jackal_velocity_controller/odom" to="/correct_odom"/>

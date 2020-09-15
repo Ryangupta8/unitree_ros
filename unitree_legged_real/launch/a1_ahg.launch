@@ -1,23 +1,15 @@
 <?xml version="1.0"?>
 <launch>
-    <arg name="rname" default="a1"/>
-    <arg name="ctrl_level" default="highlevel"/>
+  <!-- Include the Real robot Launch -->
+   <include file="$(find unitree_legged_real)/launch/real.launch"/>
 
-    <node pkg="unitree_legged_real" type="lcm_server" name="node_lcm_server"
-          respawn="false" output="screen" args="$(arg rname) $(arg ctrl_level)" />
-
-
-  <!-- Use standard ROS navigation stack through move_base? If not, specify vector maps for graph_navigation -->
-  <arg name="move_base" default="false"/>
+  <!-- Specify vector maps and topic names for graph_navigation -->
   <arg name="graph_map_location" default="$(find amrl_maps)"/>
   <arg name="graph_map_name" default="AHG_Apartment"/>
   <arg name="odom_topic" default="/filtered_odom"/>
   <arg name="scan_topic" default="/scan"/>
   <arg name="localization_topic" default="/localization"/>
     
-    <param name="robot_name" value="$(arg rname)"/>
-    <param name="control_level" value="$(arg ctrl_level)"/>
-
   <!-- Include the Velodyne Launch -->
   <include file="$(find velodyne_pointcloud)/launch/VLP16_points.launch"/>
 
