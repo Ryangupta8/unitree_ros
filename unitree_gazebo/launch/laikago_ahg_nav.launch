@@ -7,9 +7,10 @@
   <arg name="move_base" default="false"/>
   <arg name="graph_map_location" default="$(find amrl_maps)"/>
   <arg name="graph_map_name" default="AHG_Apartment"/>
-  <arg name="odom_topic" default="/odom"/>
+  <arg name="odom_topic" default="/correct_odom"/>
   <arg name="scan_topic" default="/scan"/>
-  <arg name="localization_topic" default="/amcl_pose"/>
+  <arg name="localization_topic" default="/localization"/>
+  <arg name="loc_topic" default="/localization"/>
 
 
   <param name="use_sim_time" value="false"/>
@@ -20,13 +21,8 @@
      <arg name="x_pos" value="8.0"/>
      <arg name="y_pos" value="-2.0"/>
      <arg name="z_pos" value="0.2"/>
+     <arg name="use_sim_time" value="true"/>
   </include>
-
-  <!-- Azure Kinect -->
-<!--   <include file="$(find azure_kinect_ros_driver)/launch/driver.launch">
-     <arg name="ahg_sim" value="true"/>
-     <arg name="rname" value="laikago"/>
-  </include> -->
 
   <group if="$(arg slam)">
     <include file="$(find unitree_navigation)/launch/gmapping.launch"/>
@@ -46,10 +42,10 @@
        <remap from="/navigation/cmd_vel" to="/cmd_vel"/>
     </node>
   </group>  
-
+<!-- 
   <group if="$(arg gui)">
      <node pkg="rviz" type="rviz" name="rviz" args="-d $(find unitree_gazebo)/config/laikago.rviz" output="screen"/>
-  </group>
+  </group> -->
 
 
 
