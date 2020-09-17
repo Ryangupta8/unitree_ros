@@ -13,14 +13,14 @@
   <arg name="loc_topic" default="/localization"/>
 
 
-  <param name="use_sim_time" value="false"/>
+  <param name="use_sim_time" value="true"/>
 
   <include file="$(find unitree_gazebo)/launch/normal.launch">
      <arg name="ahg_sim" value="true"/>
      <arg name="rname" value="a1"/>
      <arg name="x_pos" value="8.0"/>
      <arg name="y_pos" value="-2.0"/>
-     <arg name="use_sim_time" value="false"/>
+     <arg name="use_sim_time" value="true"/>
      <arg name="z_pos" value="0.2"/>
   </include>
 
@@ -49,9 +49,12 @@
     </node>
   </group>  
 
-   <group if="$(arg gui)">
-     <node pkg="rviz" type="rviz" name="rviz" args="-d $(find unitree_gazebo)/config/a1.rviz" output="screen"/>
-  </group> -->
+  <node name="map_server" pkg="map_server" type="map_server" args="$(find tmp)/maps/ahg_map_rev.yaml"/>
+  <include file="$(find costmap_2d)/launch/a1.launch"/>
+
+   <!--<group if="$(arg gui)">-->
+     <!--<node pkg="rviz" type="rviz" name="rviz" args="-d $(find unitree_gazebo)/config/a1.rviz" output="screen"/>-->
+  <!--</group>-->
 
 
 
