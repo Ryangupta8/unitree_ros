@@ -27,6 +27,7 @@
 
   <node pkg="global_planner" type="planner" name="planner" output="screen">
     <!--<rosparam file="$(find unitree_navigation)/config/a1/global_costmap_params.yaml" command="load" /> -->
+    <rosparam file="$(find unitree_navigation)/config/a1/costmap_common_params.yaml" command="load" ns="costmap" /> 
     <rosparam file="$(find unitree_navigation)/config/a1/global_planner_params.yaml" command="load" />
     <!--<param name="base_global_planner" value="global_planner/GlobalPlanner"/>-->
   <param name="base_global_planner" value="global_planner/GlobalPlanner"/>

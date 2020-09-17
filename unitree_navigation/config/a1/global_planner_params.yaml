@@ -10,4 +10,5 @@ shutdown_costmaps:          false
 oscillation_timeout:        0.0
 oscillation_distance:       0.5
 robot_base_frame: base
+global_frame: map
 
