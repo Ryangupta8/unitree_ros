@@ -24,7 +24,22 @@
 
   <!-- Include the Velodyne Launch -->
   <include file="$(find velodyne_pointcloud)/launch/VLP16_points.launch"/>
+  <!-- Pointcloud to Laserscan -->
+  <node pkg="nodelet" type="nodelet" name="pointcloud_to_laserscan" 
+    args="load pointcloud_to_laserscan/pointcloud_to_laserscan_nodelet velodyne_nodelet_manager">
+    <remap from="cloud_in" to="velodyne_points"/>
+    <remap from="scan" to="cloud2scan" />
 
+    <param name="min_height" value="$(arg min_height)" />
+    <param name="max_height" value="$(arg max_height)" />
+    <param name="angle_min" value="-3.1416" /> <!-- -pi -->
+    <param name="angle_max" value="3.1416" /> <!-- pi -->
+    <param name="scan_time" value="0.1" />
+    <param name="range_max" value="40.0" />
+    <param name="range_min" value="0.4" />
+    <param name="use_inf" value="true" />
+
+  </node>
 
   <!-- Run the SDK Driver -->
   <node pkg="unitree_legged_real" type="a1_driver_simple_odom" name="a1_driver_node"
