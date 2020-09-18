@@ -87,3 +87,12 @@ target_link_libraries(a1_driver_simple_odom
     ${RUNNING_COVARIANCE_LIBRARY}
 )
 add_dependencies(a1_driver_simple_odom ${${PEOJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+
+add_executable(a1_gather_publish src/a1_gather_publish.cpp)
+target_link_libraries(a1_gather_publish
+    ${EXTRA_LIBS} 
+    ${catkin_LIBRARIES} 
+    ${RUNNING_COVARIANCE_LIBRARY}
+)
+add_dependencies(a1_gather_publish ${${PEOJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+

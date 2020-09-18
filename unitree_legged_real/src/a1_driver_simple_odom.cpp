@@ -4,7 +4,6 @@ Use of this source code is governed by the MPL-2.0 license, see LICENSE.
 ************************************************************************/
 
 // Author: Ryan Gupta
-// Co-author: Nick Machak
 
 #include <pthread.h>
 #include <boost/thread.hpp>
