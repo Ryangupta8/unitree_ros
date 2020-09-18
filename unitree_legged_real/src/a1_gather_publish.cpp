@@ -23,7 +23,8 @@ Use of this source code is governed by the MPL-2.0 license, see LICENSE.
 #include <sensor_msgs/Imu.h>
 #include <tf2/LinearMath/Quaternion.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
-#include <std_msgs/Bool.h>
+#include <tf2_ros/static_transform_broadcaster.h>
+#include <tf/transform_broadcaster.h>
 
 
 #include "math_utils/running_covariance.h"
@@ -55,10 +56,8 @@ int main(int argc, char *argv[])
     ros::NodeHandle n;
     ros::Rate loop_rate(500);
 
-    Listener listener;
-
-    ros::Publisher pub = n.advertise<nav_msgs::Odometry>("odom", 1000);
-    ros::Publisher odom_pub = n.advertise<sensor_msgs::Imu>("imu_data", 1000);
+    ros::Publisher odom_pub = n.advertise<nav_msgs::Odometry>("odom", 1000);
+    ros::Publisher imu_pub = n.advertise<sensor_msgs::Imu>("imu_data", 1000);
 
     // Vars for collecting raw IMU data
     double quat_[4];
@@ -172,10 +171,6 @@ int main(int argc, char *argv[])
         imu_msg.orientation.y = quat_[1];
         imu_msg.orientation.z = quat_[2];
         imu_msg.orientation.w = quat_[3];
-        // Ensure normalized
-        tf2::convert(imu_msg.orientation , quat_tf);
-        quat_tf.normalize();
-        imu_msg.orientation = tf2::toMsg(quat_tf);
 
         // IMU Linear Acceleration
         imu_msg.linear_acceleration.x = acceler_[0];
