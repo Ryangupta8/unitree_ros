@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="rname" default="a1"/>
+  <arg name="ctrl_level" default="highlevel"/>
+
+  <arg name="min_height" default="-0.5" />
+  <arg name="max_height" default="0.5" />
+
+  <arg name="launch_nodelet_manager" default="true" />
+
+  <node pkg="unitree_legged_real" type="lcm_server" name="node_lcm_server"
+	  respawn="false" output="screen" args="$(arg rname) $(arg ctrl_level)"/>
+
+  <arg name="move_base" default="false"/>
+  <arg name="graph_map_location" default="$(find amrl_maps)"/>
+  <arg name="graph_map_name" default="AHG2"/>
+  <arg name="odom_topic" default="/odom"/>
+  <arg name="scan_topic" default="/scan"/>
+  <arg name="localization_topic" default="/localization"/>>
+  <arg name="loc_topic" default="/localization"/>
+
+  <param name="use_sim_time" value="false"/>
+  <param name="robot_name" value="$(arg rname)"/>
+  <param name="control_level" value="$(arg ctrl_level)"/>
+
+  <include file="$(find velodyne_pointcloud)/launch/VLP16_points.launch"/>
+
+  
+
+  <!-- Run the SDK Driver -->
+  <node pkg="unitree_legged_real" type="a1_gather_publish" name="a1_driver_node"
+          respawn="false" output="screen" args="$(arg rname) $(arg ctrl_level)" />
+</launch>

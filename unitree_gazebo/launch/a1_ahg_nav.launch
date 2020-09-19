@@ -43,6 +43,9 @@
     </node>
   </group>  
 
+  <node pkg="unitree_navigation" type="a1_amrl_nav" name="move_publisher" />
+
+
 <!--   <group if="$(arg gui)">
      <node pkg="rviz" type="rviz" name="rviz" args="-d $(find unitree_gazebo)/config/laikago.rviz" output="screen"/>
   </group> -->
