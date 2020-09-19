@@ -10,19 +10,29 @@ find_package(catkin REQUIRED COMPONENTS
     geometry_msgs
     unitree_legged_msgs
     math_utils
+    std_msgs
 )
 
 find_package(Eigen3 REQUIRED)
 
-find_library(RUNNING_COVARIANCE_LIBRARY running_covariance HINTS /home/hcrlab/workspaces/amrl_ws/)
+#<<<<<<< HEAD
+#find_library(RUNNING_COVARIANCE_LIBRARY running_covariance HINTS /home/hcrlab/workspaces/amrl_ws/)
+#=======
+find_library(RUNNING_COVARIANCE_LIBRARY running_covariance HINTS /home/amrl/workspaces/unitree_ws/)
+#>>>>>>> origin/nuc
 
 catkin_package( CATKIN_DEPENDS
     math_utils
 )
 
 include_directories(
-    /home/hcrlab/srcs/unitree_legged_sdk/include
-    /home/hcrlab/workspaces/amrl_ws/src/unitree_ros/math_utils/include
+#<<<<<<< HEAD
+    #/home/hcrlab/srcs/unitree_legged_sdk/include
+    #/home/hcrlab/workspaces/amrl_ws/src/unitree_ros/math_utils/include
+#=======
+    /home/amrl/robots/unitree_legged_sdk/include
+    /home/amrl/workspaces/unitree_ws/src/unitree_ros/math_utils/include
+#>>>>>>> origin/nuc
     include
     ${Boost_INCLUDE_DIR}
     ${catkin_INCLUDE_DIRS}
@@ -30,7 +40,11 @@ include_directories(
     # $ENV{UNITREE_LEGGED_SDK_PATH}/include
 )
 
-link_directories(/home/hcrlab/srcs/unitree_legged_sdk/lib)
+#<<<<<<< HEAD
+#link_directories(/home/hcrlab/srcs/unitree_legged_sdk/lib)
+#=======
+link_directories(/home/amrl/robots/unitree_legged_sdk/lib)
+#>>>>>>> origin/nuc
 string(CONCAT LEGGED_SDK_NAME libunitree_legged_sdk_amd64.so)
 set(EXTRA_LIBS ${LEGGED_SDK_NAME} lcm)
 
@@ -57,14 +71,45 @@ target_link_libraries(example_walk ${EXTRA_LIBS} ${catkin_LIBRARIES})
 add_dependencies(example_walk ${${PEOJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 
-add_executable(lcm_server /home/hcrlab/srcs/unitree_legged_sdk/examples/lcm_server.cpp)
+#<<<<<<< HEAD
+#add_executable(lcm_server /home/hcrlab/srcs/unitree_legged_sdk/examples/lcm_server.cpp)
+#=======
+add_executable(lcm_server /home/amrl/robots/unitree_legged_sdk/examples/lcm_server.cpp)
+#>>>>>>> origin/nuc
 target_link_libraries(lcm_server ${EXTRA_LIBS} ${catkin_LIBRARIES})
 add_dependencies(lcm_server ${${PEOJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
-add_executable(a1_driver src/a1_driver.cpp)
-target_link_libraries(a1_driver 
+add_executable(a1_driver_filtered_odom src/a1_driver_filtered_odom.cpp)
+target_link_libraries(a1_driver_filtered_odom 
     ${EXTRA_LIBS} 
     ${catkin_LIBRARIES} 
     ${RUNNING_COVARIANCE_LIBRARY}
 )
-add_dependencies(a1_driver ${${PEOJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(a1_driver_filtered_odom ${${PEOJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+
+
+add_executable(a1_driver_raw_odom src/a1_driver_raw_odom.cpp)
+target_link_libraries(a1_driver_raw_odom
+    ${EXTRA_LIBS} 
+    ${catkin_LIBRARIES} 
+    ${RUNNING_COVARIANCE_LIBRARY}
+)
+add_dependencies(a1_driver_raw_odom ${${PEOJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+
+
+add_executable(a1_driver_simple_odom src/a1_driver_simple_odom.cpp)
+target_link_libraries(a1_driver_simple_odom
+    ${EXTRA_LIBS} 
+    ${catkin_LIBRARIES} 
+    ${RUNNING_COVARIANCE_LIBRARY}
+)
+add_dependencies(a1_driver_simple_odom ${${PEOJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+
+add_executable(a1_gather_publish src/a1_gather_publish.cpp)
+target_link_libraries(a1_gather_publish
+    ${EXTRA_LIBS} 
+    ${catkin_LIBRARIES} 
+    ${RUNNING_COVARIANCE_LIBRARY}
+)
+add_dependencies(a1_gather_publish ${${PEOJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+

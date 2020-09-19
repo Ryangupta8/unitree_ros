@@ -14,6 +14,10 @@
   <arg name="odom_topic" default="/filtered_odom"/>
   <arg name="scan_topic" default="/scan"/>
   <arg name="localization_topic" default="/localization"/>
+  <arg name="loc_topic" default="/localization"/>
+
+  <param name="use_sim_time" value="false"/>
+
     
     <param name="robot_name" value="$(arg rname)"/>
     <param name="control_level" value="$(arg ctrl_level)"/>
@@ -22,15 +26,28 @@
   <include file="$(find velodyne_pointcloud)/launch/VLP16_points.launch"/>
 
   <!-- Run the SDK Driver -->
-  <node pkg="unitree_legged_real" type="a1_driver" name="a1_driver_node"
+  <node pkg="unitree_legged_real" type="a1_driver_filtered_odom" name="a1_driver_node"
           respawn="false" output="screen" args="$(arg rname) $(arg ctrl_level)" />
 
-  	<node pkg="amrl" type="enml" name="non_markov_localization" output="screen" args="--config_dir $(find amrl)/enml/config --robot_config a1_real.lua --maps_dir $(find amrl)/enml/maps -d1" />
+  	<node pkg="amrl" type="enml" name="non_markov_localization" output="screen" args="--config_dir $(find amrl)/enml/config --robot_config a1_real_filtered_odom.lua --maps_dir $(find amrl)/enml/maps -d1" />
     
     <node pkg="amrl" type="navigation" name="graph_navigation" output="screen" args="--map $(arg graph_map_location)/$(arg graph_map_name)/$(arg graph_map_name).navigation.txt" >
        <remap from="/jackal_velocity_controller/odom" to="/filtered_odom"/>
        <remap from="/velodyne_2dscan" to="/scan"/>
        <remap from="/navigation/cmd_vel" to="/cmd_vel"/>
     </node>
+
+  <!-- Robot Pose EKF -->
+  <node pkg="robot_pose_ekf" type="robot_pose_ekf" name="robot_pose_ekf">
+    <param name="output_frame" value="odom"/>
+    <param name="base_footprint_frame" value="base"/>
+    <param name="freq" value="30.0"/>
+    <param name="sensor_timeout" value="1.0"/>
+    <param name="odom_used" value="false"/> 
+    <param name="imu_used" value="true"/>
+    <param name="vo_used" value="false"/>
+    <param name="debug" value="false"/>
+    <param name="self_diagnose" value="false"/>
+  </node>
 
 </launch>
