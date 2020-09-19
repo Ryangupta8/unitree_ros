@@ -50,7 +50,7 @@
     </node>
  
 
-  <node name="map_server" pkg="map_server" type="map_server" args="$(find tmp)/maps/ahg_map.yaml">
+  <node name="map_server" pkg="map_server" type="map_server" args="$(find tmp)/maps/ahg_map_rev.yaml">
       <param name="frame_id" value="map_en"/>
   </node>
   <include file="$(find unitree_navigation)/launch/a1_costmap.launch"/>
