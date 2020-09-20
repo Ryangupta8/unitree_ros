@@ -24,7 +24,15 @@
   <param name="control_level" value="$(arg ctrl_level)"/>
 
   <include file="$(find velodyne_pointcloud)/launch/VLP16_points.launch"/>
-
+  <!-- pointcloud_to_laserscan -->
+  <node pkg="pointcloud_to_laserscan" name="pointcloud_to_laserscan_node" type="pointcloud_to_laserscan_node" >
+    <remap from="cloud_in" to="velodyne_points"/>
+    <remap from="scan" to="cloud2scan" />
+    <param name="min_height" value="-0.3"/>
+    <param name="max_height" value="0.3"/>
+    <param name="angle_min" value="-3.1416"/>
+    <param name="angle_max" value="3.1416"/>
+  </node>
   
 
   <!-- Run the SDK Driver -->

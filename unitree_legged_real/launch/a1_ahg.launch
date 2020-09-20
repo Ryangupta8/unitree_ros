@@ -25,7 +25,7 @@
   <!-- Include the Velodyne Launch -->
   <include file="$(find velodyne_pointcloud)/launch/VLP16_points.launch"/>
   <!-- pointcloud_to_laserscan -->
-  <node pkg="pointcloud_to_laserscan" name= type="pointcloud_to_laserscan_node" >
+  <node pkg="pointcloud_to_laserscan" name="pointcloud_to_laserscan_node" type="pointcloud_to_laserscan_node" >
     <remap from="cloud_in" to="velodyne_points"/>
     <remap from="scan" to="cloud2scan" />
     <param name="min_height" value="-0.3"/>
