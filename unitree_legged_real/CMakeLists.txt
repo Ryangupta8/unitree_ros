@@ -96,3 +96,8 @@ target_link_libraries(a1_gather_publish
 )
 add_dependencies(a1_gather_publish ${${PEOJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
+install(DIRECTORY scripts/
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+  USE_SOURCE_PERMISSIONS
+)
+
