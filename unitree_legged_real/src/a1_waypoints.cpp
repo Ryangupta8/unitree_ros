@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
 
     Listener listener;
 
-    ros::Subscriber loc_sub = n.subscribe("/localization", 1000, &Listener::loc_cb, &listener);
+    ros::Subscriber loc_sub = n.subscribe("/global_pose", 1000, &Listener::loc_cb, &listener);
     ros::Publisher goal_pub = n.advertise<geometry_msgs::PoseStamped>("/move_base_simple/goal", 1000);
 
     // To publish to move_base_simple/goal

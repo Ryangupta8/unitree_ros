@@ -50,10 +50,12 @@
     </node>
  
 
-  <node name="map_server" pkg="map_server" type="map_server" args="$(find tmp)/maps/ahg_map_rev.yaml">
-      <param name="frame_id" value="map_en"/>
+  <node name="map_server" pkg="map_server" type="map_server" args="$(find tmp)/maps/ahg4_map.yaml">
+      <param name="frame_id" value="map"/>
   </node>
-  <include file="$(find unitree_navigation)/launch/a1_costmap.launch"/>
+  <include file="$(find unitree_navigation)/launch/a1_costmap.launch">
+     <arg name="use_sim_time" value="true"/>
+  </include>
     <!--<node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">-->
         <!--<rosparam file="$(find tmp)/config/a1/costmap_common_params.yaml" command="load" ns="global_costmap" /> -->
     <!--<rosparam file="$(find tmp)/config/a1/costmap_common_params.yaml" command="load" ns="local_costmap" />-->
@@ -63,7 +65,7 @@
     <!--<param name="base_global_planner" value="global_planner/GlobalPlanner"/>-->
  <!--</node>-->
     <!--<include file="$(find tmp)/launch/amcl_diff_a1.launch"/>-->
-  <node name ="enmap_to_rosmap" pkg="tf" type="static_transform_publisher" args="9.9 -2.5 0 3.15 0 0.00 map map_en 10"/>
+  <node name ="enmap_to_rosmap" pkg="tf" type="static_transform_publisher" args="-54 15 0 -1.57 0 0.00 map map_en 10"/>
 
   <node name="scaled_map_converter" pkg="navi_manager" type="global_planner" output="screen"/>
   <node name="a1_odom" pkg="search_service" type="a1_odom" output="screen"/>

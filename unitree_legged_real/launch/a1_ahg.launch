@@ -23,7 +23,7 @@
     <param name="control_level" value="$(arg ctrl_level)"/>
 
   <!-- Include the Velodyne Launch -->
-  <include file="$(find velodyne_pointcloud)/launch/VLP16_points.launch"/>
+  <!--<include file="$(find velodyne_pointcloud)/launch/VLP16_points.launch"/>-->
   <!-- pointcloud_to_laserscan -->
   <node pkg="pointcloud_to_laserscan" name="pointcloud_to_laserscan_node" type="pointcloud_to_laserscan_node" >
     <remap from="cloud_in" to="velodyne_points"/>
