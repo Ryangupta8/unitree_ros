@@ -100,6 +100,8 @@ int main(int argc, char *argv[])
     current_time = ros::Time::now();
     last_time = ros::Time::now();
 
+    bool_pub.publish(bool_msg);
+
 
     while (ros::ok()){
         ros::spinOnce();
