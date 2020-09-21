@@ -11,7 +11,8 @@ find_package(catkin REQUIRED COMPONENTS
     unitree_legged_msgs
     math_utils
     std_msgs
-)
+    # amrl_msgs
+    )
 
 find_package(Eigen3 REQUIRED)
 
@@ -19,7 +20,8 @@ find_library(RUNNING_COVARIANCE_LIBRARY running_covariance HINTS /home/amrl/work
 
 catkin_package( CATKIN_DEPENDS
     math_utils
-)
+    # amrl_msgs
+    )
 
 include_directories(
     /home/amrl/robots/unitree_legged_sdk/include
@@ -62,23 +64,13 @@ add_executable(lcm_server /home/amrl/robots/unitree_legged_sdk/examples/lcm_serv
 target_link_libraries(lcm_server ${EXTRA_LIBS} ${catkin_LIBRARIES})
 add_dependencies(lcm_server ${${PEOJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
-add_executable(a1_driver_filtered_odom src/a1_driver_filtered_odom.cpp)
-target_link_libraries(a1_driver_filtered_odom 
+add_executable(a1_waypoints src/a1_waypoints.cpp)
+target_link_libraries(a1_waypoints 
     ${EXTRA_LIBS} 
     ${catkin_LIBRARIES} 
     ${RUNNING_COVARIANCE_LIBRARY}
 )
-add_dependencies(a1_driver_filtered_odom ${${PEOJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-
-
-add_executable(a1_driver_raw_odom src/a1_driver_raw_odom.cpp)
-target_link_libraries(a1_driver_raw_odom
-    ${EXTRA_LIBS} 
-    ${catkin_LIBRARIES} 
-    ${RUNNING_COVARIANCE_LIBRARY}
-)
-add_dependencies(a1_driver_raw_odom ${${PEOJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-
+add_dependencies(a1_waypoints ${${PEOJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 add_executable(a1_driver_simple_odom src/a1_driver_simple_odom.cpp)
 target_link_libraries(a1_driver_simple_odom
