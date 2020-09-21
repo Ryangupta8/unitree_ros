@@ -57,28 +57,9 @@ add_executable(example_walk src/exe/walk_example.cpp)
 target_link_libraries(example_walk ${EXTRA_LIBS} ${catkin_LIBRARIES})
 add_dependencies(example_walk ${${PEOJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
-
 add_executable(lcm_server /home/knapsack/robots/unitree_legged_sdk/examples/lcm_server.cpp)
 target_link_libraries(lcm_server ${EXTRA_LIBS} ${catkin_LIBRARIES})
 add_dependencies(lcm_server ${${PEOJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-
-add_executable(a1_driver_filtered_odom src/a1_driver_filtered_odom.cpp)
-target_link_libraries(a1_driver_filtered_odom 
-    ${EXTRA_LIBS} 
-    ${catkin_LIBRARIES} 
-    ${RUNNING_COVARIANCE_LIBRARY}
-)
-add_dependencies(a1_driver_filtered_odom ${${PEOJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-
-
-add_executable(a1_driver_raw_odom src/a1_driver_raw_odom.cpp)
-target_link_libraries(a1_driver_raw_odom
-    ${EXTRA_LIBS} 
-    ${catkin_LIBRARIES} 
-    ${RUNNING_COVARIANCE_LIBRARY}
-)
-add_dependencies(a1_driver_raw_odom ${${PEOJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-
 
 add_executable(a1_driver_simple_odom src/a1_driver_simple_odom.cpp)
 target_link_libraries(a1_driver_simple_odom
