@@ -4,6 +4,7 @@
 #include <geometry_msgs/Pose.h>
 #include <geometry_msgs/Quaternion.h>
 #include <tf/transform_broadcaster.h>
+#include <std_msgs/String.h>
 
 #include <cmath>
 
@@ -30,6 +31,10 @@ int main(int argc, char *argv[])
 
     ros::Subscriber loc_sub = n.subscribe("/global_pose", 1000, &Listener::loc_cb, &listener);
     ros::Publisher goal_pub = n.advertise<geometry_msgs::PoseStamped>("/move_base_simple/goal", 1000);
+    ros::Publisher test_pub = n.advertise<std_msgs::String>("test", 1000);
+
+
+    std_msgs::String test_msg; test_msg.data = "test";
 
     // To publish to move_base_simple/goal
     geometry_msgs::PoseStamped goal_msg;
@@ -52,28 +57,41 @@ int main(int argc, char *argv[])
     // Get the quaternion of the goal for PoseStamped
     goal_quat = tf::createQuaternionMsgFromYaw(goal_th[i]);
     // Fill the Goal msg
-    goal_msg.pose.position.x = goal_x[i]; goal_msg.pose.position.y = goal_y[i]; 
+    goal_msg.header.stamp = current_time;
+    goal_msg.pose.position.x = goal_x[i]; goal_msg.pose.position.y = goal_y[i]; goal_msg.pose.position.z = 0.;
     goal_msg.pose.orientation = goal_quat;
-    goal_msg.header.frame_id = "map_en";
-    goal_pub.publish(goal_msg);
+
+    bool first_time = true;
 
     while (ros::ok()){
-        ros::spinOnce();
+
+        test_pub.publish(test_msg);
+        
         current_time = ros::Time::now();
+        // if(first_time){
+        //     goal_pub.publish(goal_msg);
+        //     cout << "first time" << endl;
+        //     first_time = false;
+        // }
 		
 		distance = sqrt( pow((listener.pose.position.x - goal_x[i]), 2.0) + pow( (listener.pose.position.y - goal_y[i]), 2.0) );
+        // cout << "distance = " << distance << endl;
 
 		if(distance <= 0.15){
 			++i;
 			// Get the quaternion of the goal for PoseStamped
+            goal_msg.header.stamp = current_time;
 		    goal_quat = tf::createQuaternionMsgFromYaw(goal_th[i]);
+            if(i >= 4){ros::shutdown();}
 		    // Fill the Goal msg
 		    goal_msg.pose.position.x = goal_x[i]; goal_msg.pose.position.y = goal_y[i]; 
 		    goal_msg.pose.orientation = goal_quat;
-		    goal_pub.publish(goal_msg);
+		    
 		}
+        goal_pub.publish(goal_msg);
 
 		last_time = current_time;
+        ros::spinOnce();
         loop_rate.sleep();
     }
 
