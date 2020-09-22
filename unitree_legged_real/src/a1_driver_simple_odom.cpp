@@ -100,6 +100,8 @@ int main(int argc, char *argv[])
     current_time = ros::Time::now();
     last_time = ros::Time::now();
 
+    bool_pub.publish(bool_msg);
+
 
     while (ros::ok()){
         ros::spinOnce();
@@ -160,7 +162,7 @@ int main(int argc, char *argv[])
         /////////////////////////
         // Unitree Legged SDK //
         ///////////////////////
-        if(listener.dx == 0 && listener.dy == 0){
+        if(listener.dx == 0 && listener.dy == 0 && listener.drz == 0){
             SendHighROS.forwardSpeed = 0.0f;
             SendHighROS.sideSpeed = 0.0f;
             SendHighROS.rotateSpeed = 0.0f;
