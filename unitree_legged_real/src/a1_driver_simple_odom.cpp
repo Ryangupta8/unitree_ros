@@ -100,12 +100,11 @@ int main(int argc, char *argv[])
     current_time = ros::Time::now();
     last_time = ros::Time::now();
 
-    bool_pub.publish(bool_msg);
-
 
     while (ros::ok()){
         ros::spinOnce();
-
+        bool_pub.publish(bool_msg);
+ 
         motiontime = motiontime+2;
         roslcm.Get(RecvHighLCM);
         RecvHighROS = ToRos(RecvHighLCM);
