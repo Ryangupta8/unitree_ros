@@ -22,6 +22,7 @@ Use of this source code is governed by the MPL-2.0 license, see LICENSE.
 #include <tf2/LinearMath/Quaternion.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 #include <std_msgs/Bool.h>
+#include <std_msgs/Int32.h>
 #include <tf2_ros/static_transform_broadcaster.h>
 #include <tf/transform_broadcaster.h>
 
@@ -45,15 +46,26 @@ void* update_loop(void* param)
 class Listener{
 public:
     double dx, dy, drz; 
-
+    bool pose_bool;
+    int pose_int;
 
 // Callback function for /cmd_vel subscriber
-    void twist_callback(const geometry_msgs::Twist::ConstPtr& vel_cmd)
+    void twist_callback(const geometry_msgs::Twist::ConstPtr& msg)
     {
-        dx = vel_cmd->linear.x;
-        dy = vel_cmd->linear.y;
-        drz = vel_cmd->angular.z;
+        dx = msg->linear.x;
+        dy = msg->linear.y;
+        drz = msg->angular.z;
         // cout << "Twist Received"  << endl;
+    }
+
+    void pose_bool_callback(const std_msgs::Bool::ConstPtr& msg)
+    {
+        pose_bool = msg->data
+    }
+
+    void pose_int_callback(const std_msgs::Int32::ConstPtr& msg)
+    {
+        pose_int = msg->data
     }
 };
 
@@ -71,8 +83,10 @@ int main(int argc, char *argv[])
     Listener listener;
 
     ros::Publisher odom_pub = n.advertise<nav_msgs::Odometry>("odom", 1000);
-    ros::Publisher bool_pub = n.advertise<std_msgs::Bool>("/autonomy_arbiter/enabled", 1000);
-    ros::Subscriber sub = n.subscribe("/cmd_vel", 1000, &Listener::twist_callback, &listener);
+    ros::Publisher autonomy_pub = n.advertise<std_msgs::Bool>("/autonomy_arbiter/enabled", 1000);
+    ros::Subscriber cmd_vel_sub = n.subscribe("/cmd_vel", 1000, &Listener::twist_callback, &listener);
+    ros::Subscriber pose_bool_sub= n.subscribe("/pose_bool", 1000, &Listener::pose_bool_callback, &listener);
+    ros::Subscriber pose_int_sub= n.subscribe("/pose_int", 1000, &Listener::pose_int_callback, &listener);
 
     nav_msgs::Odometry odom;
     std_msgs::Bool bool_msg; bool_msg.data = true;
@@ -96,11 +110,13 @@ int main(int argc, char *argv[])
     double y = 0.0;
     double th = 0.0;
 
+    bool local_pose_bool = false;
+
     ros::Time current_time, last_time;
     current_time = ros::Time::now();
     last_time = ros::Time::now();
 
-    bool_pub.publish(bool_msg);
+    autonomy_pub.publish(bool_msg);
 
 
     while (ros::ok()){
@@ -178,6 +194,46 @@ int main(int argc, char *argv[])
             SendHighROS.forwardSpeed = listener.dx;
             SendHighROS.sideSpeed = listener.dy;
             SendHighROS.rotateSpeed = listener.drz;
+        }
+        /*
+        If we want to control the RPY of the robot body
+        
+            [0] -> max negative pitch (rear to ground, face to sky)
+            [1] -> max positive pitch (rear to sky, face to ground)
+            [2] -> max negative yaw + max negative pitch (turn clockwise around the vertical + rear to ground, face to sky)
+            [3] -> max positive yaw + max negative pitch (turn counterclockwise around the vertical + rear to ground, face to sky)
+
+        */
+        local_pose_bool = listener.pose_bool;
+        if(local_pose_bool){
+            if(listener.pose_int == 0){
+
+                SendHighROS.roll  = 0;
+                SendHighROS.pitch = -1.;
+                SendHighROS.yaw = 0;
+            }
+
+            if(listener.pose_int == 1){
+               
+                SendHighROS.roll  = 0;
+                SendHighROS.pitch = 1.;
+                SendHighROS.yaw = 0;
+            }
+
+            if(listener.pose_int == 2){
+               
+                SendHighROS.roll  = 0;
+                SendHighROS.pitch = -1.;
+                SendHighROS.yaw = -0.8;
+            }
+
+            if(listener.pose_int == 3){
+                
+                SendHighROS.roll  = 0;
+                SendHighROS.pitch = -1.;
+                SendHighROS.yaw = 0.8;
+            }
+            
         }
 
         SendHighLCM = ToLcm(SendHighROS);
