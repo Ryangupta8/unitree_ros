@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
 		distance = sqrt( pow((listener.pose.position.x - goal_x[i]), 2.0) + pow( (listener.pose.position.y - goal_y[i]), 2.0) );
         // cout << "distance = " << distance << endl;
 
-		if(distance <= 0.15){
+		if(distance <= 0.3){
 			++i;
 			// Get the quaternion of the goal for PoseStamped
             goal_msg.header.stamp = current_time;
