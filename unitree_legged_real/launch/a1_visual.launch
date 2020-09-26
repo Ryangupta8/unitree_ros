@@ -3,6 +3,20 @@
   <!-- puck launch -->
     <include file="$(find velodyne_pointcloud)/launch/VLP16_points.launch"/>
 
+
+    <!-- depthimage_to_laserscan -->j
+    <node pkg="nodelet" type="nodelet" name="depth2scan_nodelet_manager" args="manager" />
+    <!-- run laserscan_to_pointcloud nodelet -->
+    <node pkg="nodelet" type="nodelet" name="laserscan_to_pointcloud" args="load pointcloud_to_laserscan/laserscan_to_pointcloud_nodelet $(arg scanner)_nodelet_manager">
+        <remap from="output_frame_id" to="camera_depth_frame"/>
+        <remap from="cloud" to="$(arg scanner)/cloud"/>
+    </node>
+
+
+
+
+
+
   <!-- pointcloud_to_laserscan -->
   <node pkg="pointcloud_to_laserscan" name="pointcloud_to_laserscan_node" type="pointcloud_to_laserscan_node" >
     <remap from="cloud_in" to="velodyne_points"/>
