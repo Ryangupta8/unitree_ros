@@ -1,20 +1,31 @@
 <?xml version="1.0"?>
 <launch>
-  <arg name="rname" default="a1"/>
-  <arg name="ctrl_level" default="highlevel"/>
+  <!-- puck launch -->
+    <include file="$(find velodyne_pointcloud)/launch/VLP16_points.launch"/>
 
-  <arg name="min_height" default="-0.5" />
-  <arg name="max_height" default="0.5" />
 
-  <arg name="launch_nodelet_manager" default="true" />
+    <!-- depthimage_to_laserscan -->j
+    <node pkg="nodelet" type="nodelet" name="depth2scan_nodelet_manager" args="manager" />
+    <!-- run laserscan_to_pointcloud nodelet -->
+    <node pkg="nodelet" type="nodelet" name="laserscan_to_pointcloud" args="load pointcloud_to_laserscan/laserscan_to_pointcloud_nodelet depth2scan__nodelet_manager">
+        <remap from="output_frame_id" to="camera_depth_frame"/>
+    </node>
 
-  <param name="use_sim_time" value="false"/>
-  <param name="robot_name" value="$(arg rname)"/>
-  <param name="control_level" value="$(arg ctrl_level)"/>
 
-  
 
-  <!-- Run the SDK Driver -->
-  <node pkg="unitree_legged_real" type="a1_gather_publish" name="a1_driver_node"
-          respawn="false" output="screen" args="$(arg rname) $(arg ctrl_level)" />
+
+  <!-- pointcloud_to_laserscan -->
+  <node pkg="pointcloud_to_laserscan" name="pointcloud_to_laserscan_node" type="pointcloud_to_laserscan_node" >
+    <remap from="cloud_in" to="velodyne_points"/>
+    <remap from="scan" to="cloud2scan" /><!-- /scan /cloud2scan --> 
+    <param name="min_height" value="-0.3"/>
+    <param name="max_height" value="0.3"/>
+    <param name="angle_min" value="-3.1416"/>
+    <param name="angle_max" value="3.1416"/>
+    <param name="use_inf" value="false" />
+  </node>
+    
+  <!-- ar track alvar -->
+    <include file="$(find ar_track_alvar)/launch/a1_artag.launch"/>
+
 </launch>
