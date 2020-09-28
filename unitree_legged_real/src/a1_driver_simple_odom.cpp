@@ -196,46 +196,6 @@ int main(int argc, char *argv[])
             SendHighROS.rotateSpeed = listener.drz;
             
         }
-        /*
-        If we want to control the RPY of the robot body
-        
-            [0] -> max negative pitch (rear to ground, face to sky)
-            [1] -> max positive pitch (rear to sky, face to ground)
-            [2] -> max negative yaw + max negative pitch (turn clockwise around the vertical + rear to ground, face to sky)
-            [3] -> max positive yaw + max negative pitch (turn counterclockwise around the vertical + rear to ground, face to sky)
-
-        */
-        local_pose_bool = listener.pose_bool;
-        if(local_pose_bool){
-            if(listener.pose_int == 0){
-
-                SendHighROS.roll  = 0;
-                SendHighROS.pitch = -1.;
-                SendHighROS.yaw = 0;
-            }
-
-            if(listener.pose_int == 1){
-               
-                SendHighROS.roll  = 0;
-                SendHighROS.pitch = 1.;
-                SendHighROS.yaw = 0;
-            }
-
-            if(listener.pose_int == 2){
-               
-                SendHighROS.roll  = 0;
-                SendHighROS.pitch = -1.;
-                SendHighROS.yaw = -0.8;
-            }
-
-            if(listener.pose_int == 3){
-                
-                SendHighROS.roll  = 0;
-                SendHighROS.pitch = -1.;
-                SendHighROS.yaw = 0.8;
-            }
-            
-        }
 
         SendHighLCM = ToLcm(SendHighROS);
         roslcm.Send(SendHighLCM);
