@@ -60,12 +60,12 @@ public:
 
     void pose_bool_callback(const std_msgs::Bool::ConstPtr& msg)
     {
-        pose_bool = msg->data
+        pose_bool = msg->data;
     }
 
     void pose_int_callback(const std_msgs::Int32::ConstPtr& msg)
     {
-        pose_int = msg->data
+        pose_int = msg->data;
     }
 };
 
