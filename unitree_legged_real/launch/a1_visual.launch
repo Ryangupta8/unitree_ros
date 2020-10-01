@@ -5,8 +5,12 @@
 
 
     <!-- depthimage_to_laserscan -->j
-	<include file="$(find depthimage_to_laserscan)/launch/depth2scan.launch"/>   
+  <include file="$(find depthimage_to_laserscan)/launch/depth2scan.launch"/>   
   <!-- ar track alvar -->
     <include file="$(find ar_track_alvar)/launch/a1_artag.launch"/>
 
+<node name = "temp_velodyne" pkg="tf" type="static_transform_publisher" args="-0.27 0 0.215 0 0 0 camera_depth_frame velodyne 10"/>
+
+
+    
 </launch>

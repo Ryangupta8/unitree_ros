@@ -11,7 +11,8 @@ find_package(catkin REQUIRED COMPONENTS
     unitree_legged_msgs
     math_utils
     std_msgs
-)
+    # amrl_msgs
+    )
 
 find_package(Eigen3 REQUIRED)
 
@@ -19,7 +20,8 @@ find_library(RUNNING_COVARIANCE_LIBRARY running_covariance HINTS /home/mk/worksp
 
 catkin_package( CATKIN_DEPENDS
     math_utils
-)
+    # amrl_msgs
+    )
 
 include_directories(
     /home/mk/srcs/unitree_legged_sdk/include
@@ -61,6 +63,14 @@ add_executable(lcm_server /home/mk/srcs/unitree_legged_sdk/examples/lcm_server.c
 target_link_libraries(lcm_server ${EXTRA_LIBS} ${catkin_LIBRARIES})
 add_dependencies(lcm_server ${${PEOJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
+add_executable(a1_waypoints src/a1_waypoints.cpp)
+target_link_libraries(a1_waypoints 
+    ${EXTRA_LIBS} 
+    ${catkin_LIBRARIES} 
+    ${RUNNING_COVARIANCE_LIBRARY}
+)
+add_dependencies(a1_waypoints ${${PEOJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+
 add_executable(a1_driver_simple_odom src/a1_driver_simple_odom.cpp)
 target_link_libraries(a1_driver_simple_odom
     ${EXTRA_LIBS} 
@@ -81,4 +91,5 @@ install(DIRECTORY scripts/
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
   USE_SOURCE_PERMISSIONS
 )
+
 

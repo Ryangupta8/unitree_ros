@@ -194,6 +194,7 @@ int main(int argc, char *argv[])
             SendHighROS.forwardSpeed = listener.dx;
             SendHighROS.sideSpeed = listener.dy;
             SendHighROS.rotateSpeed = listener.drz;
+            
         }
         /*
         If we want to control the RPY of the robot body
