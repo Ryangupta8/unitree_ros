@@ -4,6 +4,7 @@
 #include <geometry_msgs/Pose.h>
 #include <geometry_msgs/Quaternion.h>
 #include <tf/transform_broadcaster.h>
+#include <tf/transform_datatypes.h>
 #include <std_msgs/String.h>
 
 #include <cmath>
@@ -42,11 +43,14 @@ int main(int argc, char *argv[])
     // Define the hard coded goal points
     double goal_x[4]; double goal_y[4]; double goal_th[4];
     goal_x[0] = 7.43; goal_y[0] = 55.13; goal_th[0] = -1.57;
-    goal_x[1] = 7.43; goal_y[1] = 50.13; goal_th[1] = -1.57;
+    //goal_x[1] = 7.44; goal_y[1] = 50.13; goal_th[1] = -1.57;
+    goal_x[1] = 7.54; goal_y[1] = 50.13; goal_th[1] = -1.57;
     goal_x[2] = 7.43; goal_y[2] = 55.13; goal_th[2] = 1.57;
-    goal_x[3] = 5.70; goal_y[3] = 59.50; goal_th[3] = 3.14;
+    //goal_x[3] = 5.70; goal_y[3] = 59.75; goal_th[3] = 3.14;
+    goal_x[3] = 5.40; goal_y[3] = 59.95; goal_th[3] = 3.13;
+    goal_x[4] = 5.0; goal_y[4] = 57.5; goal_th[4] = -1.57;
 
-    geometry_msgs::Quaternion goal_quat; 
+    geometry_msgs::Quaternion goal_quat, curr_quat; 
     int i = 0;
 
     double distance;
@@ -56,6 +60,22 @@ int main(int argc, char *argv[])
 
     // Get the quaternion of the goal for PoseStamped
     goal_quat = tf::createQuaternionMsgFromYaw(goal_th[i]);
+    curr_quat = listener.pose.orientation;
+    tf::Quaternion q(curr_quat.x, curr_quat.y, curr_quat.z, curr_quat.w);
+    tf::Matrix3x3 m(q);
+    double roll, pitch, yaw;
+    m.getRPY(roll, pitch, yaw);
+
+    cout << "yaw = " << yaw << endl;
+    cout << "global_pose:" << endl;
+    cout << curr_quat.x << "    " << curr_quat.y << "    " << curr_quat.z << "    " << curr_quat.w << endl;
+
+
+
+    double angle_error;
+    angle_error = goal_th[i] - yaw;
+    cout << "angle error = " << angle_error << endl;
+
     // Fill the Goal msg
     goal_msg.header.stamp = current_time;
     goal_msg.pose.position.x = goal_x[i]; goal_msg.pose.position.y = goal_y[i]; goal_msg.pose.position.z = 0.;
@@ -68,29 +88,32 @@ int main(int argc, char *argv[])
         test_pub.publish(test_msg);
         
         current_time = ros::Time::now();
-        // if(first_time){
-        //     goal_pub.publish(goal_msg);
-        //     cout << "first time" << endl;
-        //     first_time = false;
-        // }
-		
+
 		distance = sqrt( pow((listener.pose.position.x - goal_x[i]), 2.0) + pow( (listener.pose.position.y - goal_y[i]), 2.0) );
         // cout << "distance = " << distance << endl;
+    
 
-		if(distance <= 0.3){
+
+		if(distance <= 0.35){
 			++i;
 			// Get the quaternion of the goal for PoseStamped
             goal_msg.header.stamp = current_time;
 		    goal_quat = tf::createQuaternionMsgFromYaw(goal_th[i]);
-            if(i >= 4){ros::shutdown();}
+            if(i >= 5){ros::shutdown();}
 		    // Fill the Goal msg
 		    goal_msg.pose.position.x = goal_x[i]; goal_msg.pose.position.y = goal_y[i]; 
 		    goal_msg.pose.orientation = goal_quat;
+            //ros::Duration(2.5).sleep();
 		    
 		}
         goal_pub.publish(goal_msg);
 
 		last_time = current_time;
+
+        if(i >= 5){
+            ros::shutdown();
+        }
+
         ros::spinOnce();
         loop_rate.sleep();
     }
