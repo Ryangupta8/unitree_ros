@@ -1,4 +1,4 @@
-/************************************************************************
+/*************************************************************************
 Copyright (c) 2018-2019, Unitree Robotics.Co.Ltd. All rights reserved.
 Use of this source code is governed by the MPL-2.0 license, see LICENSE.
 ************************************************************************/
@@ -46,8 +46,7 @@ void* update_loop(void* param)
 class Listener{
 public:
     double dx, dy, drz; 
-    bool pose_bool;
-    int pose_int;
+    double goal_x, goal_y;
 
 // Callback function for /cmd_vel subscriber
     void twist_callback(const geometry_msgs::Twist::ConstPtr& msg)
@@ -58,15 +57,12 @@ public:
         // cout << "Twist Received"  << endl;
     }
 
-    void pose_bool_callback(const std_msgs::Bool::ConstPtr& msg)
+    void goal_callback(const geometry_msgs::PoseStamped::ConstPtr& msg)
     {
-        pose_bool = msg->data;
+        goal_x = msg->pose.position.x;
+        goal_y = msg->pose.position.y;
     }
 
-    void pose_int_callback(const std_msgs::Int32::ConstPtr& msg)
-    {
-        pose_int = msg->data;
-    }
 };
 
 int main(int argc, char *argv[])
@@ -85,8 +81,7 @@ int main(int argc, char *argv[])
     ros::Publisher odom_pub = n.advertise<nav_msgs::Odometry>("odom", 1000);
     ros::Publisher autonomy_pub = n.advertise<std_msgs::Bool>("/autonomy_arbiter/enabled", 1000);
     ros::Subscriber cmd_vel_sub = n.subscribe("/cmd_vel", 1000, &Listener::twist_callback, &listener);
-    ros::Subscriber pose_bool_sub= n.subscribe("/pose_bool", 1000, &Listener::pose_bool_callback, &listener);
-    ros::Subscriber pose_int_sub= n.subscribe("/pose_int", 1000, &Listener::pose_int_callback, &listener);
+    ros::Subscriber goal_sub= n.subscribe("/move_base_simple/goal", 1000, &Listener::goal_callback, &listener);
 
     nav_msgs::Odometry odom;
     std_msgs::Bool bool_msg; bool_msg.data = true;
@@ -110,9 +105,12 @@ int main(int argc, char *argv[])
     double y = 0.0;
     double th = 0.0;
 
-    bool local_pose_bool = false;
+    bool change_goal_bool = false;
+    double prev_goal_x, prev_goal_y;
+    prev_goal_x = 0; prev_goal_y = 0;
+    int j = 0; 
 
-    ros::Time current_time, last_time;
+    ros::Time current_time, last_time, pose_time_init, pose_time_final;
     current_time = ros::Time::now();
     last_time = ros::Time::now();
 
@@ -178,64 +176,94 @@ int main(int argc, char *argv[])
         /////////////////////////
         // Unitree Legged SDK //
         ///////////////////////
-        if(listener.dx == 0 && listener.dy == 0 && listener.drz == 0){
-            SendHighROS.forwardSpeed = 0.0f;
-            SendHighROS.sideSpeed = 0.0f;
-            SendHighROS.rotateSpeed = 0.0f;
-            SendHighROS.bodyHeight = 0.0f;
-
+        if((prev_goal_x != listener.goal_x && prev_goal_y != listener.goal_y)){
+            change_goal_bool = true;
+        }
+        
+        if(change_goal_bool){
             SendHighROS.mode = 1;
-            SendHighROS.roll  = 0;
-            SendHighROS.pitch = 0;
-            SendHighROS.yaw = 0;
+            cout << "j = " << j << endl;
+            if(j < 2000){
+                SendHighROS.roll  = 0.0f;
+                SendHighROS.pitch = -1.0f;
+                SendHighROS.yaw = 0.0f; 
+                cout << "s1" << endl;
+            }
+            else if(j <= 6000){
+                SendHighROS.mode = 1;
+                SendHighROS.roll  = 0.0f;
+                SendHighROS.pitch = -0.8f;
+                SendHighROS.yaw = -0.8f;
+                cout << "s2" << endl; 
+            }
+            else if(j <= 7000){
+                SendHighROS.forwardSpeed = 0.0f;
+                SendHighROS.sideSpeed = 0.0f;
+                SendHighROS.rotateSpeed = 0.0f;
+                SendHighROS.bodyHeight = 0.0f;
+
+                SendHighROS.mode = 1;
+                SendHighROS.roll  = 0;
+                SendHighROS.pitch = 0;
+                SendHighROS.yaw = 0;
+                cout << "s3" << endl; 
+            }
+            else if(j <= 10000){
+                SendHighROS.mode = 1;
+                SendHighROS.roll  = 0.0f;
+                SendHighROS.pitch = -0.8f;
+                SendHighROS.yaw = 0.8f;
+                cout << "s4" << endl;
+            }
+            else if(j <= 14000){
+                SendHighROS.roll  = 0.0f;
+                SendHighROS.pitch = 0.0f;
+                SendHighROS.yaw = 0.0f; 
+                cout << "s5" << endl;                 
+            }
+            else{
+                SendHighROS.forwardSpeed = 0.0f;
+                SendHighROS.sideSpeed = 0.0f;
+                SendHighROS.rotateSpeed = 0.0f;
+                SendHighROS.bodyHeight = 0.0f;
+
+                SendHighROS.mode = 1;
+                SendHighROS.roll  = 0;
+                SendHighROS.pitch = 0;
+                SendHighROS.yaw = 0;
+                change_goal_bool = false;
+ 
+            }
+           
+            
         }
         else{
-            SendHighROS.mode = 2;
-            SendHighROS.forwardSpeed = listener.dx;
-            SendHighROS.sideSpeed = listener.dy;
-            SendHighROS.rotateSpeed = listener.drz;
-            
-        }
-        /*
-        If we want to control the RPY of the robot body
-        
-            [0] -> max negative pitch (rear to ground, face to sky)
-            [1] -> max positive pitch (rear to sky, face to ground)
-            [2] -> max negative yaw + max negative pitch (turn clockwise around the vertical + rear to ground, face to sky)
-            [3] -> max positive yaw + max negative pitch (turn counterclockwise around the vertical + rear to ground, face to sky)
+            if(listener.dx == 0 && listener.dy == 0 && listener.drz == 0){
+                SendHighROS.forwardSpeed = 0.0f;
+                SendHighROS.sideSpeed = 0.0f;
+                SendHighROS.rotateSpeed = 0.0f;
+                SendHighROS.bodyHeight = 0.0f;
 
-        */
-        local_pose_bool = listener.pose_bool;
-        if(local_pose_bool){
-            if(listener.pose_int == 0){
-
+                SendHighROS.mode = 1;
                 SendHighROS.roll  = 0;
-                SendHighROS.pitch = -1.;
+                SendHighROS.pitch = 0;
                 SendHighROS.yaw = 0;
             }
-
-            if(listener.pose_int == 1){
-               
-                SendHighROS.roll  = 0;
-                SendHighROS.pitch = 1.;
-                SendHighROS.yaw = 0;
-            }
-
-            if(listener.pose_int == 2){
-               
-                SendHighROS.roll  = 0;
-                SendHighROS.pitch = -1.;
-                SendHighROS.yaw = -0.8;
-            }
-
-            if(listener.pose_int == 3){
+            else{
+                SendHighROS.mode = 2;
+                SendHighROS.forwardSpeed = listener.dx;
+                SendHighROS.sideSpeed = listener.dy;
+                SendHighROS.rotateSpeed = listener.drz;
                 
-                SendHighROS.roll  = 0;
-                SendHighROS.pitch = -1.;
-                SendHighROS.yaw = 0.8;
             }
-            
+            j = 0;
         }
+        
+ 
+        j += 2;  
+
+        prev_goal_x = listener.goal_x;
+        prev_goal_y = listener.goal_y;
 
         SendHighLCM = ToLcm(SendHighROS);
         roslcm.Send(SendHighLCM);
