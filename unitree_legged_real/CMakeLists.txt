@@ -16,7 +16,7 @@ find_package(catkin REQUIRED COMPONENTS
 
 find_package(Eigen3 REQUIRED)
 
-find_library(RUNNING_COVARIANCE_LIBRARY running_covariance HINTS /home/mk/workspaces/unitree_ws/)
+find_library(RUNNING_COVARIANCE_LIBRARY running_covariance HINTS /home/amrl/workspaces/unitree_ws/)
 
 catkin_package( CATKIN_DEPENDS
     math_utils
@@ -24,8 +24,8 @@ catkin_package( CATKIN_DEPENDS
     )
 
 include_directories(
-    /home/mk/srcs/unitree_legged_sdk/include
-    /home/mk/workspaces/unitree_ws/src/unitree_ros/math_utils/include
+    /home/amrl/robots/unitree_legged_sdk/include
+    /home/amrl/workspaces/unitree_ws/src/unitree_ros/math_utils/include
     include
     ${Boost_INCLUDE_DIR}
     ${catkin_INCLUDE_DIRS}
@@ -33,7 +33,7 @@ include_directories(
     # $ENV{UNITREE_LEGGED_SDK_PATH}/include
 )
 
-link_directories(/home/mk/srcs/unitree_legged_sdk/lib)
+link_directories(/home/amrl/robots/unitree_legged_sdk/lib)
 string(CONCAT LEGGED_SDK_NAME libunitree_legged_sdk_amd64.so)
 set(EXTRA_LIBS ${LEGGED_SDK_NAME} lcm)
 
@@ -59,7 +59,7 @@ add_executable(example_walk src/exe/walk_example.cpp)
 target_link_libraries(example_walk ${EXTRA_LIBS} ${catkin_LIBRARIES})
 add_dependencies(example_walk ${${PEOJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
-add_executable(lcm_server /home/mk/srcs/unitree_legged_sdk/examples/lcm_server.cpp)
+add_executable(lcm_server /home/amrl/robots/unitree_legged_sdk/examples/lcm_server.cpp)
 target_link_libraries(lcm_server ${EXTRA_LIBS} ${catkin_LIBRARIES})
 add_dependencies(lcm_server ${${PEOJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
