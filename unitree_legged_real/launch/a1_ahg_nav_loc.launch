@@ -36,7 +36,7 @@
   <!--</node>-->
 
   <!-- Run the SDK Driver -->
-  <node pkg="unitree_legged_real" type="a1_driver_simple_odom" name="a1_driver_node"
+  <node pkg="unitree_legged_real" type="a1_driver_main" name="a1_driver_node"
           respawn="false" output="screen" args="$(arg rname) $(arg ctrl_level)" />
     <!-- ENML -->
     <node pkg="amrl" type="enml" name="non_markov_localization" output="screen" args="--config_dir $(find amrl)/enml/config --robot_config a1_real_raw_odom.lua --maps_dir $(find amrl)/enml/maps -d1" />
