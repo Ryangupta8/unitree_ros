@@ -56,7 +56,10 @@ target_link_libraries(unitree_external_force ${catkin_LIBRARIES})
 add_executable(unitree_servo src/servo.cpp)
 target_link_libraries(unitree_servo ${PROJECT_NAME} ${catkin_LIBRARIES})
 
-add_executable(test_gazebo_pos_control src/test_gazebo_pos_control.cpp)
+add_executable(joint_torque_control_main src/joint_torque_control_main.cpp)
+target_link_libraries(joint_torque_control_main ${PROJECT_NAME} ${catkin_LIBRARIES})
+
+add_executable(test_gazebo_pos_control src/test/test_gazebo_pos_control.cpp)
 target_link_libraries(test_gazebo_pos_control ${PROJECT_NAME} ${catkin_LIBRARIES})
 
 add_executable(unitree_move_kinetic src/move_publisher.cpp)
