@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
 <launch>
   <!-- puck launch -->
-    <include file="$(find a1_autonomy)/launch/velodyne.launch"/>
+  <!--  <include file="$(find a1_autonomy)/launch/velodyne.launch"/> -->
+  <include file="$(find velodyne_pointcloud)/launch/VLP16_points.launch"/>
 
 
     <!-- depthimage_to_laserscan -->j
@@ -14,15 +15,12 @@
    <arg name="launch_nodelet_manager" default="true" />
  
      <!-- pointcloud_to_laserscan -->
-       <node pkg="pointcloud_to_laserscan" name="pointcloud_to_laserscan_node" type="pointcloud_to_laserscan_node" >
-            <remap from="cloud_in" to="velodyne_points"/>
-            <remap from="scan" to="cloud2scan" /><!-- /scan /cloud2scan --> 
-            <param name="min_height" value="-0.25"/>
-            <param name="max_height" value="0.1"/>
-            <param name="angle_min" value="-3.1416"/>
-            <param name="angle_max" value="3.1416"/>
-            <param name="use_inf" value="false"/>
-       </node>
+     <node pkg="a1_autonomy"
+     type="pointcloud_to_laserscan"
+     name="pointcloud_to_laserscan"
+     args="--config $(find a1_autonomy)/config/regbeams.lua"  
+     respawn="true"
+     respawn_delay="2" />
 
     
 </launch>
