@@ -19,7 +19,6 @@
 
   <param name="use_sim_time" value="false"/>
 
-    
     <param name="robot_name" value="$(arg rname)"/>
     <param name="control_level" value="$(arg ctrl_level)"/>
 
@@ -37,17 +36,11 @@
   <!--</node>-->
 
   <!-- Run the SDK Driver -->
-  <node pkg="unitree_legged_real" type="a1_driver_recover" name="a1_driver_node"
+  <node pkg="unitree_legged_real" type="a1_driver_main" name="a1_driver_node"
           respawn="false" output="screen" args="$(arg rname) $(arg ctrl_level)" />
     <!-- ENML -->
-    <node pkg="a1_autonomy" type="enml" name="non_markov_localization" output="screen" args="--config_dir $(find a1_autonomy)/config --robot_config a1_real.lua --maps_dir $(find a1_autonomy)/enml/maps -d1" />
-    <!-- GRAPH NAVIGATION -->
-    <node pkg="a1_autonomy" type="navigation" name="graph_navigation" output="screen" args="--map $(arg graph_map_name) --maps_dir $(find a1_autonomy)/enml/maps " >
-           <remap from="/jackal_velocity_controller/odom" to="/odom"/>
-           <remap from="/velodyne_2dscan" to="/depth2scan"/><!-- /depth2scan /scan /cloud2scan -->
-           <remap from="/navigation/cmd_vel" to="/cmd_vel"/>
-        </node>
-    <!--<node name="realsense_costmap_node" pkg="costmap_2d" type="costmap_2d_node" output="screen" >-->
+    <node pkg="a1_autonomy" type="enml_a1" name="non_markov_localization" output="screen" args="--config_dir $(find a1_autonomy)/config --robot_config a1_real.lua --maps_dir $(find a1_autonomy)/enml/maps -d1" />
+     <!--<node name="realsense_costmap_node" pkg="costmap_2d" type="costmap_2d_node" output="screen" >-->
         <!--<rosparam file="$(find a1_autonomy)/config/a1_realsense_costmap_params.yaml" command="load" ns="costmap" />-->
     <!--</node>-->
 

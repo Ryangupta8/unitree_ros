@@ -14,7 +14,8 @@
   <!--<arg name="scan_topic" default="/scan"/>-->
   <!--<arg name="localization_topic" default="/localization"/>-->
 
-  <rosparam file="$(find search_service)/config/ahg_real.yaml"/>
+ 
+  <rosparam file="$(find search_service)/config/ahg.yaml"/>
   <param name="use_sim_time" value="false"/>
 
   <node name="map_server" pkg="map_server" type="map_server" args="$(find tmp)/maps/ahg4_map.yaml">
