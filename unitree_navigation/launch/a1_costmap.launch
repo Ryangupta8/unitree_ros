@@ -17,18 +17,21 @@
 
   <!-- Run the costmap node -->
   <node name="costmap_node" pkg="costmap_2d" type="costmap_2d_node" output="screen">
-    <rosparam file="$(find unitree_navigation)/config/a1_params.yaml" command="load" ns="costmap" />
+    <rosparam file="$(find unitree_navigation)/config/a1_puck_params.yaml" command="load" ns="costmap" />
+    <!--<rosparam file="$(find unitree_navigation)/config/a1/costmap_common_params.yaml" command="load"/> -->
+    <!--<rosparam file="$(find unitree_navigation)/config/a1/local_costmap_params.yaml" command="load" ns="costmap" /> -->
   </node>
-  <!--<node name="costmap_global_node" pkg="costmap_2d" type="costmap_2d_node" output="screen">-->
+  <node name="costmap_node_realsense" pkg="costmap_2d" type="costmap_2d_node" output="screen">
+      <rosparam file="$(find unitree_navigation)/config/a1_realsense_params.yaml" command="load" ns="costmap"/>
+  </node>
+      <!--<node name="costmap_global_node" pkg="costmap_2d" type="costmap_2d_node" output="screen">-->
     <!--<rosparam file="$(find unitree_navigation)/config/a1/costmap_common_params.yaml" command="load" ns="costmap" /> -->
     <!--<param name="base_global_planner" value="global_planner/GlobalPlanner"/>-->
   <!--</node>-->
 
   <node pkg="global_planner" type="planner" name="planner" output="screen">
-    <!--<rosparam file="$(find unitree_navigation)/config/a1/global_costmap_params.yaml" command="load" /> -->
     <rosparam file="$(find unitree_navigation)/config/a1/costmap_common_params.yaml" command="load" ns="costmap" /> 
     <rosparam file="$(find unitree_navigation)/config/a1/global_planner_params.yaml" command="load" />
-    <!--<param name="base_global_planner" value="global_planner/GlobalPlanner"/>-->
   <param name="base_global_planner" value="global_planner/GlobalPlanner"/>
   </node>
 
