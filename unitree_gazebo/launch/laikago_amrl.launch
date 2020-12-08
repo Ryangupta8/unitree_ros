@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="slam" default="false"/>
+  <arg name="gui" default="true"/>
+
+  <!-- Use standard ROS navigation stack through move_base? If not, specify vector maps for graph_navigation -->
+  <arg name="move_base" default="false"/>
+  <arg name="graph_map_location" default="$(find amrl_maps)"/>
+  <arg name="graph_map_name" default="AHG_Apartment"/>
+  <arg name="odom_topic" default="/correct_odom"/>
+  <arg name="scan_topic" default="/scan"/>
+  <arg name="localization_topic" default="/localization"/>
+  <arg name="loc_topic" default="/localization"/>
+
+  <param name="use_sim_time" value="false"/>
+
+  <include file="$(find unitree_gazebo)/launch/normal.launch">
+     <arg name="ahg_sim" value="true"/>
+     <arg name="rname" value="laikago"/>
+     <arg name="x_pos" value="8.0"/>
+     <arg name="y_pos" value="-2.0"/>
+     <arg name="use_sim_time" value="true"/>
+     <arg name="z_pos" value="0.2"/>
+  </include>
+
+  <group if="$(arg slam)">
+    <include file="$(find unitree_navigation)/launch/gmapping.launch"/>
+  </group>
+
+
+    <node pkg="a1_autonomy" type="enml" name="non_markov_localization" output="screen" args="--config_dir $(find a1_autonomy)/config --robot_config laikago_gazebo.lua --maps_dir $(find a1_autonomy)/enml/maps -d1" />
+    
+    <node pkg="a1_autonomy" type="navigation" name="graph_navigation" output="screen" args="--map $(arg graph_map_location)/$(arg graph_map_name)/$(arg graph_map_name).navigation.txt" >
+       <remap from="/jackal_velocity_controller/odom" to="/correct_odom"/>
+       <remap from="/velodyne_2dscan" to="/scan"/>
+       <remap from="/navigation/cmd_vel" to="/cmd_vel"/>
+    </node>
+
+
+  <node name ="map_to_odom" pkg="tf" type="static_transform_publisher" args="8 -2 0 0 0 0 map odom 10"/>
+
+  <!-- <node name="map_server" pkg="map_server" type="map_server" args="$(find tmp)/maps/ahg_map.yaml"/> -->
+  <!--<node name="map_server" pkg="map_server" type="map_server" args="$(find unitree_navigation)/maps/ahg_map.pgm 0.05"/>-->
+   <!--<group if="$(arg gui)">-->
+     <!-- <node pkg="rviz" type="rviz" name="rviz" args="-d $(find unitree_gazebo)/config/a1_search.rviz" output="screen"/> -->
+  <!--</group>-->
+ <!--<group ns ="mk">-->
+    <!--<node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">-->
+    <!--<rosparam file="$(find tmp)/config/a1/costmap_common_params.yaml" command="load" ns="global_costmap" /> -->
+    <!--<rosparam file="$(find tmp)/config/a1/costmap_common_params.yaml" command="load" ns="local_costmap" />-->
+    <!--<rosparam file="$(find tmp)/config/a1/local_costmap_params.yaml" command="load" />-->
+    <!--<rosparam file="$(find tmp)/config/a1/global_costmap_params.yaml" command="load" /> -->
+    <!--<rosparam file="$(find tmp)/config/a1/base_local_planner_params.yaml" command="load" />-->
+    <!--<param name="base_global_planner" value="global_planner/GlobalPlanner"/>-->
+ <!--</node>-->
+    <!--<include file="$(find tmp)/launch/amcl_diff2.launch"/>-->
+  <!--</group>-->
+
+  <!--<node name="scaled_map_converter" pkg="navi_manager" type="global_planner" output="screen"/>-->
+  <!--<rosparam file="$(find search_service)/config/ahg.yaml"/>-->
+  <!--<node name="map_manager" pkg="search_service" type="map_manager_single.py" output="screen"/>-->
+  <!--<node name="frontier_server" pkg="visual_perception" type="frontier_server" output="screen"/>-->
+
+
+</launch>

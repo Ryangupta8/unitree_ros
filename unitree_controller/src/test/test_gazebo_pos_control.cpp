@@ -244,8 +244,8 @@ int main(int argc, char **argv)
                       0.0, 0.67, -1.3, -0.0, 0.0, -1.3};
         moveAllPosition(pos2, 200);
 
-        lowState_pub.publish(lowState);
-        sendServoCmd();
+        // lowState_pub.publish(lowState);
+        // sendServoCmd();
     }
     return 0;
 }

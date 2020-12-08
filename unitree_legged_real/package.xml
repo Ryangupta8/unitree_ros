@@ -17,6 +17,6 @@
   <depend>unitree_legged_msgs</depend>
   <depend>eigen</depend>
     <depend>math_utils</depend>
-
-
+    <depend>nav_msgs</depend>
+  <depend>sensor_msgs</depend>
 </package>
