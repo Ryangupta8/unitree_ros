@@ -13,7 +13,7 @@
   <rosparam file="$(find search_service)/config/ahg.yaml"/>
   <param name="use_sim_time" value="false"/>
 
-  <node name="map_server" pkg="map_server" type="map_server" args="$(find tmp)/maps/ahg5_map.yaml">
+  <node name="map_server" pkg="map_server" type="map_server" args="$(find tmp)/maps/ahg7_map.yaml">
       <param name="frame_id" value="map"/>
   </node>
   <include file="$(find unitree_navigation)/launch/a1_costmap.launch"/>
@@ -23,6 +23,7 @@
   <node name="a1_odom" pkg="search_service" type="a1_odomtest" output="screen"/>
   <!--<node name="a1_base_map_dom" pkg="search_service" type="a1_odom_switcher" output="screen"/>-->
   <node name="frontier_server_a1" pkg="visual_perception" type="frontier_server" output="screen"/>
+  <node name="prediction_server_a1" pkg="visual_perception" type="prediction_server" output="screen"/>
 
   <param name="robot_description"
 	  command="$(find xacro)/xacro --inorder '$(arg dollar)$(arg robot_path)/xacro/robot.xacro' 
@@ -37,6 +38,16 @@
 
   <!--<include file="$(find state_lattice_planner)/launch/slp_server.launch"/>-->
   <node name="a1_movenode" pkg="search_service" type="a1_move" output="screen"/>
+
+  <!--<group ns="mk">-->
+  <!--<node pkg="global_planner" type="planner" name="planner" output="screen">-->
+    <!--<rosparam file="$(find unitree_navigation)/config/a1/costmap_common_params2.yaml" command="load" ns="costmap" /> -->
+    <!--<rosparam file="$(find unitree_navigation)/config/a1/global_planner_params2.yaml" command="load" />-->
+  <!--<param name="base_global_planner" value="global_planner/GlobalPlanner"/>-->
+  <!--</node>-->
+  <!--</group>-->
+
+
 
     <!--<node pkg="controller_manager" type="spawner" name="controller_spawner" respawn="false"-->
           <!--output="screen" ns="/$(arg rname)_gazebo" args="joint_state_controller-->
