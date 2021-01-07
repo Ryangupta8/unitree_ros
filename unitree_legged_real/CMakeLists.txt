@@ -61,6 +61,11 @@ add_executable(lcm_server /home/knapsack/robots/unitree_legged_sdk/examples/lcm_
 target_link_libraries(lcm_server ${EXTRA_LIBS} ${catkin_LIBRARIES})
 add_dependencies(lcm_server ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
+add_executable(test_switch_control src/test/test_switch_control.cpp)
+target_link_libraries(test_switch_control ${EXTRA_LIBS} ${catkin_LIBRARIES})
+add_dependencies(test_switch_control${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+
+
 add_executable(a1_waypoints src/a1_waypoints.cpp)
 target_link_libraries(a1_waypoints 
     ${EXTRA_LIBS} 
