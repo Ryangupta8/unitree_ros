@@ -11,6 +11,8 @@ find_package(catkin REQUIRED COMPONENTS
     unitree_legged_msgs
     math_utils
     std_msgs
+    nav_msgs
+    sensor_msgs
     )
 
 find_package(Eigen3 REQUIRED)
@@ -75,6 +77,18 @@ target_link_libraries(a1_driver_main
     ${catkin_LIBRARIES} 
 )
 add_dependencies(a1_driver_main ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+
+######################
+# NOTE NOTE NOTE NOTE 
+### a1_driver_recovery with the y was the original file I rm'd
+### a1_driver_recover is the cleaner rewrite
+add_executable(a1_driver_recover src/A1HighDriver_recover.cc src/A1HighDriver.cc)
+target_link_libraries(a1_driver_recover
+    ${EXTRA_LIBS} 
+    ${catkin_LIBRARIES} 
+)
+add_dependencies(a1_driver_recover ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+
 
 add_executable(a1_driver_gather_publish src/A1HighDriver_gather_publish.cc src/A1HighDriver.cc)
 target_link_libraries(a1_driver_gather_publish 

@@ -10,11 +10,13 @@
 
   <arg name="launch_nodelet_manager" default="true" />
 
+  <node pkg="nodelet" type="nodelet" name="velodyne_nodelet_manager" args="manager" if="$(arg launch_nodelet_manager)"/>
+
   <!-- pointcloud_to_laserscan -->
        <node pkg="a1_autonomy"
       type="pointcloud_to_laserscan"
       name="pointcloud_to_laserscan"
-      args="--config $(find a1_autonomy)/config/regbeams.lua"  
+      args="--config $(find a1_autonomy)/config/highbeams.lua"  
       respawn="true"
       respawn_delay="2" />
 </launch>

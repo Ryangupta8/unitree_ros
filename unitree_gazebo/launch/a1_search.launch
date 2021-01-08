@@ -5,7 +5,7 @@
 
   <!-- Use standard ROS navigation stack through move_base? If not, specify vector maps for graph_navigation -->
   <arg name="move_base" default="false"/>
-  <arg name="graph_map_location" default="$(find amrl_maps)"/>
+  <arg name="graph_map_location" default="$(find a1_autonomy)/enml/maps"/>
   <arg name="graph_map_name" default="AHG_Apartment"/>
   <arg name="odom_topic" default="/correct_odom"/>
   <!--<arg name="odom_topic" default="/odom"/>-->
@@ -43,8 +43,8 @@
 
 
   <group unless="$(arg move_base)">  
-    <node pkg="amrl" type="enml" name="non_markov_localization" output="screen" args="--config_dir $(find amrl)/enml/config --robot_config a1.lua --maps_dir $(find amrl)/enml/maps -d1" />
-    <node pkg="amrl" type="navigation" name="graph_navigation" output="screen" args="--map $(arg graph_map_location)/$(arg graph_map_name)/$(arg graph_map_name).navigation.txt" >
+    <node pkg="a1_autonomy" type="enml" name="non_markov_localization" output="screen" args="--config_dir $(find amrl)/enml/config --robot_config a1.lua --maps_dir $(find amrl)/enml/maps -d1" />
+    <node pkg="a1_autonomy" type="navigation" name="graph_navigation" output="screen" args="--map $(arg graph_map_location)/$(arg graph_map_name)/$(arg graph_map_name).navigation.txt" >
        <remap from="/jackal_velocity_controller/odom" to="/correct_odom"/>
        <remap from="/velodyne_2dscan" to="/scan"/>
        <remap from="/navigation/cmd_vel" to="/cmd_vel"/>

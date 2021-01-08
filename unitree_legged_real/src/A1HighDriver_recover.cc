@@ -8,6 +8,7 @@
 #include <geometry_msgs/Twist.h>
 #include <geometry_msgs/PoseWithCovarianceStamped.h>
 #include <nav_msgs/Odometry.h>
+#include <sensor_msgs/LaserScan.h>
 #include <sensor_msgs/Imu.h>
 #include <tf2/LinearMath/Quaternion.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
@@ -23,9 +24,9 @@ using namespace std;
 class Listener{
 public:
     double dx, dy, drz; 
-    double goal_x, goal_y;
 
-// Callback function for /cmd_vel subscriber
+    sensor_msgs::LaserScan scan;
+
     void twist_callback(const geometry_msgs::Twist::ConstPtr& msg)
     {
         dx = msg->linear.x;
@@ -34,13 +35,47 @@ public:
         // cout << "Twist Received"  << endl;
     }
 
-    void goal_callback(const geometry_msgs::PoseStamped::ConstPtr& msg)
-    {
-        goal_x = msg->pose.position.x;
-        goal_y = msg->pose.position.y;
+    void laser_callback(const sensor_msgs::LaserScan msg){
+        scan = msg;
     }
-
 };
+
+bool GetTurnDirection(sensor_msgs::LaserScan *scan){
+    bool left_bool = true;
+    double left_avg, right_avg;
+    double sum = 0; double count = 0;
+    // std::cout << "scan->range_min = " << scan->range_min << "   " << "scan->range_max = " << scan->range_max << std::endl;
+    // std::cout << "scan->angle_min = " << scan->angle_min << "   " << "scan->angle_max = " << scan->angle_max << std::endl;
+    // std::cout << "scan->angle_increment = " << scan->angle_increment << std::endl;
+    
+    // 639 data entries in /depth2scan output from Realsense
+    // 320 is the middle. Let's look at the inside portion.
+    for(int i=250; i<320; ++i){
+        if( (!isnan(scan->ranges[i])) && (scan->ranges[i]<scan->range_max) && (scan->ranges[i]>scan->range_min) ) {
+            ++count; sum += scan->ranges[i];
+        }
+    }
+    left_avg = sum / count;
+    count = 0; sum = 0;
+    for(int i=320; i<390; ++i){
+        if( (!isnan(scan->ranges[i])) && (scan->ranges[i] < scan->range_max) && (scan->ranges[i] > scan->range_min) ) 
+        ++count; sum += scan->ranges[i];
+    }
+    right_avg = sum/count;
+    if(isnan(right_avg)){
+        right_avg = 0;
+    }
+    if(isnan(left_avg)){
+        left_avg = 0;
+    }
+    if(right_avg > left_avg){
+        left_bool = false;
+    }
+    std::cout << "left_avg = " << left_avg << std::endl;
+    std::cout << "right_avg = " << right_avg << std::endl;
+
+    return left_bool;
+}
 
 int main(int argc, char *argv[])
 {
@@ -59,7 +94,7 @@ int main(int argc, char *argv[])
     ros::Publisher odom_pub = n.advertise<nav_msgs::Odometry>("odom", 1000);
     ros::Publisher autonomy_pub = n.advertise<std_msgs::Bool>("/autonomy_arbiter/enabled", 1000);
     ros::Subscriber cmd_vel_sub = n.subscribe("/cmd_vel", 1000, &Listener::twist_callback, &listener);
-    ros::Subscriber goal_sub= n.subscribe("/move_base_simple/goal", 1000, &Listener::goal_callback, &listener);
+    ros::Subscriber depth2scan_sub = n.subscribe("/depth2scan", 100, &Listener::laser_callback, &listener);
 
     nav_msgs::Odometry odom;
     std_msgs::Bool bool_msg; bool_msg.data = true;
@@ -70,15 +105,13 @@ int main(int argc, char *argv[])
     double y = 0.0;
     double th = 0.0;
 
-    // Variables for waypoint posing
-    bool change_goal_bool = false;
-    double prev_goal_x, prev_goal_y;
-    prev_goal_x = 0; prev_goal_y = 0;
-    int j = 0;
+    bool left = true; bool standing_still_bool = false; bool started = false;
+    int j, k; j = 0; k = 0;
 
-    ros::Time current_time, last_time;
+    ros::Time current_time, last_time, prev_recovery_time;
     current_time = ros::Time::now();
     last_time = ros::Time::now();
+    prev_recovery_time = ros::Time::now();
 
     while (ros::ok()){
         ros::spinOnce();
@@ -134,50 +167,18 @@ int main(int argc, char *argv[])
         // publish the message
         odom_pub.publish(odom);
 
-        if((prev_goal_x != listener.goal_x && prev_goal_y != listener.goal_y)){
-            change_goal_bool = true;
-        }
-
-        if(change_goal_bool){
-            driver.SendHighROS.mode = 1;
-            // cout << "j = " << j << endl;
-            if(j < 2000){
-                driver.SendHighROS.roll  = 0.0f;
-                driver.SendHighROS.pitch = -1.0f;
-                driver.SendHighROS.yaw = 0.0f; 
-                // cout << "s1" << endl;
-            }
-            else if(j <= 6000){
-                driver.SendHighROS.mode = 1;
-                driver.SendHighROS.roll  = 0.0f;
-                driver.SendHighROS.pitch = -0.8f;
-                driver.SendHighROS.yaw = -0.8f;
-                // cout << "s2" << endl; 
-            }
-            else if(j <= 7000){
-                driver.SendHighROS.forwardSpeed = 0.0f;
-                driver.SendHighROS.sideSpeed = 0.0f;
-                driver.SendHighROS.rotateSpeed = 0.0f;
-                driver.SendHighROS.bodyHeight = 0.0f;
-
-                driver.SendHighROS.mode = 1;
-                driver.SendHighROS.roll  = 0;
-                driver.SendHighROS.pitch = 0;
-                driver.SendHighROS.yaw = 0;
-                // cout << "s3" << endl; 
-            }
-            else if(j <= 10000){
-                driver.SendHighROS.mode = 1;
-                driver.SendHighROS.roll  = 0.0f;
-                driver.SendHighROS.pitch = -0.8f;
-                driver.SendHighROS.yaw = 0.8f;
-                // cout << "s4" << endl;
-            }
-            else if(j <= 14000){
-                driver.SendHighROS.roll  = 0.0f;
-                driver.SendHighROS.pitch = 0.0f;
-                driver.SendHighROS.yaw = 0.0f; 
-                // cout << "s5" << endl;                 
+        if(standing_still_bool){// Enter recovery
+            k += 2;
+            std::cout << "standing still was recognized as true" << endl;
+            if(k<4000){
+                driver.SendHighROS.mode = 2; // Continuous Walk
+                if(left){
+                    driver.SendHighROS.rotateSpeed = 0.196f; 
+                }
+                else{ 
+                    driver.SendHighROS.rotateSpeed = -0.196f;
+                } 
+                std::cout << "turning loop" << std::endl;
             }
             else{
                 driver.SendHighROS.forwardSpeed = 0.0f;
@@ -185,44 +186,58 @@ int main(int argc, char *argv[])
                 driver.SendHighROS.rotateSpeed = 0.0f;
                 driver.SendHighROS.bodyHeight = 0.0f;
 
-                driver.SendHighROS.mode = 1;
+                driver.SendHighROS.mode = 1; // Forced Stand
                 driver.SendHighROS.roll  = 0;
                 driver.SendHighROS.pitch = 0;
                 driver.SendHighROS.yaw = 0;
-                change_goal_bool = false;
- 
+                prev_recovery_time = ros::Time::now();
+                standing_still_bool = false;
+                std::cout << "finished turning, setting still to false" << std::endl;
             }
-           
-            
+            j = 0;
         }
         else{
+            cout << "standing still recognized as false" << endl;
+            // If cmd_vel is 0,0,0 then stand still
             if(listener.dx == 0 && listener.dy == 0 && listener.drz == 0){
                 driver.SendHighROS.forwardSpeed = 0.0f;
                 driver.SendHighROS.sideSpeed = 0.0f;
                 driver.SendHighROS.rotateSpeed = 0.0f;
                 driver.SendHighROS.bodyHeight = 0.0f;
 
-                driver.SendHighROS.mode = 1;
+                driver.SendHighROS.mode = 1; // Forced Stand
                 driver.SendHighROS.roll  = 0;
                 driver.SendHighROS.pitch = 0;
                 driver.SendHighROS.yaw = 0;
+                // If standing still for 2+ seconds, enter recovery
+                j += 2;
+                if((current_time - prev_recovery_time).toSec() > 10){
+                    cout << "more than 10 sec since we last recovered" << endl;
+                    if(started){
+                        cout << "started is recognized as true" << endl;
+                        if(j > 2000){
+                            cout << "2 seconds of standing still" << endl;
+                            cout << "calling GetTurnDirection" <<endl;
+                            left = GetTurnDirection(&listener.scan);
+                            cout << "returned GetTurnDirection" << endl;
+                            standing_still_bool = true;
+                            cout << "still set to true" << endl;
+                        }
+                    }
+                }
             }
+            // Else we want to walk as commanded
             else{
-                driver.SendHighROS.mode = 2;
+                driver.SendHighROS.mode = 2; // Continuous Walk
                 driver.SendHighROS.forwardSpeed = listener.dx;
                 driver.SendHighROS.sideSpeed = listener.dy;
                 driver.SendHighROS.rotateSpeed = listener.drz;
-                
+                started = true; 
+                j = 0;
+                k = 0;
+                cout << "graph_nav command. k= 0, j = 0" << endl;
             }
-            j = 0;
         }
-        
- 
-        j += 2;  
-
-        prev_goal_x = listener.goal_x;
-        prev_goal_y = listener.goal_y;
-
         driver.SendCmd();
 
         last_time = current_time;

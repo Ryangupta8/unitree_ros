@@ -32,6 +32,12 @@
   <param name="base_global_planner" value="global_planner/GlobalPlanner"/>
   </node>
 
+  <!-- <node name="realsense_costmap_node" pkg="costmap_2d" type="costmap_2d_node" output="screen" >
+        <rosparam file="$(find a1_autonomy)/config/a1_realsense_costmap_params.yaml" command="load" ns="costmap" />
+    </node> -->
+
+
+
 
 
   <!--<node pkg="global_planner" type="planner" name="planner" output="screen">-->

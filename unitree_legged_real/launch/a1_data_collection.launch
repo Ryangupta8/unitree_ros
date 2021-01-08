@@ -12,7 +12,7 @@
 	  respawn="false" output="screen" args="$(arg rname) $(arg ctrl_level)"/>
 
   <arg name="move_base" default="false"/>
-  <arg name="graph_map_location" default="$(find amrl_maps)"/>
+  <arg name="graph_map_location" default="$(find a1_autonomy)/enml/maps"/>
   <arg name="graph_map_name" default="AHG2"/>
   <arg name="odom_topic" default="/odom"/>
   <arg name="scan_topic" default="/scan"/>

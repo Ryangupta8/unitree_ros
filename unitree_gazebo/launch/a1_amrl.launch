@@ -37,7 +37,7 @@
     </node>
 
 
-  <node name ="map_to_odom" pkg="tf" type="static_transform_publisher" args="8 -2 0 0 0 0 map odom 10"/>
+    <!-- <node name ="map_to_odom" pkg="tf" type="static_transform_publisher" args="8 -2 0 0 0 0 map odom 10"/> -->
 
   <!-- <node name="map_server" pkg="map_server" type="map_server" args="$(find tmp)/maps/ahg_map.yaml"/> -->
   <!--<node name="map_server" pkg="map_server" type="map_server" args="$(find unitree_navigation)/maps/ahg_map.pgm 0.05"/>-->

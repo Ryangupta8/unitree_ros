@@ -5,7 +5,7 @@
 
   <!-- Use standard ROS navigation stack through move_base? If not, specify vector maps for graph_navigation -->
   <arg name="move_base" default="false"/>
-  <arg name="graph_map_location" default="$(find amrl_maps)"/>
+  <arg name="graph_map_location" default="$(find a1_autonomy)/enml/maps"/>
   <arg name="graph_map_name" default="AHG_Apartment"/>
   <arg name="odom_topic" default="/correct_odom"/>
   <arg name="scan_topic" default="/scan"/>
