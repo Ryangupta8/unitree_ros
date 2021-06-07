@@ -91,36 +91,149 @@ int main(int argc, char *argv[])
         SendLowROS.motorCmd[i].tau = 0;
     }
 
-    double pos = 0.3;
-
+    double pos = 0.5;
+    
     while (ros::ok()){
         motiontime++;
         roslcm.Get(RecvLowLCM);
         RecvLowROS = ToRos(RecvLowLCM);
-        printf("FL_1 position: %f\n",  RecvLowROS.motorState[FL_1].q);
-
-        pos = pos*(-1);
+        SendLowROS.motorCmd[FL_0].q = 0.0;                                                                                                                                                            
+        SendLowROS.motorCmd[FL_0].dq = 0;                                                                                                                                                               
+        SendLowROS.motorCmd[FL_0].Kp = 5.0;                                                                                                                                                             
+        SendLowROS.motorCmd[FL_0].Kd = 1.0;                                                                                                                                                             
+        SendLowROS.motorCmd[FL_0].tau = 0.0; 
+        //printf("FL_2 position: %f\n",  RecvLowROS.motorState[FL_2].q);
 
         // // gravity compensation
         // SendLowROS.motorCmd[FR_0].tau = -0.65f;
         // SendLowROS.motorCmd[FL_0].tau = +0.65f;
         // SendLowROS.motorCmd[RR_0].tau = -0.65f;
         // SendLowROS.motorCmd[RL_0].tau = +0.65f;
-
-        if( motiontime >= 500 && motiontime < 2000){
-            torque = (0 - RecvLowROS.motorState[FL_2].q)*10.0f + (0 - RecvLowROS.motorState[FL_2].dq)*1.0f;
-            if(torque > 5.0f) torque = 5.0f;
-            if(torque < -5.0f) torque = -5.0f;
-
-            SendLowROS.motorCmd[FL_2].tau = torque;
-        }
-        else if(motiontime >=2000 && motiontime <=3000){
-            SendLowROS.motorCmd[FL_2].q =  pos;
+        if(motiontime <=1000){
+            SendLowROS.motorCmd[FL_2].q = -2.18;
             SendLowROS.motorCmd[FL_2].dq = 0;
             SendLowROS.motorCmd[FL_2].Kp = 5.0;
             SendLowROS.motorCmd[FL_2].Kd = 1.0;
-            SendLowROS.motorCmd[FL_2].tau = 0.0f;
+            SendLowROS.motorCmd[FL_2].tau = 0.0;
+            std::cout << "POS1" << std::endl;
+        } 
+        else if( motiontime > 1000 && motiontime <= 1100 ){
+            /* torque = (0 - RecvLowROS.motorState[FL_2].q)*10.0f + (0 - RecvLowROS.motorState[FL_2].dq)*1.0f;
+            if(torque > 5.0f) torque = 5.0f;
+            if(torque < -5.0f) torque = -5.0f; */
+            // if(motiontime >=)
+            // {torque = torque*(-1);}
+            SendLowROS.motorCmd[FL_2].tau = 15;
+            std::cout << "TORQUE" << std::endl;
         }
+        else if(motiontime >1100 && motiontime <=2250){
+            SendLowROS.motorCmd[FL_2].q = -2.18;
+            SendLowROS.motorCmd[FL_2].dq = 0;
+            SendLowROS.motorCmd[FL_2].Kp = 5.0;
+            SendLowROS.motorCmd[FL_2].Kd = 1.0;
+            SendLowROS.motorCmd[FL_2].tau = 0.0;
+            std::cout << "POS1" << std::endl;
+        }
+
+        else if(motiontime >2250 && motiontime <= 3250){
+            SendLowROS.motorCmd[FL_2].q = -2.18;
+            SendLowROS.motorCmd[FL_2].dq = 0;
+            SendLowROS.motorCmd[FL_2].Kp = 5.0;
+            SendLowROS.motorCmd[FL_2].Kd = 1.0;
+            SendLowROS.motorCmd[FL_2].tau = 0.0;
+            std::cout << "POS1" << std::endl;
+        } 
+        else if( motiontime > 3250 && motiontime <= 3350 ){
+            /* torque = (0 - RecvLowROS.motorState[FL_2].q)*10.0f + (0 - RecvLowROS.motorState[FL_2].dq)*1.0f;
+            if(torque > 5.0f) torque = 5.0f;
+            if(torque < -5.0f) torque = -5.0f; */
+            // if(motiontime >=)
+            // {torque = torque*(-1);}
+            SendLowROS.motorCmd[FL_2].tau = 15;
+            std::cout << "TORQUE" << std::endl;
+        }
+        else if(motiontime >3350 && motiontime <=4500){
+            SendLowROS.motorCmd[FL_2].q = -2.18;
+            SendLowROS.motorCmd[FL_2].dq = 0;
+            SendLowROS.motorCmd[FL_2].Kp = 5.0;
+            SendLowROS.motorCmd[FL_2].Kd = 1.0;
+            SendLowROS.motorCmd[FL_2].tau = 0.0;
+            std::cout << "POS1" << std::endl;
+        }
+
+        else if(motiontime >4500 && motiontime <= 5500){
+            SendLowROS.motorCmd[FL_2].q = -2.18;
+            SendLowROS.motorCmd[FL_2].dq = 0;
+            SendLowROS.motorCmd[FL_2].Kp = 5.0;
+            SendLowROS.motorCmd[FL_2].Kd = 1.0;
+            SendLowROS.motorCmd[FL_2].tau = 0.0;
+            std::cout << "POS1" << std::endl;
+        } 
+        else if( motiontime > 5500 && motiontime <= 5600 ){
+            /* torque = (0 - RecvLowROS.motorState[FL_2].q)*10.0f + (0 - RecvLowROS.motorState[FL_2].dq)*1.0f;
+            if(torque > 5.0f) torque = 5.0f;
+            if(torque < -5.0f) torque = -5.0f; */
+            // if(motiontime >=)
+            // {torque = torque*(-1);}
+            SendLowROS.motorCmd[FL_2].tau = 15;
+            std::cout << "TORQUE" << std::endl;
+        }
+        else if(motiontime >= 5600 && motiontime <= 6750){
+            SendLowROS.motorCmd[FL_2].q = -2.18;
+            SendLowROS.motorCmd[FL_2].dq = 0;
+            SendLowROS.motorCmd[FL_2].Kp = 5.0;
+            SendLowROS.motorCmd[FL_2].Kd = 1.0;
+            SendLowROS.motorCmd[FL_2].tau = 0.0;
+            std::cout << "POS1" << std::endl;
+        }
+
+        else if(motiontime >6750 && motiontime <= 7750){
+            SendLowROS.motorCmd[FL_2].q = -2.18;
+            SendLowROS.motorCmd[FL_2].dq = 0;
+            SendLowROS.motorCmd[FL_2].Kp = 5.0;
+            SendLowROS.motorCmd[FL_2].Kd = 1.0;
+            SendLowROS.motorCmd[FL_2].tau = 0.0;
+            std::cout << "POS1" << std::endl;
+        } 
+        else if( motiontime > 7750 && motiontime <= 7850 ){
+            /* torque = (0 - RecvLowROS.motorState[FL_2].q)*10.0f + (0 - RecvLowROS.motorState[FL_2].dq)*1.0f;
+            if(torque > 5.0f) torque = 5.0f;
+            if(torque < -5.0f) torque = -5.0f; */
+            // if(motiontime >=)
+            // {torque = torque*(-1);}
+            SendLowROS.motorCmd[FL_2].tau = 15;
+            std::cout << "TORQUE" << std::endl;
+        }
+        else if(motiontime >= 7850 && motiontime <= 9000){
+            SendLowROS.motorCmd[FL_2].q = -2.18;
+            SendLowROS.motorCmd[FL_2].dq = 0;
+            SendLowROS.motorCmd[FL_2].Kp = 5.0;
+            SendLowROS.motorCmd[FL_2].Kd = 1.0;
+            SendLowROS.motorCmd[FL_2].tau = 0.0;
+            std::cout << "POS1" << std::endl;
+        }
+
+        // else if(motiontime >4500 && motiontime <= 5500){
+        //     SendLowROS.motorCmd[FL_2].q = -2.18;
+        //     SendLowROS.motorCmd[FL_2].dq = 0;
+        //     SendLowROS.motorCmd[FL_2].Kp = 5.0;
+        //     SendLowROS.motorCmd[FL_2].Kd = 1.0;
+        //     SendLowROS.motorCmd[FL_2].tau = 0.0;
+        //     std::cout << "POS1" << std::endl;
+        // } 
+        // else if( motiontime > 5500 && motiontime <= 5750 ){
+            
+        //     SendLowROS.motorCmd[FL_2].tau = 5;
+        //     std::cout << "TORQUE" << std::endl;
+        // }
+        // else if(motiontime >= 5750 && motiontime <= 6750){
+        //     SendLowROS.motorCmd[FL_2].q = -2.18;
+        //     SendLowROS.motorCmd[FL_2].dq = 0;
+        //     SendLowROS.motorCmd[FL_2].Kp = 5.0;
+        //     SendLowROS.motorCmd[FL_2].Kd = 1.0;
+        //     SendLowROS.motorCmd[FL_2].tau = 0.0;
+        //     std::cout << "POS1" << std::endl;
+        // }
 
         // Send command and spin ros loop
         SendLowLCM = ToLcm(SendLowROS);
