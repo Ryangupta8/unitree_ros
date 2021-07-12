@@ -6,9 +6,9 @@
 
 
     <!-- depthimage_to_laserscan -->j
-  <include file="$(find depthimage_to_laserscan)/launch/depth2scan.launch"/>   
+    <!-- <include file="$(find depthimage_to_laserscan)/launch/depth2scan.launch"/>   -->
   <!-- ar track alvar -->
-    <include file="$(find ar_track_alvar)/launch/a1_artag.launch"/>
+  <!-- <include file="$(find ar_track_alvar)/launch/a1_artag.launch"/> -->
 
     <arg name="min_height" default="-0.25" />
     <arg name="max_height" default="0.1" />
