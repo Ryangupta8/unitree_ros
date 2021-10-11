@@ -22,8 +22,6 @@
     <param name="robot_name" value="$(arg rname)"/>
     <param name="control_level" value="$(arg ctrl_level)"/>
 
-  <!-- Include the Velodyne Launch -->
-  <!--<include file="$(find velodyne_pointcloud)/launch/VLP16_points.launch"/>-->
   <!-- pointcloud_to_laserscan -->
   <!--<node pkg="pointcloud_to_laserscan" name="pointcloud_to_laserscan_node" type="pointcloud_to_laserscan_node" >-->
     <!--<remap from="cloud_in" to="velodyne_points"/>-->
@@ -42,12 +40,6 @@
           respawn="false" output="screen" args="$(arg rname) $(arg ctrl_level)" />
     <!-- ENML -->
     <node pkg="a1_autonomy" type="enml_a1" name="non_markov_localization_a1" output="screen" args="--config_dir $(find a1_autonomy)/config --robot_config a1_real_mas.lua --maps_dir $(find a1_autonomy)/enml/maps -d1" />
-     <!--<node name="realsense_costmap_node" pkg="costmap_2d" type="costmap_2d_node" output="screen" >-->
-        <!--<rosparam file="$(find a1_autonomy)/config/a1_realsense_costmap_params.yaml" command="load" ns="costmap" />-->
-    <!--</node>-->
-
-<!-- <node name ="enmap_to_rosmap" pkg="tf" type="static_transform_publisher" args="-54 15 0 -1.57 0 0.00 map map_en 10"/> -->
-
 
 </launch>
 
