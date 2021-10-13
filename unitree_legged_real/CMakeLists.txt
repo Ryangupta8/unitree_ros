@@ -24,8 +24,8 @@ catkin_package( CATKIN_DEPENDS
     )
 
 include_directories(
-    /home/amrl/robots/unitree_legged_sdk/include
-    /home/amrl/workspaces/autonomy_ws/src/unitree_ros/math_utils/include
+    /home/knapsack/robots/unitree_legged_sdk/include
+    /home/knapsack/workspaces/autonomy_ws/src/a1_autonomy/unitree_ros/math_utils/include
     include
     ${Boost_INCLUDE_DIR}
     ${catkin_INCLUDE_DIRS}
@@ -33,7 +33,17 @@ include_directories(
     # $ENV{UNITREE_LEGGED_SDK_PATH}/include
 )
 
-link_directories(/home/amrl/robots/unitree_legged_sdk/lib)
+#system
+include_directories("/usr/local/include")
+link_directories("/usr/local/lib")
+
+#PnC
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
+find_package(PnC REQUIRED)
+include_directories(${PNC_INCLUDE_DIRS})
+include_directories(/use/local/lib/PnC)
+
+link_directories(/home/knapsack/robots/unitree_legged_sdk/lib)
 string(CONCAT LEGGED_SDK_NAME libunitree_legged_sdk_amd64.so)
 set(EXTRA_LIBS ${LEGGED_SDK_NAME} lcm)
 
@@ -55,11 +65,20 @@ add_executable(walk_lcm src/exe/walk_mode.cpp)
 target_link_libraries(walk_lcm ${EXTRA_LIBS} ${catkin_LIBRARIES})
 add_dependencies(walk_lcm ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
+add_executable(test_pd src/test/test_pd.cpp)
+target_link_libraries(test_pd ${EXTRA_LIBS} ${catkin_LIBRARIES})
+add_dependencies(test_pd ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+
+add_executable(test_pnc src/test/test_pnc.cpp)
+target_link_libraries(test_pnc ${EXTRA_LIBS} ${catkin_LIBRARIES} ${PNC_LIBRARIES} ${PNC_WBC_LIBRARY})
+add_dependencies(test_pnc ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+
+
 add_executable(example_walk src/exe/walk_example.cpp)
 target_link_libraries(example_walk ${EXTRA_LIBS} ${catkin_LIBRARIES})
 add_dependencies(example_walk ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
-add_executable(lcm_server /home/amrl/robots/unitree_legged_sdk/examples/lcm_server.cpp)
+add_executable(lcm_server /home/knapsack/robots/unitree_legged_sdk/examples/lcm_server.cpp)
 target_link_libraries(lcm_server ${EXTRA_LIBS} ${catkin_LIBRARIES})
 add_dependencies(lcm_server ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
