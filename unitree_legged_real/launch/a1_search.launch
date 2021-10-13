@@ -25,17 +25,6 @@
   <node name="frontier_server_a1" pkg="visual_perception" type="frontier_server" output="screen"/>
   <node name="prediction_server_a1" pkg="visual_perception" type="prediction_server" output="screen"/>
 
-  <param name="robot_description"
-	  command="$(find xacro)/xacro --inorder '$(arg dollar)$(arg robot_path)/xacro/robot.xacro' 
-	  DEBUG:=$(arg user_debug)"/>
-
-  <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher"
-          respawn="false" output="screen">
-        <!--<remap from="/joint_states" to="/$(arg rname)_gazebo/joint_states"/>-->
-  </node>
-
-    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher"/>
-
   <!--<include file="$(find state_lattice_planner)/launch/slp_server.launch"/>-->
   <node name="a1_movenode" pkg="search_service" type="a1_move" output="screen"/>
 
