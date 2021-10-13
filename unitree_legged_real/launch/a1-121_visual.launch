@@ -5,14 +5,12 @@
   <include file="$(find velodyne_pointcloud)/launch/VLP16_points.launch"/>
 
 
-    <!-- depthimage_to_laserscan -->j
+    <!-- depthimage_to_laserscan -->
     <!-- <include file="$(find depthimage_to_laserscan)/launch/depth2scan.launch"/>   -->
   <!-- ar track alvar -->
   <!-- <include file="$(find ar_track_alvar)/launch/a1_artag.launch"/> -->
 
-    <arg name="min_height" default="-0.25" />
-    <arg name="max_height" default="0.1" />
-   <arg name="launch_nodelet_manager" default="true" />
+    <arg name="launch_nodelet_manager" default="true" />
  
      <!-- pointcloud_to_laserscan -->
      <node pkg="a1_autonomy"

@@ -6,6 +6,16 @@
     <node pkg="unitree_legged_real" type="lcm_server" name="node_lcm_server"
           respawn="false" output="screen" args="$(arg rname) $(arg ctrl_level)" />
 
+  <!-- Include Robot description from URDF in order to get frame transforms -->
+  <param name="a1_121_description" command="$(find xacro)/xacro --inorder '$(find a1_description)/xacro/robot_velodyne.xacro'
+                                        DEBUG:=false"/>
+  <node pkg="robot_state_publisher" type="robot_state_publisher" name="a1_121_robot_state_pub" >
+    <remap from="robot_description" to="a1_121_description" />
+  </node>
+
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" >
+    <remap from="robot_description" to="a1_121_description" />
+  </node>
 
   <!-- Use standard ROS navigation stack through move_base? If not, specify vector maps for graph_navigation -->
   <arg name="move_base" default="false"/>
@@ -22,18 +32,9 @@
     <param name="robot_name" value="$(arg rname)"/>
     <param name="control_level" value="$(arg ctrl_level)"/>
 
-  <!-- pointcloud_to_laserscan -->
-  <!--<node pkg="pointcloud_to_laserscan" name="pointcloud_to_laserscan_node" type="pointcloud_to_laserscan_node" >-->
-    <!--<remap from="cloud_in" to="velodyne_points"/>-->
-    <!--<remap from="scan" to="cloud2scan" />-->
-    <!--<param name="min_height" value="-0.3"/>-->
-    <!--<param name="max_height" value="0.3"/>-->
-    <!--<param name="angle_min" value="-3.1416"/>-->
-    <!--<param name="angle_max" value="3.1416"/>-->
-    <!--<param name="use_inf" value="false" />-->
-  <!--</node>-->
   <node name ="enmap_to_rosmap" pkg="tf" type="static_transform_publisher" args="-54 15 0 -1.57 0 0.00 map map_en 100"/>
   <node name="a1_odomtest" pkg="search_service" type="a1_odomtest" output="screen"/>
+
 
   <!-- Run the SDK Driver -->
   <node pkg="unitree_legged_real" type="a1_driver_main" name="a1_driver_node"
