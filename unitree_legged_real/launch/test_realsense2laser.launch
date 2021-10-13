@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- puck launch -->
+  <!--  <include file="$(find a1_autonomy)/launch/velodyne.launch"/> -->
+  <include file="$(find realsense2_camera)/launch/demo_pointcloud.launch"/>
+
+
+    <!-- depthimage_to_laserscan -->
+    <!-- <include file="$(find depthimage_to_laserscan)/launch/depth2scan.launch"/>   -->
+  <!-- ar track alvar -->
+  <!-- <include file="$(find ar_track_alvar)/launch/a1_artag.launch"/> -->
+
+    <arg name="launch_nodelet_manager" default="true" />
+ 
+     <!-- pointcloud_to_laserscan -->
+     <node pkg="a1_autonomy"
+     type="pointcloud_to_laserscan"
+     name="pointcloud_to_laserscan"
+     args="--config $(find a1_autonomy)/config/realsense.lua"  
+     respawn="true"
+     respawn_delay="2" />
+
+    
+</launch>
