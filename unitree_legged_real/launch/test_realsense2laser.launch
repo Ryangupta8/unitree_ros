@@ -2,7 +2,7 @@
 <launch>
   <!-- puck launch -->
   <!--  <include file="$(find a1_autonomy)/launch/velodyne.launch"/> -->
-  <include file="$(find realsense2_camera)/launch/demo_pointcloud.launch"/>
+  <include file="$(find realsense2_camera)/launch/rs_camera.launch"/>
 
 
     <!-- depthimage_to_laserscan -->
@@ -20,5 +20,10 @@
      respawn="true"
      respawn_delay="2" />
 
-    
+  <node name ="camera_to_base_link" pkg="tf" type="static_transform_publisher"
+        args="0.5 0 0.15 0 0 0 base_link camera_link 100"/>
+  <node name ="camera_to_base" pkg="tf" type="static_transform_publisher"
+        args="0.5 0 0.15 0 0 0 base camera_link 100"/>
+
+
 </launch>
