@@ -5,7 +5,7 @@
 
     <node pkg="unitree_legged_real" type="lcm_server" name="node_lcm_server"
           respawn="false" output="screen" args="$(arg rname) $(arg ctrl_level)" />
-
+    <node pkg="unitree_legged_real" type="a1_950_initialpose_convert" name="a1_950_initialpose_convert"/
 
   <!-- Use standard ROS navigation stack through move_base? If not, specify vector maps for graph_navigation -->
   <arg name="move_base" default="false"/>

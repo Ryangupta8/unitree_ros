@@ -13,6 +13,7 @@ find_package(catkin REQUIRED COMPONENTS
     std_msgs
     nav_msgs
     sensor_msgs
+    amrl_msgs
     )
 
 find_package(Eigen3 REQUIRED)
@@ -78,6 +79,20 @@ target_link_libraries(a1_driver_main
     ${catkin_LIBRARIES} 
 )
 add_dependencies(a1_driver_main ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+
+add_executable(a1_121_initialpose_convert src/a1_121_initialpose_converter.cc)
+target_link_libraries(a1_121_initialpose_convert
+    ${EXTRA_LIBS} 
+    ${catkin_LIBRARIES} 
+)
+add_dependencies(a1_121_initialpose_convert ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+
+add_executable(a1_950_initialpose_convert src/a1_950_initialpose_converter.cc)
+target_link_libraries(a1_950_initialpose_convert
+    ${EXTRA_LIBS} 
+    ${catkin_LIBRARIES} 
+)
+add_dependencies(a1_950_initialpose_convert ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ######################
 # NOTE NOTE NOTE NOTE 
