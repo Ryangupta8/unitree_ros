@@ -66,7 +66,6 @@ Listener	unitree_legged_real/src/A1HighDriver_main.cc	/^class Listener{$/;"	c	fi
 Listener	unitree_legged_real/src/A1HighDriver_recover.cc	/^class Listener{$/;"	c	file:
 Listener	unitree_legged_real/src/A1HighDriver_waypoint_pose.cc	/^class Listener{$/;"	c	file:
 Listener	unitree_legged_real/src/a1_121_initialpose_converter.cc	/^class Listener{$/;"	c	file:
-Listener	unitree_legged_real/src/a1_950_initialpose_converter.cc	/^class Listener{$/;"	c	file:
 Listener	unitree_legged_real/src/a1_waypoints.cpp	/^class Listener{$/;"	c	file:
 Load	unitree_gazebo/plugin/draw_force_plugin.cc	/^        void Load(rendering::VisualPtr _parent, sdf::ElementPtr _sdf )$/;"	f	class:gazebo::UnitreeDrawForcePlugin
 Load	unitree_gazebo/plugin/foot_contact_plugin.cc	/^        void Load(sensors::SensorPtr _sensor, sdf::ElementPtr _sdf)$/;"	f	class:gazebo::UnitreeFootContactPlugin
@@ -229,7 +228,6 @@ imu_sub	unitree_controller/src/test/test_gazebo_pos_control.cpp	/^    ros::Subsc
 init	unitree_legged_control/src/joint_controller.cpp	/^    bool UnitreeJointController::init(hardware_interface::EffortJointInterface *robot, ros::NodeHandle &n)$/;"	f	class:unitree_legged_control::UnitreeJointController
 init_pose_Cb	unitree_legged_real/scripts/a1_tf_publisher	/^    def init_pose_Cb(self, msg):$/;"	m	class:tf_converter
 initialpose_cb	unitree_legged_real/src/a1_121_initialpose_converter.cc	/^    void initialpose_cb(const amrl_msgs::Localization2DMsg::ConstPtr& msg)$/;"	f	class:Listener
-initialpose_cb	unitree_legged_real/src/a1_950_initialpose_converter.cc	/^    void initialpose_cb(const amrl_msgs::Localization2DMsg::ConstPtr& msg)$/;"	f	class:Listener
 isCalf	unitree_legged_control/include/joint_controller.h	/^        bool isHip, isThigh, isCalf, rqtTune;$/;"	m	class:unitree_legged_control::UnitreeJointController
 isHip	unitree_legged_control/include/joint_controller.h	/^        bool isHip, isThigh, isCalf, rqtTune;$/;"	m	class:unitree_legged_control::UnitreeJointController
 isThigh	unitree_legged_control/include/joint_controller.h	/^        bool isHip, isThigh, isCalf, rqtTune;$/;"	m	class:unitree_legged_control::UnitreeJointController
@@ -269,7 +267,6 @@ main	unitree_legged_real/src/A1HighDriver_main.cc	/^int main(int argc, char *arg
 main	unitree_legged_real/src/A1HighDriver_recover.cc	/^int main(int argc, char *argv[])$/;"	f
 main	unitree_legged_real/src/A1HighDriver_waypoint_pose.cc	/^int main(int argc, char *argv[])$/;"	f
 main	unitree_legged_real/src/a1_121_initialpose_converter.cc	/^int main(int argc, char *argv[]){$/;"	f
-main	unitree_legged_real/src/a1_950_initialpose_converter.cc	/^int main(int argc, char *argv[]){$/;"	f
 main	unitree_legged_real/src/a1_waypoints.cpp	/^int main(int argc, char *argv[])$/;"	f
 main	unitree_legged_real/src/exe/position_mode.cpp	/^int main(int argc, char *argv[])$/;"	f
 main	unitree_legged_real/src/exe/torque_mode.cpp	/^int main(int argc, char *argv[])$/;"	f
@@ -403,11 +400,8 @@ velocityLimits	unitree_legged_control/src/joint_controller.cpp	/^    void Unitre
 visual	unitree_gazebo/plugin/draw_force_plugin.cc	/^            rendering::VisualPtr visual;$/;"	m	class:gazebo::UnitreeDrawForcePlugin	file:
 visual_namespace	unitree_gazebo/plugin/draw_force_plugin.cc	/^            std::string visual_namespace;$/;"	m	class:gazebo::UnitreeDrawForcePlugin	file:
 x	unitree_legged_real/src/a1_121_initialpose_converter.cc	/^    double x, y, yaw;$/;"	m	class:Listener	file:
-x	unitree_legged_real/src/a1_950_initialpose_converter.cc	/^    double x, y, yaw;$/;"	m	class:Listener	file:
 y	unitree_legged_real/src/a1_121_initialpose_converter.cc	/^    double x, y, yaw;$/;"	m	class:Listener	file:
-y	unitree_legged_real/src/a1_950_initialpose_converter.cc	/^    double x, y, yaw;$/;"	m	class:Listener	file:
 yaw	unitree_legged_real/src/a1_121_initialpose_converter.cc	/^    double x, y, yaw;$/;"	m	class:Listener	file:
-yaw	unitree_legged_real/src/a1_950_initialpose_converter.cc	/^    double x, y, yaw;$/;"	m	class:Listener	file:
 ~UnitreeDrawForcePlugin	unitree_gazebo/plugin/draw_force_plugin.cc	/^        ~UnitreeDrawForcePlugin(){$/;"	f	class:gazebo::UnitreeDrawForcePlugin
 ~UnitreeFootContactPlugin	unitree_gazebo/plugin/foot_contact_plugin.cc	/^        ~UnitreeFootContactPlugin(){}$/;"	f	class:gazebo::UnitreeFootContactPlugin
 ~UnitreeJointController	unitree_legged_control/src/joint_controller.cpp	/^    UnitreeJointController::~UnitreeJointController(){$/;"	f	class:unitree_legged_control::UnitreeJointController
