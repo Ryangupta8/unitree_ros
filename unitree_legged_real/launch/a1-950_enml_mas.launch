@@ -5,12 +5,12 @@
 
     <node pkg="unitree_legged_real" type="lcm_server" name="node_lcm_server"
           respawn="false" output="screen" args="$(arg rname) $(arg ctrl_level)" />
-    <node pkg="unitree_legged_real" type="a1_950_initialpose_convert" name="a1_950_initialpose_convert"/
+      <node pkg="unitree_legged_real" type="a1_950_initialpose_convert" name="a1_950_initialpose_convert"/>
 
   <!-- Use standard ROS navigation stack through move_base? If not, specify vector maps for graph_navigation -->
   <arg name="move_base" default="false"/>
   <arg name="graph_map_location" default="$(find a1_autonomy)/enml/maps"/>
-  <arg name="graph_map_name" default="AHG2"/>
+  <arg name="graph_map_name" default="ASE1"/>
   <arg name="odom_topic" default="/odom"/>
   <arg name="scan_topic" default="/depth2scan"/><!--/depth2scan /scan /cloud2scan -->
   <arg name="localization_topic" default="/localization"/>
