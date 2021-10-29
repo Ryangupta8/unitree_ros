@@ -10,7 +10,7 @@
 
   <!-- Run the costmap node from puck data -->
   <node name="costmap_node" pkg="costmap_2d" type="costmap_2d_node" output="screen">
-    <rosparam file="$(find unitree_navigation)/config/a1_puck_params.yaml" command="load" ns="costmap" />
+    <rosparam file="$(find unitree_navigation)/config/a1_hokuyo_params.yaml" command="load" ns="costmap" />
   </node>
   <!--<node name="costmap_node2" pkg="costmap_2d" type="costmap_2d_node" output="screen">-->
     <!--<rosparam file="$(find unitree_navigation)/config/a1_depth_params.yaml" command="load" ns="costmap" />-->

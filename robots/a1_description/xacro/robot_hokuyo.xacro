@@ -7,7 +7,6 @@
     <xacro:include filename="$(find a1_description)/xacro/leg.xacro"/>
     <xacro:include filename="$(find a1_description)/xacro/stairs.xacro"/>
     <xacro:include filename="$(find a1_description)/xacro/gazebo.xacro"/>
-    <!--<xacro:include filename="$(find velodyne_description)/urdf/VLP-16.urdf.xacro"/>-->
     <!-- <xacro:include filename="$(find a1_gazebo)/launch/stairs.urdf.xacro"/> -->
 
     <!-- <xacro:stairs stairs="15" xpos="0" ypos="0" zpos="0" /> -->
@@ -138,12 +137,28 @@
         <origin rpy="0 0 0" xyz="${-leg_offset_x} ${leg_offset_y} 0"/>
     </xacro:leg>
 
+
+    <joint name="base_range_sensor_joint" type="fixed">
+        <origin rpy="0.0 0.0 0.0" xyz="0.05 0.0 0.1844"/>
+          <parent link="base"/>
+          <child link="laser"/>
+      </joint>
+      <link name="laser">
+
+          <visual>
+              <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <box size="0.001 0.001 0.001"/>
+              </geometry>
+          </visual>
+          <inertial>
+              <origin xyz="0 0 0"/>
+              <mass value="0.01"/>
+              <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>
+          </inertial>
+      </link>
+
     <!--<xacro:include filename="$(find velodyne_description)/urdf/VLP-16.urdf.xacro"/>-->
-<!--<<<<<<< Updated upstream-->
-    <!--<VLP-16 parent="base" name="velodyne" topic="lidar_points" hz="10" samples="1024" gpu="false" lasers="16" max_range="100">-->
-        <!--<origin xyz="0.005 0.0 0.15" rpy="0 0 0" />-->
-    <!--</VLP-16>-->
-<!--=======-->
     <!--<VLP-16 parent="base" name="velodyne" topic="lidar_points" hz="10" samples="1024" gpu="false" lasers="16" max_range="100">-->
         <!--<origin xyz="0.0075 0.0 0.3025" rpy="0 0 0" />-->
     <!--</VLP-16>-->

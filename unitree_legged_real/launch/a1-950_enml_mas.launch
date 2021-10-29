@@ -32,7 +32,8 @@
     <!--<param name="angle_max" value="3.1416"/>-->
     <!--<param name="use_inf" value="false" />-->
   <!--</node>-->
-  <node name ="enmap_to_rosmap" pkg="tf" type="static_transform_publisher" args="-54 15 0 -1.57 0 0.00 map map_en 100"/>
+  <!--<node name ="enmap_to_rosmap" pkg="tf" type="static_transform_publisher" args="-54 15 0 -1.57 0 0.00 map map_en 100"/>-->
+  <node name ="enmap_to_rosmap" pkg="tf" type="static_transform_publisher" args="-21 -37 0 0.0 0 0.00 map map_en 100"/>
   <node name="a1_odomtest" pkg="search_service" type="a1_odomtest" output="screen"/>
 
   <!-- Run the SDK Driver -->
