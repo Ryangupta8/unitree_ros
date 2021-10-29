@@ -9,13 +9,14 @@
   </node>
 
   <!-- Run the costmap node from puck data -->
-  <node name="costmap_node" pkg="costmap_2d" type="costmap_2d_node" output="screen">
-    <rosparam file="$(find unitree_navigation)/config/a1_puck_params.yaml" command="load" ns="costmap" />
-  </node>
-  <!--<node name="costmap_node2" pkg="costmap_2d" type="costmap_2d_node" output="screen">-->
-    <!--<rosparam file="$(find unitree_navigation)/config/a1_depth_params.yaml" command="load" ns="costmap" />-->
+  <!--<node name="costmap_node" pkg="costmap_2d" type="costmap_2d_node" output="screen">-->
+    <!--<rosparam file="$(find unitree_navigation)/config/a1_puck_params.yaml" command="load" ns="costmap" />-->
   <!--</node>-->
+  <node name="costmap_node2" pkg="costmap_2d" type="costmap_2d_node" output="screen">
+    <rosparam file="$(find unitree_navigation)/config/a1_depth_params.yaml" command="load" ns="costmap" />
+  </node>
 
+  <node name="base_to_camera_depth" pkg="tf" type="static_transform_publisher" args="0.3 0 0 0 0 0 base camera_depth_frame100"/>
   <!-- Run the costmap from the realsense depth data-->
   <!--<node name="costmap_global_node" pkg="costmap_2d" type="costmap_2d_node" output="screen">-->
       <!-- <rosparam file="$(find unitree_navigation)/config/a1_puck_params.yaml" command="load" ns="costmap" /> -->

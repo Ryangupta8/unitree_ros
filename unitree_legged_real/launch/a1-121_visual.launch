@@ -5,7 +5,8 @@
   <include file="$(find velodyne_pointcloud)/launch/VLP16_points.launch"/>
 
    <!--<node name="base_to_velodyne" pkg="tf" type="static_transform_publisher" args="0.0075 0.0 0.3025 0 0 0 base velodyne 100"/> -->
-  <node name="base_to_camera" pkg="tf" type="static_transform_publisher" args="0.3 0 0 0 0 0 base camera_depth_frame 100"/>
+  <!--<node name="base_to_camera" pkg="tf" type="static_transform_publisher" args="0.3 0 0 0 0 0 base camera_depth_frame 100"/>-->
+  <!--<node name="base_to_camera_depth" pkg="tf" type="static_transform_publisher" args="0.3 0 0 0 0 0 base camera_link 100"/>-->
 
   <include file="$(find unitree_legged_real)/launch/realsense_to_laserscan.launch"/>
 
