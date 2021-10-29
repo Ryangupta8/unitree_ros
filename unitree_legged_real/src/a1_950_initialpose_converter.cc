@@ -6,6 +6,8 @@
 
 #include "ros/ros.h"
 
+bool received = false;
+
 class Listener{
   public:
     double x, y, yaw;
@@ -15,13 +17,18 @@ class Listener{
         x = msg->pose.x;
         y = msg->pose.y;
         yaw = msg->pose.theta;
+        received =true;
+
+
+        //geometry_msgs::PoseWithCovarianceStamped pose_msg;
     }
 };
 
 int main(int argc, char *argv[]){
     ros::init(argc, argv, "a1_950_initialpose_convert");
     ros::NodeHandle n;
-    ros::Rate loop_rate(2000);
+    //ros::Rate loop_rate(100);
+    ros::Rate loop_rate(10);
 
     Listener listener;
 
@@ -43,7 +50,13 @@ int main(int argc, char *argv[]){
         double qz = sin(listener.yaw/2);
         pose_msg.pose.pose.orientation.w = qw;
         pose_msg.pose.pose.orientation.z = qz;
-        initpose_pub.publish(pose_msg);
+
+        if(received)
+        {
+            initpose_pub.publish(pose_msg);
+            received=false;
+
+        }
         loop_rate.sleep();
     }
 
