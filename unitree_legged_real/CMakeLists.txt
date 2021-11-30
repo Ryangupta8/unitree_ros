@@ -17,7 +17,7 @@ find_package(catkin REQUIRED COMPONENTS
 
 find_package(Eigen3 REQUIRED)
 
-find_library(RUNNING_COVARIANCE_LIBRARY running_covariance HINTS /home/amrl/workspaces/autonomy_ws/)
+find_library(RUNNING_COVARIANCE_LIBRARY running_covariance HINTS /home/knapsack/workspaces/locomotion_ws/)
 
 catkin_package( CATKIN_DEPENDS
     math_utils
@@ -25,7 +25,7 @@ catkin_package( CATKIN_DEPENDS
 
 include_directories(
     /home/knapsack/robots/unitree_legged_sdk/include
-    /home/knapsack/workspaces/autonomy_ws/src/a1_autonomy/unitree_ros/math_utils/include
+    /home/knapsack/workspaces/locomotion_ws/src/unitree_ros/math_utils/include
     include
     ${Boost_INCLUDE_DIR}
     ${catkin_INCLUDE_DIRS}
