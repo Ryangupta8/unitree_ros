@@ -49,6 +49,10 @@ set(EXTRA_LIBS ${LEGGED_SDK_NAME} lcm)
 
 set(CMAKE_CXX_FLAGS "-O3")
 
+add_executable(wbic src/wbic.cpp)
+target_link_libraries(wbic ${EXTRA_LIBS} ${catkin_LIBRARIES} ${PNC_LIBRARIES} ${PNC_WBC_LIBRARY})
+add_dependencies(wbic ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+
 add_executable(position_lcm src/exe/position_mode.cpp)
 target_link_libraries(position_lcm ${EXTRA_LIBS} ${catkin_LIBRARIES})
 add_dependencies(position_lcm ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
@@ -65,9 +69,9 @@ add_executable(walk_lcm src/exe/walk_mode.cpp)
 target_link_libraries(walk_lcm ${EXTRA_LIBS} ${catkin_LIBRARIES})
 add_dependencies(walk_lcm ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
-add_executable(test_pd src/test/test_pd.cpp)
-target_link_libraries(test_pd ${EXTRA_LIBS} ${catkin_LIBRARIES})
-add_dependencies(test_pd ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+# add_executable(test_pd src/test/test_pd.cpp)
+# target_link_libraries(test_pd ${EXTRA_LIBS} ${catkin_LIBRARIES})
+# add_dependencies(test_pd ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 add_executable(test_pnc src/test/test_pnc.cpp)
 target_link_libraries(test_pnc ${EXTRA_LIBS} ${catkin_LIBRARIES} ${PNC_LIBRARIES} ${PNC_WBC_LIBRARY})
@@ -82,47 +86,12 @@ add_executable(lcm_server /home/knapsack/robots/unitree_legged_sdk/examples/lcm_
 target_link_libraries(lcm_server ${EXTRA_LIBS} ${catkin_LIBRARIES})
 add_dependencies(lcm_server ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
-add_executable(a1_waypoints src/a1_waypoints.cpp)
-target_link_libraries(a1_waypoints 
-    ${EXTRA_LIBS} 
-    ${catkin_LIBRARIES} 
-    ${RUNNING_COVARIANCE_LIBRARY}
-)
-add_dependencies(a1_waypoints ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-
 add_executable(a1_driver_main src/A1HighDriver_main.cc src/A1HighDriver.cc)
 target_link_libraries(a1_driver_main 
     ${EXTRA_LIBS} 
     ${catkin_LIBRARIES} 
 )
 add_dependencies(a1_driver_main ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-
-######################
-# NOTE NOTE NOTE NOTE 
-### a1_driver_recovery with the y was the original file I rm'd
-### a1_driver_recover is the cleaner rewrite
-add_executable(a1_driver_recover src/A1HighDriver_recover.cc src/A1HighDriver.cc)
-target_link_libraries(a1_driver_recover
-    ${EXTRA_LIBS} 
-    ${catkin_LIBRARIES} 
-)
-add_dependencies(a1_driver_recover ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-
-
-add_executable(a1_driver_gather_publish src/A1HighDriver_gather_publish.cc src/A1HighDriver.cc)
-target_link_libraries(a1_driver_gather_publish 
-    ${EXTRA_LIBS} 
-    ${catkin_LIBRARIES} 
-)
-add_dependencies(a1_driver_gather_publish ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-
-add_executable(a1_driver_waypoint_pose src/A1HighDriver_waypoint_pose.cc src/A1HighDriver.cc)
-target_link_libraries(a1_driver_waypoint_pose 
-    ${EXTRA_LIBS} 
-    ${catkin_LIBRARIES} 
-)
-add_dependencies(a1_driver_waypoint_pose ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-
 
 install(DIRECTORY scripts/
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
