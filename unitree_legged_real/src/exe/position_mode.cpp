@@ -4,25 +4,24 @@ Use of this source code is governed by the MPL-2.0 license, see LICENSE.
 ************************************************************************/
 
 #include <ros/ros.h>
+#include <string>
+#include <pthread.h>
+#include <boost/thread.hpp>
+#include <boost/thread/mutex.hpp>
 #include <unitree_legged_msgs/LowCmd.h>
 #include <unitree_legged_msgs/LowState.h>
-#include "unitree_legged_sdk/unitree_legged_sdk.h"
 #include "convert.h"
 
 using namespace UNITREE_LEGGED_SDK;
 
-class Custom
+template<typename TLCM>
+void* update_loop(void* param)
 {
-public:
-    Custom() {}
-    void LCMRecv();
-
-    LCM roslcm;
-};
-
-void Custom::LCMRecv()
-{
-    roslcm.Recv();
+    TLCM *data = (TLCM *)param;
+    while(ros::ok){
+        data->Recv();
+        usleep(2000);
+    }
 }
 
 double jointLinearInterpolation(double initPos, double targetPos, double rate)
@@ -33,19 +32,17 @@ double jointLinearInterpolation(double initPos, double targetPos, double rate)
     return p;
 }
 
-int main(int argc, char *argv[])
+template<typename TCmd, typename TState, typename TLCM>
+int mainHelper(int argc, char *argv[], TLCM &roslcm)
 {
     std::cout << "WARNING: Control level is set to LOW-level." << std::endl
               << "Make sure the robot is hung up." << std::endl
               << "Press Enter to continue..." << std::endl;
     std::cin.ignore();
 
-    ros::init(argc, argv, "position_ros_mode");
     ros::NodeHandle n;
     ros::Rate loop_rate(500);
 
-    Custom custom;
-    SetLevel(LOWLEVEL);    // must have this
     long motiontime = 0;
     int rate_count = 0;
     int sin_count = 0;
@@ -54,17 +51,18 @@ int main(int argc, char *argv[])
     float sin_mid_q[3] = {0.0, 1.2, -2.0};
     float Kp[3] = {0};  
     float Kd[3] = {0};
-    LowCmd SendLowLCM = {0};
-    LowState RecvLowLCM = {0};
+    TCmd SendLowLCM = {0};
+    TState RecvLowLCM = {0};
     unitree_legged_msgs::LowCmd SendLowROS;
     unitree_legged_msgs::LowState RecvLowROS;
+
     bool initiated_flag = false;  // initiate need time
     int count = 0;
 
-    custom.roslcm.SubscribeState();
+    roslcm.SubscribeState();
 
-    LoopFunc loop_lcm("LCM_Recv", 0.002, 3, boost::bind(&Custom::LCMRecv, &custom));
-    loop_lcm.start();
+    pthread_t tid;
+    pthread_create(&tid, NULL, update_loop<TLCM>, &roslcm);
 
     SendLowROS.levelFlag = LOWLEVEL;
     for(int i = 0; i<12; i++){
@@ -77,8 +75,9 @@ int main(int argc, char *argv[])
     }
 
     while (ros::ok()){
-        custom.roslcm.Get(RecvLowLCM);
+        roslcm.Get(RecvLowLCM);
         RecvLowROS = ToRos(RecvLowLCM);
+        printf("FR_2 position: %f\n",  RecvLowROS.motorState[FR_2].q);
 
         if(initiated_flag == true){
             motiontime++;
@@ -112,7 +111,7 @@ int main(int argc, char *argv[])
                 }
                 double sin_joint1, sin_joint2;
                 // last, do sine wave
-                if( motiontime >= 1700){
+                if( motiontime >= 400){
                     sin_count++;
                     sin_joint1 = 0.6 * sin(3*M_PI*sin_count/1000.0);
                     sin_joint2 = -0.6 * sin(1.8*M_PI*sin_count/1000.0);
@@ -144,8 +143,8 @@ int main(int argc, char *argv[])
 
         }
 
-        SendLowLCM = ToLcm(SendLowROS);
-        custom.roslcm.Send(SendLowLCM);
+        SendLowLCM = ToLcm(SendLowROS, SendLowLCM);
+        roslcm.Send(SendLowLCM);
         ros::spinOnce();
         loop_rate.sleep();
 
@@ -156,4 +155,11 @@ int main(int argc, char *argv[])
         }
     }
     return 0;
+}
+
+int main(int argc, char *argv[]){
+    ros::init(argc, argv, "position_ros_mode");
+
+    UNITREE_LEGGED_SDK::LCM roslcm(LOWLEVEL);
+    mainHelper<UNITREE_LEGGED_SDK::LowCmd, UNITREE_LEGGED_SDK::LowState, UNITREE_LEGGED_SDK::LCM>(argc, argv, roslcm);
 }
