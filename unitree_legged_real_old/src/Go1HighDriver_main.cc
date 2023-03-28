@@ -46,6 +46,8 @@ public:
     command.yawSpeed = msg->yawSpeed;
     command.mode = msg->mode;
 
+    if(!command_received) ROS_INFO("Command Topic received");
+
     command_received = 1;
   }
 };
@@ -70,6 +72,8 @@ int mainHelper(int argc, char *argv[], TLCM &roslcm)
 
   ros::NodeHandle n;
   ros::Rate loop_rate(500);
+
+  command_received = 0;
 
   Listener listener;
 
@@ -137,22 +141,35 @@ int mainHelper(int argc, char *argv[], TLCM &roslcm)
     odom.pose.pose.position.z = 0.0;
     odom.pose.pose.orientation = odom_quat;
     odom.child_frame_id = "base";
-    odom.twist.twist.linear.x = driver.RecvHighROS.velocity[0];
-    odom.twist.twist.linear.y = driver.RecvHighROS.velocity[1];
-    odom.twist.twist.angular.z = driver.RecvHighROS.velocity[2];
+    odom.twist.twist.linear.x = RecvHighROS.velocity[0];
+    odom.twist.twist.linear.y = RecvHighROS.velocity[1];
+    odom.twist.twist.angular.z = RecvHighROS.velocity[2];
     odom_pub.publish(odom);
 
-    SendHighROS.gaitType = listener.command.gaitType;
-    SendHighROS.speedLevel = listener.command.speedLevel;
-    SendHighROS.footRaiseHeight = listener.command.footRaiseHeight;
-    SendHighROS.bodyHeight = listener.command.bodyHeight;
-    SendHighROS.euler[0] = listener.command.euler[0];
-    SendHighROS.euler[1] = listener.command.euler[1];
-    SendHighROS.euler[2] = listener.command.euler[2];
-    SendHighROS.velocity[0] = listener.command.velocity[0];
-    SendHighROS.velocity[1] = listener.command.velocity[1];
-    SendHighROS.yawSpeed = listener.command.yawSpeed;
-    SendHighROS.mode = listener.command.mode;
+    SendHighROS.mode = 0;
+    SendHighROS.gaitType = 0; // listener.command.gaitType;
+    SendHighROS.speedLevel = 0; // listener.command.speedLevel;
+    SendHighROS.footRaiseHeight = 0; // listener.command.footRaiseHeight;
+    SendHighROS.bodyHeight = -0.1; // listener.command.bodyHeight;
+    SendHighROS.euler[0] = 0.2;
+    SendHighROS.euler[1] = 0;
+    SendHighROS.euler[2] = 0;
+    SendHighROS.velocity[0] = 0.0f;
+    SendHighROS.velocity[1] = 0.0f;
+    SendHighROS.yawSpeed = 0.0f;
+    SendHighROS.reserve = 0;
+
+    // SendHighROS.gaitType = listener.command.gaitType;
+    // SendHighROS.speedLevel = listener.command.speedLevel;
+    // SendHighROS.footRaiseHeight = listener.command.footRaiseHeight;
+    // SendHighROS.bodyHeight = listener.command.bodyHeight;
+    // SendHighROS.euler[0] = listener.command.euler[0];
+    // SendHighROS.euler[1] = listener.command.euler[1];
+    // SendHighROS.euler[2] = listener.command.euler[2];
+    // SendHighROS.velocity[0] = listener.command.velocity[0];
+    // SendHighROS.velocity[1] = listener.command.velocity[1];
+    // SendHighROS.yawSpeed = listener.command.yawSpeed;
+    // SendHighROS.mode = listener.command.mode;
 
     SendHighLCM = ToLcm(SendHighROS, SendHighLCM);
     roslcm.Send(SendHighLCM);

@@ -1,16 +1,19 @@
+
+uint8[2] head
 uint8 levelFlag
-uint16 commVersion              # Old version Aliengo does not have
-uint16 robotID                  # Old version Aliengo does not have
-uint32 SN                       # Old version Aliengo does not have
-uint8 bandWidth                 # Old version Aliengo does not have
+uint8 frameReserve
+
+uint32[2] SN
+uint32[2] version
+uint16 bandWidth
 IMU imu
 MotorState[20] motorState
-BmsState bms                    # new on Go1, battery state
-int16[4] footForce              # force sensors     # Old version Aliengo is different
-int16[4] footForceEst           # force sensors     # Old version Aliengo does not have
-uint32 tick                     # reference real-time from motion controller (unit: us)
-uint8[40] wirelessRemote        # wireless commands
-uint32 reserve                  # Old version Aliengo does not have
+BmsState bms
+int16[4] footForce	
+int16[4] footForceEst	
+uint32 tick						
+uint8[40] wirelessRemote 
+uint32 reserve
 uint32 crc
 
 # Old version Aliengo does not have:
@@ -19,3 +22,4 @@ Cartesian[4] eeForce          #it's a 1-DOF force infact, but we use 3-DOF here 
 Cartesian position            # will delete
 Cartesian velocity            # will delete
 Cartesian velocity_w            # will delete
+

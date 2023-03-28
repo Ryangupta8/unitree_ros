@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="rname" default="go1"/>
+    <arg name="ctrl_level" default="highlevel"/>
+
+    <!-- LCM Server for robot comms -->
+    <node pkg="unitree_legged_real" type="lcm_server" name="node_lcm_server"
+        respawn="false" output="screen" args="$(arg rname) $(arg ctrl_level)" />
+
+    <!-- Run the SDK -->
+    <node pkg="unitree_legged_real" type="go1_driver_main" name="a1_driver_node"
+        respawn="false" output="screen" args="$(arg rname) $(arg ctrl_level)" />
+
+</launch>
