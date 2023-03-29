@@ -38,9 +38,9 @@ include_directories(
 )
 
 
-include_directories(/home/$ENV{USER}/robots/unitree_legged_sdk/include)
+include_directories(/home/$ENV{USER}/robots/unitree_legged_sdk-3.5.1/include)
 
-link_directories(/home/$ENV{USER}/robots/unitree_legged_sdk/lib)
+link_directories(/home/$ENV{USER}/robots/unitree_legged_sdk-3.5.1/lib)
 
 
 add_executable(example_walk src/exe/example_walk.cpp)
